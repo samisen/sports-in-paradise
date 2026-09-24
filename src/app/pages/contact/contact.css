@@ -1,0 +1,52 @@
+:host { display: block; }
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 32px;
+  align-items: start;
+}
+@media (min-width: 900px) { .contact-grid { grid-template-columns: minmax(0, 1.25fr) minmax(0, .85fr); gap: 44px; } }
+
+.two { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0 18px; }
+@media (min-width: 620px) { .two { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+.opt { font-size: 11.4px; color: var(--ink-3); font-weight: 400; }
+
+.actions { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; margin-top: 8px; }
+.wa-inline { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; color: var(--ink-2); text-decoration: none; }
+.wa-inline:hover { color: var(--ink); }
+.wa-inline nz-icon { font-size: 18px; color: #25d366; }
+
+.demo-note { margin: 18px 0 0; font-size: 11.8px; color: var(--ink-3); }
+
+.done { display: grid; gap: 12px; justify-items: start; }
+.done nz-icon { font-size: 34px; color: var(--brand); }
+.done h2 { margin: 0; font-family: var(--font-display); font-size: 1.7rem; color: var(--ink); }
+.done p { margin: 0; max-width: 56ch; font-size: 15px; line-height: 1.7; color: var(--ink-2); }
+.done-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; }
+
+/* ---------- info column ---------- */
+
+.info-col { display: grid; gap: 16px; }
+@media (min-width: 900px) { .info-col { position: sticky; top: calc(var(--header-h) + 24px); } }
+
+.info-card {
+  padding: 24px 22px 26px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+}
+.info-card h2 { margin: 0 0 10px; font-family: var(--font-display); font-size: 1.4rem; font-weight: 600; color: var(--ink); }
+.info-card h3 { margin: 0 0 8px; font-size: 1.05rem; font-weight: 600; color: var(--ink); }
+.info-card p { margin: 0; font-size: 14px; line-height: 1.66; color: var(--ink-2); }
+
+.info-list { margin: 20px 0 0; padding: 0; list-style: none; display: grid; gap: 16px; }
+.info-list li { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 12px; }
+.info-list nz-icon { font-size: 17px; color: var(--brand); margin-top: 3px; }
+.info-list .k { display: block; font-size: 10.4px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); }
+.info-list .v, .info-list a { display: block; font-size: 14px; color: var(--ink); text-decoration: none; }
+.info-list a:hover { color: var(--brand-strong); }
+
+.info-card.is-quiet { background: var(--surface-2); }
+.info-card.is-quiet a { margin-top: 14px; }

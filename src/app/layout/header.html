@@ -1,0 +1,106 @@
+<header class="site-header" [class.is-solid]="scrolled() || !isHome()">
+  <div class="container bar">
+    <a class="brand" routerLink="/" [attr.aria-label]="brand.name + ' — home'">
+      <svg class="brand-mark" viewBox="0 0 64 64" aria-hidden="true">
+        <rect width="64" height="64" rx="15" class="mark-bg" />
+        <rect x="16" y="12" width="32" height="40" rx="3" class="mark-court" />
+        <path d="M16 32h32" class="mark-net" />
+        <path d="M32 12v13M32 39v13" class="mark-line" />
+        <circle cx="41" cy="24" r="3.4" class="mark-ball" />
+      </svg>
+      <span class="brand-text">
+        <span class="brand-name">{{ brand.wordmarkLead }}</span>
+        <span class="brand-sub">{{ brand.wordmarkTail }}</span>
+      </span>
+    </a>
+
+    <nav class="nav-desktop" aria-label="Main">
+      @for (item of navBar; track item.link) {
+        <a [routerLink]="item.link" routerLinkActive="is-active">{{ item.label }}</a>
+      }
+    </nav>
+
+    <div class="bar-actions">
+      <button
+        type="button"
+        class="icon-btn theme-btn"
+        (click)="theme.toggle()"
+        [attr.aria-label]="theme.mode() === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'"
+      >
+        @if (theme.mode() === 'dark') {
+          <svg viewBox="0 0 24 24" aria-hidden="true" class="ico">
+            <circle cx="12" cy="12" r="4.4" />
+            <g stroke-linecap="round">
+              <path d="M12 2.5v2.2M12 19.3v2.2M4.2 4.2l1.6 1.6M18.2 18.2l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.2 19.8l1.6-1.6M18.2 5.8l1.6-1.6" />
+            </g>
+          </svg>
+        } @else {
+          <svg viewBox="0 0 24 24" aria-hidden="true" class="ico">
+            <path d="M20.5 14.3A8.6 8.6 0 0 1 9.7 3.5a8.6 8.6 0 1 0 10.8 10.8z" />
+          </svg>
+        }
+      </button>
+
+      <a class="cta-desktop" nz-button nzType="primary" routerLink="/plan">{{ brand.cta.primary }}</a>
+
+      <button type="button" class="icon-btn menu-btn" (click)="openDrawer()" aria-label="Open menu">
+        <nz-icon nzType="menu" />
+      </button>
+    </div>
+  </div>
+</header>
+
+<nz-drawer
+  [nzVisible]="drawerOpen()"
+  nzPlacement="right"
+  [nzClosable]="false"
+  [nzWidth]="320"
+  nzWrapClassName="nav-drawer"
+  (nzOnClose)="closeDrawer()"
+>
+  <ng-container *nzDrawerContent>
+    <div class="drawer-inner">
+      <div class="drawer-top">
+        <span class="drawer-label">Menu</span>
+        <button type="button" class="icon-btn" (click)="closeDrawer()" aria-label="Close menu">
+          <nz-icon nzType="close" />
+        </button>
+      </div>
+
+      <nav class="drawer-nav" aria-label="Mobile">
+        <a routerLink="/" routerLinkActive="is-current" [routerLinkActiveOptions]="{ exact: true }" (click)="closeDrawer()">
+          <span class="d-label">Home</span>
+          <span class="d-blurb">Start here</span>
+        </a>
+        @for (item of navMain; track item.link) {
+          <a [routerLink]="item.link" routerLinkActive="is-current" (click)="closeDrawer()">
+            <span class="d-label">{{ item.label }}</span>
+            <span class="d-blurb">{{ item.blurb }}</span>
+          </a>
+        }
+      </nav>
+
+      <nav class="drawer-sub" aria-label="More">
+        @for (item of navSecondary; track item.link) {
+          <a [routerLink]="item.link" routerLinkActive="is-current" (click)="closeDrawer()">
+            {{ item.label }}
+          </a>
+        }
+      </nav>
+
+      <div class="drawer-foot">
+        <button type="button" class="theme-row" (click)="theme.toggle()">
+          <span>{{ theme.mode() === 'dark' ? 'Light theme' : 'Dark theme' }}</span>
+          <nz-icon nzType="swap" />
+        </button>
+        <a class="wa-row" [href]="brand.whatsappUrl" target="_blank" rel="noopener noreferrer">
+          <nz-icon nzType="whats-app" />
+          WhatsApp
+        </a>
+        <a nz-button nzType="primary" nzBlock nzSize="large" routerLink="/plan" (click)="closeDrawer()">
+          {{ brand.cta.primary }}
+        </a>
+      </div>
+    </div>
+  </ng-container>
+</nz-drawer>

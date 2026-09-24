@@ -1,0 +1,72 @@
+.site-footer {
+  background: var(--bg-deep);
+  color: rgba(255, 255, 255, .74);
+  padding-block: 56px 28px;
+  font-size: 14.5px;
+}
+@media (min-width: 768px) { .site-footer { padding-block: 84px 32px; } }
+
+.foot-grid {
+  display: grid;
+  gap: 36px;
+  grid-template-columns: minmax(0, 1fr);
+}
+@media (min-width: 640px) { .foot-grid { grid-template-columns: repeat(2, 1fr); gap: 40px; } }
+@media (min-width: 1040px) {
+  .foot-grid { grid-template-columns: 1.7fr 1fr 1fr 1.2fr; gap: 48px; }
+}
+
+.brand { display: inline-flex; align-items: center; gap: 10px; color: #fff; text-decoration: none; }
+.brand-mark { width: 34px; height: 34px; }
+.brand-text { display: flex; flex-direction: column; line-height: 1; }
+.brand-name { font-family: var(--font-display); font-size: 22px; }
+.brand-sub { font-size: 9px; letter-spacing: .28em; text-transform: uppercase; opacity: .6; margin-top: 3px; }
+
+.foot-blurb { margin: 18px 0 20px; max-width: 42ch; line-height: 1.65; }
+
+.foot-social { display: flex; gap: 10px; }
+.foot-social a {
+  width: 38px; height: 38px;
+  display: inline-grid; place-items: center;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, .18);
+  color: rgba(255, 255, 255, .8);
+  font-size: 16px;
+  transition: background-color .2s ease, color .2s ease;
+}
+.foot-social a:hover { background: rgba(255, 255, 255, .1); color: #fff; }
+
+.foot-col h3 {
+  font-size: 11px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, .45);
+  margin: 0 0 16px;
+  font-weight: 600;
+}
+.foot-col ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 11px; }
+.foot-col a { color: rgba(255, 255, 255, .74); text-decoration: none; }
+.foot-col a:hover { color: #fff; text-decoration: underline; text-underline-offset: 3px; }
+
+.foot-contact address { font-style: normal; line-height: 1.7; margin: 0 0 14px; }
+.foot-link-strong { display: block; color: #fff; text-decoration: none; margin-bottom: 4px; }
+.foot-link-strong:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+.foot-bottom {
+  margin-top: 44px;
+  padding-top: 22px;
+  border-top: 1px solid rgba(255, 255, 255, .12);
+  display: grid;
+  gap: 10px;
+  font-size: 12.5px;
+  color: rgba(255, 255, 255, .5);
+}
+.foot-bottom p { margin: 0; }
+.foot-legal { max-width: 96ch; line-height: 1.6; }
+.foot-note { opacity: .75; }
+
+/* brand mark — the same court as the header, at footer weight */
+.mark-bg { fill: var(--brand); }
+.mark-court { fill: none; stroke: #fff; stroke-width: 2.6; opacity: .92; }
+.mark-net { stroke: #fff; stroke-width: 2.6; stroke-linecap: round; opacity: .92; }
+.mark-ball { fill: #fff; }

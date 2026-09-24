@@ -1,0 +1,82 @@
+:host { display: block; }
+
+/* ---------- steps ---------- */
+
+.steps { margin: 0; padding: 0; list-style: none; display: grid; gap: 2px; }
+.step {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 16px;
+  padding: 22px 0;
+  border-bottom: 1px solid var(--line);
+}
+.step:last-child { border-bottom: 0; }
+.step-no { font-size: 12px; color: var(--ink-3); padding-top: 4px; }
+.step-body h2 {
+  display: flex; align-items: center; gap: 9px;
+  margin: 0; font-size: 1.14rem; font-weight: 600; line-height: 1.35; color: var(--ink);
+}
+.step-icon { font-size: 18px; color: var(--brand); }
+.step-line { margin: 8px 0 0; font-size: 15px; line-height: 1.6; color: var(--ink); }
+.step-detail { margin: 7px 0 0; font-size: 14px; line-height: 1.68; color: var(--ink-2); max-width: 74ch; }
+
+/* ---------- a day ---------- */
+
+.slot {
+  padding: 20px 18px 22px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+.slot-time { font-size: 11.4px; letter-spacing: .06em; color: var(--ink-3); }
+.slot h3 {
+  display: flex; align-items: center; gap: 9px;
+  margin: 8px 0 0; font-size: 1.02rem; font-weight: 600; line-height: 1.35; color: var(--ink);
+}
+.slot-icon { font-size: 18px; color: var(--brand); }
+.slot p { margin: 9px 0 0; font-size: 13.8px; line-height: 1.62; color: var(--ink-2); }
+
+/* ---------- coaches ---------- */
+
+.coach {
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+@media (min-width: 620px) { .coach { flex-direction: row; } }
+.coach-art { display: block; flex: none; background: var(--surface-3); aspect-ratio: 16 / 9; }
+@media (min-width: 620px) { .coach-art { width: 168px; aspect-ratio: auto; } }
+.coach-body { display: flex; flex-direction: column; gap: 6px; padding: 20px 18px 22px; }
+.coach-top { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.coach h3 { margin: 0; font-family: var(--font-display); font-size: 1.2rem; font-weight: 600; color: var(--ink); }
+.coach-role { font-size: 11.4px; letter-spacing: .05em; text-transform: uppercase; color: var(--brand-strong); }
+.coach-meta { margin: 0; font-size: 12.2px; color: var(--ink-3); }
+.coach-bio { margin: 6px 0 0; font-size: 13.8px; line-height: 1.66; color: var(--ink-2); }
+.coach-speaks { display: flex; align-items: center; gap: 7px; margin: 6px 0 0; font-size: 12.4px; color: var(--ink-3); }
+
+/* ---------- included ---------- */
+
+.incl-col h3 { margin: 0 0 14px; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3); }
+.incl-col ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+.incl-col li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 10px;
+  font-size: 14.4px;
+  line-height: 1.55;
+  color: var(--ink-2);
+}
+.incl-col nz-icon { color: var(--brand); font-size: 12px; margin-top: 5px; }
+.incl-col .is-other nz-icon { color: var(--ink-3); }
+
+.claim-note { margin: 30px 0 0; max-width: 80ch; font-size: 11.5px; line-height: 1.6; color: var(--ink-3); }
+
+/* ---------- faq ---------- */
+
+.container-narrow > * { max-width: var(--container); }
+.faq-answer { margin: 0; font-size: 14.8px; line-height: 1.75; color: var(--ink-2); max-width: 74ch; }
+.faq-more { margin: 26px 0 0; font-size: 14px; color: var(--ink-2); }
+.faq-more a { color: var(--brand-strong); }

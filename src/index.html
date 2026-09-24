@@ -1,11 +1,41 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="utf-8">
-  <title>PadelRetreat</title>
+  <title>Sports in Paradise — Padel retreats in Bali</title>
   <base href="/">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="Padel retreats in Bali, built around how you want to play. Plan your own week — coaching, match play, recovery and the island — and talk to the team who runs it.">
+  <!-- Safari reads these before any stylesheet, and uses them for the area
+       outside the page (the overscroll underlay) as well as the browser
+       chrome. The JS below keeps them in step with an explicit toggle. -->
+  <meta name="theme-color" content="#1668c4" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0b1017" media="(prefers-color-scheme: dark)">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <!-- both themes sit in the cache so swapping between them costs no round trip -->
+  <link rel="preload" as="style" href="theme-light.css">
+  <link rel="preload" as="style" href="theme-dark.css">
+  <link id="theme-css" rel="stylesheet" href="theme-light.css">
+  <script>
+    (function () {
+      var stored = null;
+      try { stored = localStorage.getItem('sip-theme'); } catch (e) {}
+      var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      var theme = stored === 'dark' || stored === 'light' ? stored : (prefersDark ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', theme);
+      // applied here too, so the UA paints its own surfaces in the right
+      // scheme from the very first frame, before styles.css is parsed
+      document.documentElement.style.colorScheme = theme;
+      // One link whose href changes, rather than two links toggled through
+      // `media` or `disabled`: WebKit does not reliably start applying a
+      // stylesheet that was inert when the document loaded.
+      var link = document.getElementById('theme-css');
+      if (link) link.href = theme === 'dark' ? 'theme-dark.css' : 'theme-light.css';
+    })();
+  </script>
 </head>
 <body>
   <app-root></app-root>

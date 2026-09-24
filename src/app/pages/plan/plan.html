@@ -1,0 +1,353 @@
+@let c = config();
+@let s = study();
+
+<section class="planner-page">
+  <div class="container">
+    <div class="pl-intro">
+      <p class="eyebrow">Plan your retreat</p>
+      <h1 class="display">Build the Week You Actually Want</h1>
+      <p class="lede">
+        Set the length, the level and how hard you want to work. The schedule redraws and the price
+        recalculates with every choice — then send it to us and we will tell you what we can hold.
+      </p>
+    </div>
+  </div>
+
+  <div class="pl-holder">
+    <div class="planner" #shellEl [class.is-fullscreen]="fullscreen()">
+      <!-- ============ TOOLBAR ============ -->
+      <header class="pl-bar">
+        <div class="pl-bar-left">
+          @if (fullscreen()) {
+            <button type="button" class="pl-back" (click)="toggleFullscreen()" aria-label="Leave full screen">
+              <nz-icon nzType="arrow-left" />
+            </button>
+          }
+          <div class="pl-title">
+            <strong>Your week</strong>
+            <span>{{ c.nights }} nights · {{ baseName() }} · {{ levelName() }}</span>
+          </div>
+        </div>
+
+        <div class="pl-bar-right">
+          <div class="zoom" role="group" aria-label="Schedule scale">
+            <button type="button" (click)="zoomOut()" aria-label="Smaller"><nz-icon nzType="minus" /></button>
+            <span class="mono">{{ hourPx() }}px/h</span>
+            <button type="button" (click)="zoomIn()" aria-label="Bigger"><nz-icon nzType="plus" /></button>
+          </div>
+
+          <button type="button" class="icon-btn" (click)="reset()" nz-tooltip nzTooltipTitle="Start again">
+            <nz-icon nzType="swap" />
+          </button>
+
+          <button
+            type="button"
+            class="icon-btn"
+            (click)="toggleFullscreen()"
+            [nz-tooltip]="fullscreen() ? 'Exit full screen (Esc)' : 'Full screen'"
+            [attr.aria-pressed]="fullscreen()"
+          >
+            <nz-icon [nzType]="fullscreen() ? 'compress' : 'expand'" />
+          </button>
+
+          <button nz-button nzType="primary" class="pl-send" (click)="openSend()">
+            <nz-icon nzType="send" />
+            <span class="pl-send-label">Send to the team</span>
+          </button>
+        </div>
+      </header>
+
+      <div class="pl-body">
+        <!-- ============ CONTROLS ============ -->
+        <aside class="pl-panel" aria-label="Retreat options">
+          <div class="pl-panel-mode">
+            <nz-segmented
+              [nzOptions]="modeOptions"
+              [ngModel]="mode()"
+              (ngModelChange)="mode.set($event)"
+              nzBlock
+            />
+            <p class="mode-note">
+              {{ isAdvanced() ? 'Every option, including what happens off court.' : 'The five decisions that shape the week.' }}
+            </p>
+          </div>
+
+          <div class="pl-panel-scroll">
+            <section class="grp">
+              <h2 class="grp-title">Length and group</h2>
+
+              <div class="fld">
+                <label>Nights <span class="fld-val mono">{{ c.nights }}</span></label>
+                <nz-slider
+                  [nzMin]="nightLimits.min" [nzMax]="nightLimits.max" [nzStep]="1"
+                  [ngModel]="c.nights" (ngModelChange)="setNights($event)" />
+                <span class="fld-hint">{{ s.days.length }} days on the ground</span>
+              </div>
+
+              <div class="fld">
+                <label>Players <span class="fld-val mono">{{ c.guests }}</span></label>
+                <nz-slider
+                  [nzMin]="guestLimits.min" [nzMax]="guestLimits.max" [nzStep]="1"
+                  [ngModel]="c.guests" (ngModelChange)="setGuests($event)" />
+                <span class="fld-hint">
+                  @if (s.groupDiscountPct) {
+                    {{ s.groupDiscountPct }}% off per person at this group size
+                  } @else {
+                    Three or more shares a coach, and the price drops
+                  }
+                </span>
+              </div>
+            </section>
+
+            <section class="grp">
+              <h2 class="grp-title">Where you play now</h2>
+              <div class="rows">
+                @for (l of levels; track l.id) {
+                  <button type="button" class="row" [class.is-on]="c.level === l.id" (click)="setLevel(l.id)">
+                    <span class="row-name">{{ l.name }}</span>
+                    <span class="row-note">{{ l.note }}</span>
+                  </button>
+                }
+              </div>
+            </section>
+
+            <section class="grp">
+              <h2 class="grp-title">How hard</h2>
+              <div class="rows">
+                @for (i of intensities; track i.id) {
+                  <button type="button" class="row" [class.is-on]="c.intensity === i.id" (click)="setIntensity(i.id)">
+                    <span class="row-name">{{ i.name }}<span class="row-tag mono">{{ i.sessions }}</span></span>
+                    <span class="row-note">{{ i.note }}</span>
+                  </button>
+                }
+              </div>
+            </section>
+
+            <section class="grp">
+              <h2 class="grp-title">Base</h2>
+              <div class="pills">
+                @for (b of bases; track b.id) {
+                  <button type="button" class="pill" [class.is-on]="c.base === b.id" (click)="setBase(b.id)">
+                    <span class="pill-name">{{ b.name }}</span>
+                    <span class="pill-sub mono">{{ b.courts }}</span>
+                  </button>
+                }
+              </div>
+            </section>
+
+            <section class="grp">
+              <h2 class="grp-title">Where you sleep</h2>
+              <div class="pills">
+                @for (st of stays; track st.id) {
+                  <button type="button" class="pill" [class.is-on]="c.stay === st.id" (click)="setStay(st.id)">
+                    <span class="pill-name">{{ st.name }}</span>
+                    <span class="pill-sub mono">&#36;{{ st.nightly }}/night</span>
+                  </button>
+                }
+              </div>
+            </section>
+
+            @if (isAdvanced()) {
+              @for (g of extraGroups; track g.key) {
+                <section class="grp">
+                  <h2 class="grp-title">{{ g.title }}</h2>
+                  <div class="chips">
+                    @for (e of extrasIn(g.key); track e.id) {
+                      <button
+                        type="button"
+                        class="chip"
+                        [class.is-on]="hasExtra(e.id)"
+                        [disabled]="extraDisabled(e.id)"
+                        (click)="toggleExtra(e.id)"
+                        [nz-tooltip]="extraNote(e.id) || e.note"
+                      >
+                        <nz-icon [nzType]="hasExtra(e.id) ? 'check' : 'plus'" />
+                        <span class="chip-name">{{ e.name }}</span>
+                        <span class="chip-cost mono">+&#36;{{ e.perPerson }}</span>
+                      </button>
+                    }
+                  </div>
+                </section>
+              }
+
+              <section class="grp">
+                <h2 class="grp-title">The study</h2>
+                <dl class="lines">
+                  @for (line of s.lines; track line.label) {
+                    <div class="line">
+                      <dt>
+                        {{ line.label }}
+                        @if (line.note) { <span class="line-note">{{ line.note }}</span> }
+                      </dt>
+                      <dd class="mono">{{ money(line.amount) }}</dd>
+                    </div>
+                  }
+                  @if (s.groupDiscountPct) {
+                    <div class="line is-credit">
+                      <dt>Group of {{ c.guests }}</dt>
+                      <dd class="mono">−{{ s.groupDiscountPct }}%</dd>
+                    </div>
+                  }
+                  <div class="line is-total">
+                    <dt>Per person</dt>
+                    <dd class="mono">{{ money(s.perPerson) }}</dd>
+                  </div>
+                  @if (c.guests > 1) {
+                    <div class="line">
+                      <dt>{{ c.guests }} players</dt>
+                      <dd class="mono">{{ money(s.groupTotal) }}</dd>
+                    </div>
+                  }
+                </dl>
+                <p class="foot-note">{{ claim.footnote }}</p>
+              </section>
+            }
+          </div>
+
+          <div class="pl-panel-foot">
+            <div class="foot-total">
+              <span>Per person</span>
+              <strong class="mono">{{ money(s.perPerson) }}</strong>
+            </div>
+            <button nz-button nzType="primary" nzSize="large" (click)="openSend()">
+              Send to the team
+              <nz-icon nzType="arrow-right" />
+            </button>
+          </div>
+        </aside>
+
+        <!-- ============ SCHEDULE ============ -->
+        <section class="pl-canvas" aria-label="Your week, day by day">
+          <div class="pl-scroll">
+            <div class="sched" [style.--hour-px.px]="hourPx()">
+              <div class="hours" [style.height.px]="gridHeight()">
+                @for (h of hours(); track h) {
+                  <span class="hour" [style.top.px]="(h - dayStart) * hourPx()">{{ clock(h) }}</span>
+                }
+              </div>
+
+              @for (day of s.days; track day.id) {
+                <div class="day" animate.enter="day-enter" animate.leave="day-leave">
+                  <div class="day-head">
+                    <strong>{{ day.name }}</strong>
+                    <span class="day-tag" [class]="'tag-' + day.tag.split(' ')[0].toLowerCase()">{{ day.tag }}</span>
+                  </div>
+
+                  <div class="day-grid" [style.height.px]="gridHeight()">
+                    @for (h of hours(); track h) {
+                      <span class="rule" [style.top.px]="(h - dayStart) * hourPx()"></span>
+                    }
+
+                    @for (b of dayBlocks(day); track b.id) {
+                      <article
+                        class="blk"
+                        [class]="'kind-' + b.kind"
+                        [style.top.px]="blockTop(b)"
+                        [style.height.px]="blockHeight(b)"
+                        animate.enter="blk-enter"
+                        animate.leave="blk-leave"
+                      >
+                        <span class="blk-time mono">{{ blockTime(b) }}</span>
+                        <span class="blk-label">{{ b.label }}</span>
+                        @if (showSub(b)) {
+                          <span class="blk-sub">{{ b.sub }}</span>
+                        }
+                      </article>
+                    }
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+
+          <div class="pl-status">
+            <nz-icon nzType="check-circle" />
+            <div>
+              <strong>{{ s.courtHours }} hours</strong> on court over
+              <strong>{{ s.trainingDays }}</strong> training days
+              <span class="pl-status-sub">
+                Sessions sit at either end of the day — nothing is scheduled in the midday heat
+              </span>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SEND ============ -->
+<nz-drawer
+  [nzVisible]="sendOpen()"
+  nzPlacement="right"
+  [nzClosable]="false"
+  [nzWidth]="440"
+  nzWrapClassName="send-drawer"
+  (nzOnClose)="closeSend()"
+>
+  <ng-container *nzDrawerContent>
+    <div class="send-inner">
+      <div class="send-top">
+        <span class="send-label">Send it to the team</span>
+        <button type="button" class="icon-btn" (click)="closeSend()" aria-label="Close">
+          <nz-icon nzType="close" />
+        </button>
+      </div>
+
+      @if (!sent()) {
+        <p class="send-lede">
+          We will come back with the dates we can hold and anything in the week we would change.
+          Nothing is booked by sending this.
+        </p>
+
+        <div class="send-summary">
+          <p class="send-summary-title">Your week</p>
+          <pre>{{ summaryText() }}</pre>
+        </div>
+
+        <form [formGroup]="sendForm" (ngSubmit)="submit()" class="send-form">
+          <label class="f">
+            <span>Your name</span>
+            <input nz-input formControlName="name" placeholder="Alex Moreno" />
+          </label>
+          <label class="f">
+            <span>Email</span>
+            <input nz-input formControlName="email" type="email" placeholder="alex@example.com" />
+          </label>
+          <label class="f">
+            <span>Roughly when <em>optional</em></span>
+            <input nz-input formControlName="when" placeholder="Some time in May, flexible" />
+          </label>
+          <label class="f">
+            <span>Anything else <em>optional</em></span>
+            <textarea nz-input formControlName="note" rows="3" placeholder="Injuries, who you are travelling with, a question."></textarea>
+          </label>
+
+          <button nz-button nzType="primary" nzBlock nzSize="large" type="submit" [nzLoading]="sending()">
+            {{ brand.cta.send }}
+            <nz-icon nzType="arrow-right" />
+          </button>
+        </form>
+
+        <a nz-button nzBlock nzSize="large" class="send-wa" [href]="whatsappHref()" target="_blank" rel="noopener noreferrer">
+          <nz-icon nzType="whats-app" />
+          Or send it on WhatsApp
+        </a>
+
+        <p class="send-note">Demonstration site — nothing is sent or stored.</p>
+      } @else {
+        <div class="send-done">
+          <nz-icon nzType="check-circle" />
+          <h3>That is with us.</h3>
+          <p>
+            On the real site this would reach a coach rather than an inbox. For now, have a look at
+            the weeks already running.
+          </p>
+          <a nz-button nzType="primary" nzBlock nzSize="large" routerLink="/retreats" (click)="closeSend()">
+            See the retreats
+          </a>
+        </div>
+      }
+    </div>
+  </ng-container>
+</nz-drawer>

@@ -1,59 +1,41 @@
-# PadelRetreat
+# Sports in Paradise
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.24.
+A demonstration site for a padel retreat operator in Bali: small coached weeks
+that guests plan for themselves, priced live, and sent to the team rather than
+booked.
 
-## Development server
+Built to the same pattern as the Turta Escape site — Angular 21 (standalone,
+zoneless, signals), ng-zorro-antd, two compiled Less theme bundles for light
+and dark, and mobile-first CSS driven by design tokens.
 
-To start a local development server, run:
+## The idea
 
-```bash
-ng serve
-```
+There is no availability search and nothing is held. A visitor builds the week
+they want and sends it over; a coach replies with what can actually be booked.
+Every price on the site says so.
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## Where the interesting parts are
 
-## Code scaffolding
+| Path | What it is |
+| --- | --- |
+| `src/app/core/retreat-config.ts` | The domain: choices, the day-by-day schedule they produce, and the price. No Angular, so the rules are readable on their own. |
+| `src/app/pages/plan/` | The planner. Controls on the left, a live schedule on the right, animated as blocks are added, resized and removed. |
+| `src/app/core/brand.ts` | Brand, contact details and the price qualifier. One file to swap the placeholder identity. |
+| `src/app/shared/court-art.ts` | Card artwork: a padel court drawn from a seed, so each retreat looks like itself without stock photography. |
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
+## Running it
 
 ```bash
-ng build
+nvm use            # Node 24, see .nvmrc
+npm ci
+npm start          # http://localhost:4200
+npm run build
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+## Notes
 
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- **Not a booking engine.** Prices are indicative and the forms do not send.
+- **Brand is a placeholder.** "Sports in Paradise" is a working name; the
+  footer says so until `BRAND.isPlaceholder` is set to false.
+- **No photography yet.** Card and hero artwork is drawn rather than
+  photographed, so nothing on the site pretends to be a real venue.

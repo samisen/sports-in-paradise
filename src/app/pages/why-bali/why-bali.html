@@ -1,0 +1,107 @@
+<app-page-hero
+  [eyebrow]="copy.eyebrow"
+  [heading]="copy.title"
+  [lede]="copy.lead"
+/>
+
+<section class="section">
+  <div class="container container-narrow">
+    @for (p of copy.paragraphs; track p) {
+      <p class="para">{{ p }}</p>
+    }
+    <p class="source">
+      {{ facts.baliArrivals }} — {{ facts.baliArrivalsNote }}.
+      <span>{{ facts.baliArrivalsSource }}</span>
+    </p>
+  </div>
+</section>
+
+<section class="section section-sand">
+  <div class="container">
+    <div class="head" appReveal>
+      <p class="eyebrow">What the island gives you</p>
+      <h2 class="display">Six reasons a training week works here.</h2>
+    </div>
+
+    <div class="grid grid-3">
+      @for (f of copy.facets; track f.title; let i = $index) {
+        <article class="facet" [appReveal]="i * 50">
+          <nz-icon [nzType]="f.icon" class="facet-icon" />
+          <h3>{{ f.title }}</h3>
+          <p>{{ f.text }}</p>
+        </article>
+      }
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="head" appReveal>
+      <p class="eyebrow">The bases</p>
+      <h2 class="display">Where a week can be based.</h2>
+      <p class="lede">
+        Four places on one small island, each suiting a different kind of week. Tap a marker for
+        what is there.
+      </p>
+    </div>
+
+    <app-bali-map [selected]="selected()" (selectBase)="onSelectBase($event)" />
+
+    @if (retreatsHere().length) {
+      <div class="grid grid-3 here">
+        @for (r of retreatsHere(); track r.slug) {
+          <app-retreat-card [retreat]="r" />
+        }
+      </div>
+    }
+
+    <div class="grid grid-2 base-notes">
+      @for (b of bases(); track b.id; let i = $index) {
+        <article class="base" [appReveal]="i * 50">
+          <div class="base-top">
+            <h3>{{ b.name }}</h3>
+            <span class="base-sub">{{ b.subtitle }}</span>
+          </div>
+          <p class="base-tag">{{ b.tagline }}</p>
+          <p class="base-desc">{{ b.description }}</p>
+          <dl class="base-stats">
+            <div><dt>Courts</dt><dd class="mono">{{ b.courts }}</dd></div>
+            <div><dt>Clubs</dt><dd class="mono">{{ b.clubs }}</dd></div>
+            <div><dt>Airport</dt><dd class="mono">{{ b.driveToAirportMin }} min</dd></div>
+          </dl>
+          <ul class="base-best">
+            @for (t of b.bestFor; track t) {
+              <li><nz-icon nzType="check" /> {{ t }}</li>
+            }
+          </ul>
+        </article>
+      }
+    </div>
+  </div>
+</section>
+
+<section class="section section-sand">
+  <div class="container">
+    <div class="head" appReveal>
+      <p class="eyebrow">Read on</p>
+      <h2 class="display">More on the island and the sport.</h2>
+    </div>
+    <ul class="reading">
+      @for (p of journal; track p.slug) {
+        <li>
+          <a [routerLink]="['/journal', p.slug]">
+            <span class="reading-cat">{{ p.category }}</span>
+            <span class="reading-title">{{ p.title }}</span>
+            <nz-icon nzType="arrow-right" />
+          </a>
+        </li>
+      }
+    </ul>
+    <p class="reading-more">
+      <a class="head-link" routerLink="/journal">The whole journal <nz-icon nzType="arrow-right" /></a>
+    </p>
+  </div>
+</section>
+
+<app-cta-band />

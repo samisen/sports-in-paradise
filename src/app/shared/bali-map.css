@@ -1,0 +1,171 @@
+:host { display: block; }
+
+.map-wrap {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 18px;
+  align-items: stretch;
+}
+@media (min-width: 900px) {
+  .map-wrap { grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); gap: 28px; }
+}
+
+/* ---------- the island ---------- */
+
+.map-plot {
+  background: var(--bg-sand);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 8px;
+  /* Canggu, Pererenan and Seminyak are a few kilometres apart on a 150 km
+     island, so on a phone the map pans rather than shrinking the markers
+     into each other. */
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.map-svg { display: block; width: 100%; min-width: 580px; height: auto; overflow: visible; }
+@media (min-width: 700px) { .map-svg { min-width: 0; } }
+
+.island {
+  fill: var(--surface-3);
+  stroke: var(--line-strong);
+  stroke-width: 1.4;
+  stroke-linejoin: round;
+}
+
+.landmark circle { fill: var(--ink-3); opacity: .55; }
+.landmark text {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  fill: var(--ink-3);
+  opacity: .8;
+}
+
+/* ---------- markers ---------- */
+
+.marker { cursor: pointer; outline: none; }
+
+.halo {
+  fill: var(--brand);
+  opacity: 0;
+  transition: opacity .25s ease, r .25s ease;
+}
+.marker:hover .halo,
+.marker.is-active .halo { opacity: .14; }
+.marker:focus-visible .halo { opacity: .28; }
+
+.disc {
+  fill: var(--brand);
+  stroke: var(--bg-sand);
+  stroke-width: 2.5;
+  transition: fill .2s ease, transform .25s ease;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.marker.is-active .disc { fill: var(--brand-strong); }
+.marker.is-selected .disc { fill: var(--accent); }
+
+.marker.is-empty .disc { fill: var(--ink-3); opacity: .45; }
+.marker.is-empty .halo { fill: var(--ink-3); }
+
+.count {
+  font-family: var(--font-sans);
+  font-size: 17px;
+  font-weight: 700;
+  fill: #fff;
+  text-anchor: middle;
+  pointer-events: none;
+}
+
+.pin-label {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 600;
+  fill: var(--ink);
+  text-anchor: middle;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .2s ease;
+  paint-order: stroke;
+  stroke: var(--bg-sand);
+  stroke-width: 4px;
+  stroke-linejoin: round;
+}
+.marker:hover .pin-label,
+.marker:focus-visible .pin-label,
+.marker.is-active .pin-label,
+.marker.is-selected .pin-label { opacity: 1; }
+
+/* ---------- panel ---------- */
+
+.map-panel { display: flex; }
+
+.panel-card {
+  flex: 1;
+  padding: 22px 22px 24px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+}
+@media (min-width: 768px) { .panel-card { padding: 26px 26px 28px; } }
+
+.panel-eyebrow {
+  margin: 0 0 6px;
+  font-size: 10.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.panel-name {
+  margin: 0 0 8px;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 1.7rem;
+  line-height: 1.1;
+  color: var(--ink);
+}
+.panel-tag { margin: 0 0 18px; font-size: 14.5px; color: var(--brand); font-weight: 500; }
+
+.panel-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px 18px;
+  margin: 0 0 18px;
+  padding: 16px 0;
+  border-block: 1px solid var(--line);
+}
+.panel-stats dt { font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); }
+.panel-stats dd { margin: 3px 0 0; font-size: 1.15rem; font-weight: 600; color: var(--ink); }
+
+.panel-desc { margin: 0; font-size: 14.2px; line-height: 1.65; color: var(--ink-2); }
+
+.panel-action {
+  margin-top: auto;
+  padding-top: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 0;
+  background: none;
+  color: var(--brand);
+  font-size: 14.5px;
+  font-weight: 500;
+  cursor: pointer;
+  align-self: flex-start;
+}
+.panel-action.is-clear { color: var(--ink-3); }
+.panel-none { margin: 18px 0 0; font-size: 13.5px; color: var(--ink-3); }
+
+.panel-empty .panel-desc { margin-bottom: 20px; }
+.panel-hint {
+  margin: auto 0 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--ink-3);
+}
+.panel-hint nz-icon { color: var(--brand); }

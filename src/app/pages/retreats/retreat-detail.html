@@ -1,0 +1,119 @@
+@let r = retreat();
+@if (r) {
+  <article class="detail">
+    <header class="hero">
+      <span class="hero-art" aria-hidden="true"><app-court-art [seed]="r.art" /></span>
+      <span class="hero-veil" aria-hidden="true"></span>
+      <div class="container hero-inner">
+        <a class="back" routerLink="/retreats"><nz-icon nzType="arrow-left" /> All retreats</a>
+        <p class="eyebrow">{{ base()?.name }} · {{ r.nights }} nights · {{ levelName() }}</p>
+        <h1 class="display">{{ r.name }}</h1>
+        <p class="lede">{{ r.headline }}</p>
+        <p class="dates"><nz-icon nzType="calendar" /> {{ r.dates }}</p>
+      </div>
+    </header>
+
+    <section class="section">
+      <div class="container detail-grid">
+        <div class="main">
+          <p class="summary">{{ r.summary }}</p>
+          @for (p of r.body; track p) {
+            <p class="para">{{ p }}</p>
+          }
+
+          <h2 class="sub">What is included</h2>
+          <ul class="includes">
+            @for (i of r.includes; track i) {
+              <li><nz-icon nzType="check" /> {{ i }}</li>
+            }
+          </ul>
+
+          @if (extras().length) {
+            <h2 class="sub">On top of the standard week</h2>
+            <ul class="extras">
+              @for (e of extras(); track e.id) {
+                <li><strong>{{ e.name }}</strong> <span>{{ e.note }}</span></li>
+              }
+            </ul>
+          }
+
+          <h2 class="sub">A day on this week</h2>
+          <p class="para">
+            {{ intensity()?.note }} — {{ intensity()?.sessions }}. Play sits at either end of the
+            day, because nothing useful happens on a glass court in the middle of a Bali afternoon.
+          </p>
+
+          <ol class="sample">
+            @for (d of sample(); track d.id) {
+              <li class="sday">
+                <span class="sday-head">
+                  <strong>{{ d.name }}</strong>
+                  <span class="sday-tag">{{ d.tag }}</span>
+                </span>
+                <span class="sday-blocks">
+                  @for (b of d.blocks; track b.id) {
+                    <span class="sblk" [class]="'kind-' + b.kind">{{ b.label }}</span>
+                  }
+                </span>
+              </li>
+            }
+          </ol>
+
+          <p class="claim-note">{{ claim.footnote }}</p>
+        </div>
+
+        <aside class="aside">
+          <div class="aside-card">
+            <p class="price-k">From</p>
+            <p class="price"><strong>{{ money(r.priceFromUsd) }}</strong> <span>per person</span></p>
+
+            <dl class="facts">
+              <div><dt>Dates</dt><dd>{{ r.dates }}</dd></div>
+              <div><dt>Base</dt><dd>{{ base()?.name }}</dd></div>
+              <div><dt>Stay</dt><dd>{{ stayName() }}</dd></div>
+              <div><dt>Group</dt><dd>{{ r.spotsTotal }} players</dd></div>
+              <div><dt>Places left</dt><dd>{{ r.spotsLeft }}</dd></div>
+              <div><dt>Coach</dt><dd>{{ coach()?.name }}</dd></div>
+            </dl>
+
+            <a nz-button nzType="primary" nzBlock nzSize="large" routerLink="/contact">
+              Ask about this week
+              <nz-icon nzType="arrow-right" />
+            </a>
+            <a nz-button nzBlock class="wa" [href]="whatsappHref()" target="_blank" rel="noopener noreferrer">
+              <nz-icon nzType="whats-app" /> Ask on WhatsApp
+            </a>
+            <a nz-button nzBlock nzType="text" routerLink="/plan">Build a different week</a>
+
+            <p class="aside-note">Nothing is held until we have confirmed dates with you.</p>
+          </div>
+
+          @if (coach(); as c) {
+            <div class="aside-card is-quiet">
+              <p class="coach-k">Your coach</p>
+              <h3>{{ c.name }}</h3>
+              <p class="coach-meta">{{ c.from }} · {{ c.level }}</p>
+              <p class="coach-bio">{{ c.bio }}</p>
+            </div>
+          }
+        </aside>
+      </div>
+    </section>
+
+    <section class="section section-sand">
+      <div class="container">
+        <div class="head">
+          <p class="eyebrow">Also open</p>
+          <h2 class="display">Other weeks.</h2>
+        </div>
+        <div class="grid grid-3">
+          @for (o of others(); track o.slug) {
+            <app-retreat-card [retreat]="o" />
+          }
+        </div>
+      </div>
+    </section>
+  </article>
+
+  <app-cta-band />
+}

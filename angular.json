@@ -6,7 +6,7 @@
   },
   "newProjectRoot": "projects",
   "projects": {
-    "padel-retreat": {
+    "sports-in-paradise": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -25,6 +25,16 @@
               }
             ],
             "styles": [
+              {
+                "input": "src/themes/light.less",
+                "bundleName": "theme-light",
+                "inject": false
+              },
+              {
+                "input": "src/themes/dark.less",
+                "bundleName": "theme-dark",
+                "inject": false
+              },
               "src/styles.css"
             ]
           },
@@ -33,16 +43,16 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kB",
-                  "maximumError": "1MB"
+                  "maximumWarning": "900kB",
+                  "maximumError": "3MB"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "4kB",
-                  "maximumError": "8kB"
+                  "maximumWarning": "20kB",
+                  "maximumError": "60kB"
                 }
               ],
-              "outputHashing": "all"
+              "outputHashing": "none"
             },
             "development": {
               "optimization": false,
@@ -56,13 +66,20 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "padel-retreat:build:production"
+              "buildTarget": "sports-in-paradise:build:production"
             },
             "development": {
-              "buildTarget": "padel-retreat:build:development"
+              "buildTarget": "sports-in-paradise:build:development"
             }
           },
-          "defaultConfiguration": "development"
+          "defaultConfiguration": "development",
+          "options": {
+            "prebundle": {
+              "exclude": [
+                "ng-zorro-antd"
+              ]
+            }
+          }
         },
         "test": {
           "builder": "@angular/build:unit-test"

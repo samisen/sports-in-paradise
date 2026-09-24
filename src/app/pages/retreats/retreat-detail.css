@@ -1,0 +1,113 @@
+:host { display: block; }
+
+.hero {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  min-height: 62svh;
+  padding-top: calc(var(--header-h) + 60px);
+  padding-bottom: 44px;
+  overflow: hidden;
+  background: var(--bg-deep);
+}
+.hero-art { position: absolute; inset: 0; }
+.hero-veil { position: absolute; inset: 0; background: var(--overlay); }
+.hero-inner { position: relative; }
+.hero .eyebrow { color: rgba(255, 255, 255, .72); }
+.hero .display { max-width: 18ch; color: #fff; }
+.hero .lede { max-width: 54ch; margin-top: 14px; color: rgba(255, 255, 255, .84); }
+.dates { display: inline-flex; align-items: center; gap: 8px; margin: 18px 0 0; font-size: 13.6px; color: rgba(255, 255, 255, .8); }
+.back {
+  display: inline-flex; align-items: center; gap: 7px; margin-bottom: 18px;
+  font-size: 13px; color: rgba(255, 255, 255, .82); text-decoration: none;
+}
+.back:hover { color: #fff; }
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 36px;
+  align-items: start;
+}
+@media (min-width: 960px) { .detail-grid { grid-template-columns: minmax(0, 1.5fr) minmax(0, .78fr); gap: 48px; } }
+
+.summary { margin: 0 0 20px; font-size: 1.06rem; line-height: 1.7; color: var(--ink); max-width: 70ch; }
+.para { margin: 0 0 16px; font-size: 15.2px; line-height: 1.76; color: var(--ink-2); max-width: 70ch; }
+
+.sub {
+  margin: 34px 0 14px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.includes { margin: 0; padding: 0; list-style: none; display: grid; gap: 9px; }
+.includes li { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 10px; font-size: 14.4px; color: var(--ink-2); }
+.includes nz-icon { color: var(--brand); font-size: 12px; margin-top: 5px; }
+
+.extras { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+.extras li { display: flex; flex-wrap: wrap; gap: 4px 10px; font-size: 14px; color: var(--ink-2); }
+.extras strong { color: var(--ink); }
+
+/* a compact read of the week, not the planner's full grid */
+.sample { margin: 16px 0 0; padding: 0; list-style: none; display: grid; gap: 2px; }
+.sday {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr);
+  gap: 14px;
+  align-items: start;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+}
+@media (max-width: 560px) { .sday { grid-template-columns: minmax(0, 1fr); gap: 6px; } }
+.sday:last-child { border-bottom: 0; }
+.sday-head { display: flex; flex-direction: column; gap: 1px; }
+.sday-head strong { font-size: 13.4px; color: var(--ink); }
+.sday-tag { font-size: 10.6px; letter-spacing: .05em; text-transform: uppercase; color: var(--ink-3); }
+.sday-blocks { display: flex; flex-wrap: wrap; gap: 5px; }
+.sblk {
+  padding: 3px 9px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  font-size: 11.6px;
+  color: var(--ink-2);
+}
+.sblk.kind-clinic { border-color: color-mix(in srgb, var(--brand) 42%, transparent); background: color-mix(in srgb, var(--brand) 12%, var(--surface)); color: var(--ink); }
+.sblk.kind-match { border-color: color-mix(in srgb, var(--accent) 44%, transparent); background: color-mix(in srgb, var(--accent) 12%, var(--surface)); color: var(--ink); }
+.sblk.kind-free, .sblk.kind-meal { opacity: .72; }
+
+.claim-note { margin: 30px 0 0; max-width: 78ch; font-size: 11.5px; line-height: 1.6; color: var(--ink-3); }
+
+/* ---------- aside ---------- */
+
+.aside { display: grid; gap: 16px; }
+@media (min-width: 960px) { .aside { position: sticky; top: calc(var(--header-h) + 24px); } }
+
+.aside-card {
+  padding: 22px 20px 24px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+}
+.price-k { margin: 0; font-size: 10.4px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); }
+.price { margin: 4px 0 0; display: flex; align-items: baseline; gap: 8px; }
+.price strong { font-size: 1.75rem; font-weight: 600; color: var(--brand-strong); }
+.price span { font-size: 12.6px; color: var(--ink-3); }
+
+.facts { margin: 18px 0 20px; display: grid; gap: 9px; padding-top: 16px; border-top: 1px solid var(--line); }
+.facts > div { display: flex; align-items: baseline; justify-content: space-between; gap: 14px; }
+.facts dt { margin: 0; font-size: 12.6px; color: var(--ink-3); }
+.facts dd { margin: 0; font-size: 13.4px; color: var(--ink); text-align: end; }
+
+.aside-card a { margin-bottom: 8px; }
+.wa { display: inline-flex !important; align-items: center; justify-content: center; gap: 8px; }
+.wa nz-icon { color: #25d366; }
+.aside-note { margin: 10px 0 0; font-size: 11.4px; line-height: 1.55; color: var(--ink-3); }
+
+.aside-card.is-quiet { background: var(--surface-2); }
+.coach-k { margin: 0 0 6px; font-size: 10.4px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); }
+.aside-card h3 { margin: 0; font-family: var(--font-display); font-size: 1.2rem; font-weight: 600; color: var(--ink); }
+.coach-meta { margin: 3px 0 0; font-size: 12.2px; color: var(--ink-3); }
+.coach-bio { margin: 10px 0 0; font-size: 13.4px; line-height: 1.64; color: var(--ink-2); }

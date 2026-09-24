@@ -1,0 +1,63 @@
+<footer class="site-footer">
+  <div class="container">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a class="brand" routerLink="/" [attr.aria-label]="brand.name + ' — home'">
+          <svg class="brand-mark" viewBox="0 0 64 64" aria-hidden="true">
+          <rect width="64" height="64" rx="15" class="mark-bg" />
+          <rect x="16" y="12" width="32" height="40" rx="3" class="mark-court" />
+          <path d="M16 32h32" class="mark-net" />
+          <circle cx="41" cy="24" r="3.4" class="mark-ball" />
+        </svg>
+          <span class="brand-text">
+            <span class="brand-name">{{ brand.wordmarkLead }}</span>
+            <span class="brand-sub">{{ brand.wordmarkTail }}</span>
+          </span>
+        </a>
+        <p class="foot-blurb">{{ brand.coreIdea }}</p>
+        <div class="foot-social">
+          <a href="#" aria-label="WhatsApp"><nz-icon nzType="whats-app" /></a>
+          <a href="#" aria-label="Instagram"><nz-icon nzType="instagram" /></a>
+          <a href="#" aria-label="LinkedIn"><nz-icon nzType="linkedin" /></a>
+        </div>
+      </div>
+
+      @for (col of columns; track col.title) {
+        <nav class="foot-col" [attr.aria-label]="col.title">
+          <h3>{{ col.title }}</h3>
+          <ul>
+            @for (l of col.links; track l.label) {
+              <li><a [routerLink]="l.link">{{ l.label }}</a></li>
+            }
+          </ul>
+        </nav>
+      }
+
+      <div class="foot-col foot-contact">
+        <h3>Office</h3>
+        <address>
+          @for (line of brand.address; track line) {
+            {{ line }}<br />
+          }
+        </address>
+        <a class="foot-link-strong" [href]="'mailto:' + brand.email">{{ brand.email }}</a>
+        <a class="foot-link-strong" [href]="brand.phoneHref">{{ brand.phone }}</a>
+      </div>
+    </div>
+
+    <div class="foot-bottom">
+      <p>
+        &copy; {{ year }} {{ brand.name }}.
+        @if (brand.isPlaceholder) {
+          <span class="foot-note">Working brand name — subject to change.</span>
+        }
+      </p>
+      <p class="foot-legal">
+        {{ priceClaim.footnote }}
+        Foreign nationals hold Indonesian property under leasehold or company structures; ownership
+        and financial statements on this site should be reviewed with independent legal and tax
+        advice before you act on them. Demonstration site.
+      </p>
+    </div>
+  </div>
+</footer>

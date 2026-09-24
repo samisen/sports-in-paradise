@@ -1,0 +1,77 @@
+<app-page-hero
+  eyebrow="Retreats"
+  heading="The weeks that are open."
+  lede="Eight formats, four bases, and dates through the year. If none of them is quite your week, build your own on the planner — most people do."
+/>
+
+<!-- filters, kept at the top of the page while you scroll the list -->
+<div class="filter-bar">
+  <div class="container bar-inner">
+    <div class="f">
+      <label for="f-base">Base</label>
+      <nz-select id="f-base" [ngModel]="base()" (ngModelChange)="base.set($event)" nzBorderless>
+        <nz-option nzValue="all" nzLabel="Anywhere on the island" />
+        @for (b of bases; track b.id) {
+          <nz-option [nzValue]="b.id" [nzLabel]="b.name" />
+        }
+      </nz-select>
+    </div>
+
+    <div class="f">
+      <label for="f-level">Level</label>
+      <nz-select id="f-level" [ngModel]="level()" (ngModelChange)="level.set($event)" nzBorderless>
+        <nz-option nzValue="all" nzLabel="Any level" />
+        @for (l of levels; track l.id) {
+          <nz-option [nzValue]="l.id" [nzLabel]="l.name" />
+        }
+      </nz-select>
+    </div>
+
+    <div class="f f-sort">
+      <label for="f-sort">Sort</label>
+      <nz-select id="f-sort" [ngModel]="sort()" (ngModelChange)="sort.set($event)" nzBorderless>
+        @for (s of sortOptions; track s.value) {
+          <nz-option [nzValue]="s.value" [nzLabel]="s.label" />
+        }
+      </nz-select>
+    </div>
+
+    @if (hasFilters()) {
+      <button type="button" class="clear" (click)="reset()">
+        <nz-icon nzType="close" /> Clear
+      </button>
+    }
+  </div>
+</div>
+
+<section class="section listing">
+  <div class="container">
+    <p class="count">
+      {{ filtered().length }} {{ filtered().length === 1 ? 'retreat' : 'retreats' }}
+      @if (hasFilters()) { <span>· filtered</span> }
+    </p>
+
+    @if (filtered().length) {
+      <div class="grid grid-3">
+        @for (r of filtered(); track r.slug; let i = $index) {
+          <div [appReveal]="i * 50"><app-retreat-card [retreat]="r" /></div>
+        }
+      </div>
+    } @else {
+      <div class="empty">
+        <p>Widen the filters to see more — or tell us the week you want and we will build it.</p>
+        <div class="empty-actions">
+          <button nz-button nzType="primary" (click)="reset()">Show all retreats</button>
+          <a nz-button routerLink="/plan">Plan your own</a>
+        </div>
+      </div>
+    }
+
+    <p class="listing-footnote">
+      Prices are from, per person, and indicative. Nothing here is a booking — we confirm dates,
+      courts and rooms with you before anything is held.
+    </p>
+  </div>
+</section>
+
+<app-cta-band />

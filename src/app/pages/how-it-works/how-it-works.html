@@ -1,0 +1,124 @@
+<app-page-hero
+  eyebrow="How it works"
+  heading="From a message to a week."
+  [lede]="promise"
+/>
+
+<section class="section">
+  <div class="container">
+    <ol class="steps">
+      @for (s of steps; track s.index; let i = $index) {
+        <li class="step" [appReveal]="i * 50">
+          <span class="step-no mono">{{ s.index }}</span>
+          <div class="step-body">
+            <h2><nz-icon [nzType]="s.icon" class="step-icon" />{{ s.name }}</h2>
+            <p class="step-line">{{ s.line }}</p>
+            <p class="step-detail">{{ s.detail }}</p>
+          </div>
+        </li>
+      }
+    </ol>
+  </div>
+</section>
+
+<section class="section section-sand">
+  <div class="container">
+    <div class="head" appReveal>
+      <p class="eyebrow">A day</p>
+      <h2 class="display">What the hours actually look like.</h2>
+      <p class="lede">
+        Play sits at either end of the day. The middle belongs to you, and that is a scheduling
+        decision rather than a gap.
+      </p>
+    </div>
+
+    <div class="grid grid-3">
+      @for (s of shape; track s.time; let i = $index) {
+        <article class="slot" [appReveal]="i * 45">
+          <span class="slot-time mono">{{ s.time }}</span>
+          <h3><nz-icon [nzType]="s.icon" class="slot-icon" />{{ s.title }}</h3>
+          <p>{{ s.text }}</p>
+        </article>
+      }
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="head" appReveal>
+      <p class="eyebrow">The coaches</p>
+      <h2 class="display">{{ belief }}</h2>
+    </div>
+
+    <div class="grid grid-2">
+      @for (c of coaches; track c.id; let i = $index) {
+        <article class="coach" [appReveal]="i * 60">
+          <span class="coach-art"><app-court-art [seed]="c.art + 80" /></span>
+          <div class="coach-body">
+            <div class="coach-top">
+              <h3>{{ c.name }}</h3>
+              <span class="coach-role">{{ c.role }}</span>
+            </div>
+            <p class="coach-meta">{{ c.from }} · {{ c.level }} · {{ c.years }} years coaching</p>
+            <p class="coach-bio">{{ c.bio }}</p>
+            <p class="coach-speaks"><nz-icon nzType="global" /> {{ c.speaks.join(', ') }}</p>
+          </div>
+        </article>
+      }
+    </div>
+  </div>
+</section>
+
+<section class="section section-sand">
+  <div class="container">
+    <div class="head" appReveal>
+      <p class="eyebrow">The price</p>
+      <h2 class="display">What is in it, and what is not.</h2>
+    </div>
+
+    <div class="grid grid-2 incl">
+      <div class="incl-col" appReveal>
+        <h3>Included</h3>
+        <ul>
+          @for (i of included; track i) {
+            <li><nz-icon nzType="check" /> {{ i }}</li>
+          }
+        </ul>
+      </div>
+      <div class="incl-col" appReveal>
+        <h3>You arrange</h3>
+        <ul class="is-other">
+          @for (i of notIncluded; track i) {
+            <li><nz-icon nzType="minus" /> {{ i }}</li>
+          }
+        </ul>
+      </div>
+    </div>
+
+    <p class="claim-note">{{ claim.footnote }}</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container container-narrow">
+    <div class="head" appReveal>
+      <p class="eyebrow">Questions</p>
+      <h2 class="display">The ones people actually ask.</h2>
+    </div>
+
+    <nz-collapse nzGhost nzExpandIconPosition="end" class="faq" appReveal>
+      @for (f of faqs; track f.question) {
+        <nz-collapse-panel [nzHeader]="f.question">
+          <p class="faq-answer">{{ f.answer }}</p>
+        </nz-collapse-panel>
+      }
+    </nz-collapse>
+
+    <p class="faq-more">
+      Something not here? <a routerLink="/contact">Ask us directly</a> — it is a person who answers.
+    </p>
+  </div>
+</section>
+
+<app-cta-band />

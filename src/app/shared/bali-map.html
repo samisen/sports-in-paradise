@@ -1,0 +1,107 @@
+<div class="map-wrap">
+  <div class="map-plot">
+    <svg
+      class="map-svg"
+      [attr.viewBox]="'0 0 ' + map.width + ' ' + map.height"
+      role="img"
+      aria-label="Map of Bali showing where our retreats are"
+      (mouseleave)="hovered.set(null)"
+    >
+      @for (d of map.paths; track $index) {
+        <path class="island" [attr.d]="d" />
+      }
+
+      @for (l of landmarks; track l.label) {
+        <g class="landmark">
+          <circle [attr.cx]="l.x" [attr.cy]="l.y" r="3.5" />
+          <text [attr.x]="l.x + 9" [attr.y]="l.y + 5">{{ l.label }}</text>
+        </g>
+      }
+
+      @for (m of markers(); track m.id) {
+        <g
+          class="marker"
+          [class.is-empty]="m.count === 0"
+          [class.is-active]="active() === m.id"
+          [class.is-selected]="selected() === m.id"
+          (mouseenter)="hovered.set(m.id)"
+          (focusin)="hovered.set(m.id)"
+          (click)="toggle(m.id)"
+          (keydown.enter)="toggle(m.id)"
+          (keydown.space)="toggle(m.id)"
+          tabindex="0"
+          role="button"
+          [attr.aria-pressed]="selected() === m.id"
+          [attr.aria-label]="m.name + ', ' + m.count + ' retreats'"
+        >
+          <circle class="halo" [attr.cx]="m.x" [attr.cy]="m.y" [attr.r]="m.radius + 9" />
+          <circle class="disc" [attr.cx]="m.x" [attr.cy]="m.y" [attr.r]="m.radius" />
+          @if (m.count > 0) {
+            <text class="count" [attr.x]="m.x" [attr.y]="m.y + 6">{{ m.count }}</text>
+          }
+          <text class="pin-label" [attr.x]="m.x" [attr.y]="m.y - m.radius - 10">{{ m.name }}</text>
+        </g>
+      }
+    </svg>
+  </div>
+
+  <!-- ---------- side panel ---------- -->
+  <div class="map-panel">
+    @if (activeBase(); as a) {
+      <div class="panel-card">
+        <p class="panel-eyebrow">{{ a.subtitle }}</p>
+        <h3 class="panel-name">{{ a.name }}</h3>
+        <p class="panel-tag">{{ a.tagline }}</p>
+
+        <dl class="panel-stats">
+          <div>
+            <dt>Retreats here</dt>
+            <dd class="mono">{{ activeCount() }}</dd>
+          </div>
+          <div>
+            <dt>Courts</dt>
+            <dd class="mono">{{ a.courts }}</dd>
+          </div>
+          <div>
+            <dt>Clubs</dt>
+            <dd class="mono">{{ a.clubs }}</dd>
+          </div>
+          <div>
+            <dt>Airport</dt>
+            <dd class="mono">{{ a.driveToAirportMin }} min</dd>
+          </div>
+        </dl>
+
+        <p class="panel-desc">{{ a.description }}</p>
+
+        @if (selected() === a.id) {
+          <button type="button" class="panel-action is-clear" (click)="clear()">
+            <nz-icon nzType="close" />
+            Clear filter
+          </button>
+        } @else if (activeCount() > 0) {
+          <button type="button" class="panel-action" (click)="toggle(a.id)">
+            Show {{ activeCount() }} {{ activeCount() === 1 ? 'retreat' : 'retreats' }}
+            <nz-icon nzType="arrow-right" />
+          </button>
+        } @else {
+          <p class="panel-none">We run weeks here too — tell us your dates and we will put one together.</p>
+        }
+      </div>
+    } @else {
+      <div class="panel-card panel-empty">
+        <p class="panel-eyebrow">Where we play</p>
+        <h3 class="panel-name">Four bases, one island.</h3>
+        <p class="panel-desc">
+          Canggu has the courts and the scene, Uluwatu the quiet a serious block needs, Ubud the
+          cooler air, and Sanur the shortest airport run. Pick one to see what it has and which
+          weeks run there.
+        </p>
+        <p class="panel-hint">
+          <nz-icon nzType="compass" />
+          Hover a marker, or tap one to filter the list.
+        </p>
+      </div>
+    }
+  </div>
+</div>

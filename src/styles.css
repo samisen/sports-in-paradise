@@ -1,1 +1,532 @@
-/* You can add global styles to this file, and also import other style files */
+/* ==========================================================================
+   Sports in Paradise — global design tokens & primitives
+   Mobile-first. Everything themeable via [data-theme].
+   ========================================================================== */
+
+:root {
+  /* Tells the engine which scheme the UA-painted surfaces belong to: form
+     controls, scrollbars, the canvas behind the page, caret and autofill.
+     WebKit keeps those light without it, however dark the authored CSS is,
+     which is why dark mode looked half-applied in Safari but fine in Chrome. */
+  color-scheme: light;
+
+  /* brand */
+  --brand: #1668c4;
+  --brand-strong: #0f4c93;
+  --brand-soft: #e7f0fb;
+  --accent: #e2653f;
+  --accent-soft: #fdeee8;
+
+  /* surfaces */
+  --bg: #ffffff;
+  --bg-sand: #f4f7fa;
+  --bg-deep: #0b1017;
+  --surface: #ffffff;
+  --surface-2: #f4f7fa;
+  --surface-3: #e8eef4;
+
+  /* ink */
+  --ink: #0e1b2a;
+  --ink-2: #40505f;
+  --ink-3: #6c7d8c;
+  --ink-on-dark: #f1f5f9;
+
+  /* lines */
+  --line: #dde3ea;
+  --line-strong: #c7d1db;
+
+  /* charts: one neutral for the single data series, contrast-checked
+     against the surface in both themes */
+  --chart-bar: #7a7a75;
+  --chart-bar-strong: #5c5c58;
+
+  /* effects */
+  --shadow-sm: 0 1px 2px rgba(14, 27, 42, .05), 0 4px 14px rgba(14, 27, 42, .05);
+  --shadow-md: 0 8px 30px rgba(14, 27, 42, .1);
+  --shadow-lg: 0 24px 60px rgba(14, 27, 42, .14);
+  --overlay: linear-gradient(180deg, rgba(6,12,20,.12) 0%, rgba(6,12,20,.55) 55%, rgba(6,12,20,.86) 100%);
+
+  /* type */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-display: 'Space Grotesk', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* layout */
+  --container: 1240px;
+  --gutter: 20px;
+  --radius: 14px;
+  --radius-lg: 22px;
+  --header-h: 66px;
+}
+
+html[data-theme='dark'] {
+  color-scheme: dark;
+  --brand: #4a9eff;
+  --brand-strong: #6fb4ff;
+  --brand-soft: #112741;
+  --accent: #ff8a5c;
+  --accent-soft: #331a11;
+
+  --bg: #0b1017;
+  --bg-sand: #0f151d;
+  --bg-deep: #070b10;
+  --surface: #121821;
+  --surface-2: #161e29;
+  --surface-3: #1e2833;
+
+  --ink: #eef3f8;
+  --ink-2: #b6c3d0;
+  --ink-3: #8294a5;
+  --ink-on-dark: #f2f5f3;
+
+  --line: #26313d;
+  --line-strong: #35434f;
+
+  --chart-bar: #9aa09b;
+  --chart-bar-strong: #c2c8c3;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, .4);
+  --shadow-md: 0 10px 34px rgba(0, 0, 0, .45);
+  --shadow-lg: 0 26px 70px rgba(0, 0, 0, .55);
+  --overlay: linear-gradient(180deg, rgba(4,8,13,.25) 0%, rgba(4,8,13,.62) 55%, rgba(4,8,13,.92) 100%);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--ink);
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* `clip` rather than `hidden`: hidden turns the body into a scroll container,
+     which silently breaks every `position: sticky` on the page. */
+  overflow-x: clip;
+}
+
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
+img { max-width: 100%; display: block; }
+
+::selection { background: var(--brand); color: #fff; }
+
+/* ---------- layout primitives ---------- */
+
+.container {
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+/* A narrow measure must not re-centre the block: `.container` is already
+   auto-centred, so shrinking it pulls the text off the left grid line that
+   every full-width section sits on. Keep the box, narrow the children. */
+.container-narrow { max-width: var(--container); }
+.container-narrow > * { max-width: 820px; }
+
+/* prose stays in the narrow column, but a collapse is a list of rows:
+   it reads better spanning the full container width */
+.container-narrow > nz-collapse,
+.container-narrow > .ant-collapse { max-width: none; }
+
+.section { padding-block: 64px; }
+.section-lg { padding-block: 80px; }
+.section-sand { background: var(--bg-sand); }
+.section-deep { background: var(--bg-deep); color: var(--ink-on-dark); }
+.section-deep .eyebrow { color: rgba(255,255,255,.55); }
+.section-deep .lede, .section-deep p { color: rgba(255,255,255,.72); }
+
+@media (min-width: 768px) {
+  :root { --gutter: 32px; --header-h: 76px; }
+  .section { padding-block: 96px; }
+  .section-lg { padding-block: 128px; }
+}
+@media (min-width: 1200px) {
+  .section { padding-block: 116px; }
+  .section-lg { padding-block: 152px; }
+}
+
+.grid { display: grid; gap: 20px; }
+.grid-2 { grid-template-columns: minmax(0, 1fr); }
+.grid-3 { grid-template-columns: minmax(0, 1fr); }
+.grid-4 { grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 620px) {
+  .grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (min-width: 700px) {
+  .grid { gap: 24px; }
+  .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .grid-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (min-width: 1040px) {
+  .grid { gap: 28px; }
+  .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+/* ---------- typography ---------- */
+
+.eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin: 0 0 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.eyebrow::before {
+  content: '';
+  width: 26px;
+  height: 1px;
+  background: var(--brand);
+  flex: none;
+}
+
+.display {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: -.01em;
+  line-height: 1.04;
+  color: var(--ink);
+  margin: 0;
+  font-size: clamp(2.3rem, 9vw, 3.1rem);
+}
+.display em { font-style: italic; color: var(--brand); }
+
+h1.display { font-size: clamp(2.6rem, 11vw, 4rem); }
+
+@media (min-width: 768px) {
+  .display { font-size: clamp(2.8rem, 4.6vw, 3.9rem); }
+  h1.display { font-size: clamp(3.4rem, 6.4vw, 5.4rem); }
+}
+
+.title-md {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.5rem, 4.6vw, 1.9rem);
+  line-height: 1.2;
+  margin: 0;
+  color: var(--ink);
+}
+
+.lede {
+  font-size: 1.02rem;
+  line-height: 1.65;
+  color: var(--ink-2);
+  margin: 18px 0 0;
+  max-width: 62ch;
+}
+@media (min-width: 768px) { .lede { font-size: 1.1rem; } }
+
+.muted { color: var(--ink-3); }
+
+.mono {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum';
+}
+
+/* ---------- surfaces ---------- */
+
+.card-surface {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.hairline { height: 1px; background: var(--line); border: 0; margin: 0; }
+
+/* ---------- reveal-on-scroll ---------- */
+
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity .7s cubic-bezier(.22,.61,.36,1), transform .7s cubic-bezier(.22,.61,.36,1);
+  will-change: opacity, transform;
+}
+[data-reveal].is-visible { opacity: 1; transform: none; }
+
+/* ---------- ng-zorro bridges ---------- */
+
+.ant-card,
+.ant-collapse:not(.ant-collapse-ghost),
+.ant-collapse:not(.ant-collapse-ghost) .ant-collapse-content,
+.ant-tabs-card > .ant-tabs-nav .ant-tabs-tab {
+  background: var(--surface);
+}
+
+/* A ghost collapse is meant to sit on the page, not in a card. The bridge above
+   used to paint it, which left the header text hard against a card edge. */
+.ant-collapse.ant-collapse-ghost,
+.ant-collapse.ant-collapse-ghost > .ant-collapse-item,
+.ant-collapse.ant-collapse-ghost .ant-collapse-content {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+}
+.ant-card { border-color: var(--line); }
+.ant-drawer-body, .ant-drawer-header { background: var(--surface); }
+.ant-modal-content, .ant-modal-header { background: var(--surface); }
+
+/* antd buttons are display:block and centre their label with line-height, which
+   leaves the text sitting high once a custom height or a trailing icon is in
+   play. Flex centring fixes both axes; the gap replaces antd's icon margins. */
+.ant-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  line-height: 1.2;
+  font-weight: 500;
+}
+.ant-btn.ant-btn-block { display: flex; }
+/* antd sizes buttons with vertical padding + line-height; both fight flex
+   centring, and the lg padding is asymmetric (0.01px top / 5.6px bottom). */
+.ant-btn,
+.ant-btn.ant-btn-lg,
+.ant-btn.ant-btn-sm {
+  padding-block: 0;
+  line-height: 1.25;
+}
+.ant-btn > span,
+.ant-btn > .anticon { display: inline-flex; align-items: center; }
+.ant-btn > .anticon + span,
+.ant-btn > span + .anticon,
+.ant-btn > .ant-btn-loading-icon + span,
+.ant-btn > span + .ant-btn-loading-icon { margin-inline-start: 0; }
+.ant-btn-lg { height: 48px; padding-inline: 26px; font-size: 15px; }
+.ant-btn-primary { box-shadow: none; }
+
+.ant-tag { border-radius: 999px; padding-inline: 10px; font-weight: 500; }
+
+.ant-back-top { inset-inline-end: 20px; inset-block-end: 20px; }
+
+/* keep antd overlays above sticky header */
+.cdk-overlay-container { z-index: 1100; }
+
+/* ---------- scrollbar ---------- */
+@media (min-width: 900px) {
+  * { scrollbar-width: thin; scrollbar-color: var(--line-strong) transparent; }
+  *::-webkit-scrollbar { width: 10px; height: 10px; }
+  *::-webkit-scrollbar-thumb { background: var(--line-strong); border-radius: 99px; border: 3px solid var(--bg); }
+  *::-webkit-scrollbar-track { background: transparent; }
+}
+
+/* ---------- utilities ---------- */
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+.no-scroll { overflow: hidden; }
+
+/* ---------- drawer shell (rendered outside component scope) ---------- */
+.nav-drawer .ant-drawer-body { padding: 0; }
+.nav-drawer .ant-drawer-content { background: var(--surface); }
+.filter-drawer .ant-drawer-content { background: var(--surface); }
+.filter-drawer .ant-drawer-body { padding-bottom: 32px; }
+
+/* antd tab bars are wider than a narrow phone; let them scroll instead of the page */
+.ant-tabs-nav-wrap { overflow: hidden; }
+.ant-tabs > .ant-tabs-nav { min-width: 0; }
+
+/* FAQ collapse, ghost variant */
+.faq .ant-collapse-item { border-bottom: 1px solid var(--line) !important; }
+.faq .ant-collapse-header {
+  padding-inline: 0 !important;
+  padding-block: 20px !important;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--ink) !important;
+}
+/* ng-zorro 21 names the panel body `.ant-collapse-body`; the older
+   `.ant-collapse-content-box` selector never matched, which left the answer
+   indented 16px past its own heading. */
+.faq .ant-collapse-body,
+.faq .ant-collapse-content-box {
+  padding: 0 0 22px !important;
+}
+
+/* villa study modal (rendered outside the page component's scope) */
+.study-modal .ant-modal-content, .study-modal .ant-modal-header { background: var(--surface); }
+.study-modal .study-intro { margin: 0 0 20px; font-size: 15px; line-height: 1.7; color: var(--ink-2); }
+.study-modal .study-rows { margin: 0; display: grid; gap: 10px; }
+.study-modal .study-rows > div {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 18px;
+}
+.study-modal .study-rows dt { font-size: 13.8px; color: var(--ink-3); }
+.study-modal .study-rows dd { margin: 0; font-size: 14px; color: var(--ink); text-align: end; }
+.study-modal .study-rows .hi dd { font-weight: 600; }
+.study-modal .study-rows .total {
+  margin-top: 6px; padding-top: 12px; border-top: 1px solid var(--line);
+}
+.study-modal .study-rows .total dt { color: var(--ink); font-weight: 600; }
+.study-modal .study-rows .total dd { font-size: 1.2rem; font-weight: 700; color: var(--brand); }
+.study-modal .study-small { margin: 20px 0 0; font-size: 12px; line-height: 1.6; color: var(--ink-3); }
+
+/* floor switcher on the villa configurator */
+.floor-switch .ant-segmented { background: var(--surface-3); padding: 2px; }
+.floor-switch .ant-segmented-item-selected { background: var(--surface); }
+.floor-switch .ant-segmented-item-label { padding-inline: 12px; }
+
+/* villa editor: the send-to-team drawer */
+.send-drawer .ant-drawer-content, .send-drawer .ant-drawer-header { background: var(--surface); }
+.send-drawer .send-intro { margin: 0 0 18px; font-size: 14px; line-height: 1.65; color: var(--ink-2); }
+.send-drawer .send-summary {
+  margin: 0 0 22px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  font-family: var(--font-sans);
+  font-size: 12.6px;
+  line-height: 1.7;
+  color: var(--ink-2);
+  white-space: pre-wrap;
+}
+.send-drawer .optional { font-weight: 400; color: var(--ink-3); font-size: 11.5px; margin-inline-start: 6px; }
+.send-drawer .send-or {
+  display: flex; align-items: center; gap: 12px;
+  margin: 18px 0; color: var(--ink-3); font-size: 12px;
+}
+.send-drawer .send-or::before, .send-drawer .send-or::after {
+  content: ''; flex: 1; height: 1px; background: var(--line);
+}
+.send-drawer .send-wa nz-icon { color: #25d366; }
+.send-drawer .send-note { margin: 18px 0 0; font-size: 11.5px; color: var(--ink-3); }
+.send-drawer .send-done { padding-top: 24px; display: grid; gap: 12px; justify-items: stretch; }
+.send-drawer .done-icon { font-size: 44px; color: var(--brand); }
+.send-drawer .send-done h3 { margin: 4px 0 0; font-size: 1.3rem; color: var(--ink); }
+.send-drawer .send-done p { margin: 0 0 12px; font-size: 14px; line-height: 1.6; color: var(--ink-2); }
+
+/* the projects filter popover carries the price and yield sliders */
+.ant-popover-inner, .ant-popover-title { background: var(--surface); }
+.ant-popover-inner-content { padding: 16px 18px; }
+
+/* ===========================================================================
+   Ant Design components, bound to our own tokens
+
+   The Ant theme arrives as two compiled bundles and only one is live at a
+   time. Where we had overridden a component we overrode its background only,
+   so a drawer could be dark while its title and close button stayed on the
+   light palette. Everything the eye reads as "the wrong mode" is bound here
+   instead, which keeps the components correct independently of which bundle
+   is applied.
+   ======================================================================== */
+
+/* ---- overlays: header, title, close ---- */
+
+.ant-drawer-title,
+.ant-modal-title { color: var(--ink); }
+
+.ant-drawer-header,
+.ant-modal-header { border-bottom-color: var(--line); }
+
+.ant-drawer-body,
+.ant-modal-body { color: var(--ink-2); }
+
+.ant-drawer-close,
+.ant-modal-close,
+.ant-modal-close-x { color: var(--ink-3); }
+
+.ant-drawer-close:hover,
+.ant-modal-close:hover,
+.ant-modal-close:focus-visible { color: var(--ink); }
+
+.ant-modal-mask,
+.ant-drawer-mask { background: rgba(4, 9, 15, .58); }
+
+/* ---- segmented ---- */
+
+.ant-segmented { background: var(--surface-3); color: var(--ink-2); }
+.ant-segmented-thumb,
+.ant-segmented-item-selected { background: var(--surface); color: var(--ink); }
+.ant-segmented-item:hover:not(.ant-segmented-item-selected):not(.ant-segmented-item-disabled) { color: var(--ink); }
+.ant-segmented-item-disabled,
+.ant-segmented-item-disabled:hover { color: var(--ink-3); }
+
+/* ---- select ---- */
+
+.ant-select { color: var(--ink); }
+.ant-select:not(.ant-select-customize-input) .ant-select-selector {
+  background: var(--surface);
+  border-color: var(--line);
+  color: var(--ink);
+}
+.ant-select-selection-placeholder { color: var(--ink-3); }
+.ant-select-arrow,
+.ant-select-clear { color: var(--ink-3); background: transparent; }
+.ant-select-dropdown { background: var(--surface); }
+.ant-select-item { color: var(--ink-2); }
+.ant-select-item-option-active:not(.ant-select-item-option-disabled) { background: var(--surface-2); }
+.ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
+  background: var(--brand-soft);
+  color: var(--ink);
+}
+
+/* ---- text inputs ---- */
+
+.ant-input,
+.ant-input-affix-wrapper,
+textarea.ant-input,
+.ant-input-number,
+.ant-input-number-input {
+  background: var(--surface);
+  border-color: var(--line);
+  color: var(--ink);
+}
+.ant-input::placeholder,
+textarea.ant-input::placeholder,
+.ant-input-number-input::placeholder {
+  color: var(--ink-3);
+  /* Safari paints placeholders through text-fill rather than colour */
+  -webkit-text-fill-color: var(--ink-3);
+  opacity: 1;
+}
+
+/* The browser locks the background of an autofilled field, so the only way to
+   recolour it is an inset shadow large enough to cover the box. */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+  -webkit-box-shadow: inset 0 0 0 1000px var(--surface);
+  -webkit-text-fill-color: var(--ink);
+  caret-color: var(--ink);
+  /* the shadow is applied on a transition the UA cannot cancel */
+  transition: background-color 8000s ease-in-out 0s;
+}
+
+/* ---- checkbox, radio, form labels ---- */
+
+.ant-checkbox-wrapper,
+.ant-radio-wrapper { color: var(--ink-2); }
+.ant-checkbox-inner,
+.ant-radio-inner { background: var(--surface); border-color: var(--line-strong); }
+.ant-checkbox-checked .ant-checkbox-inner {
+  background: var(--brand);
+  border-color: var(--brand);
+}
+.ant-form-item-label > label { color: var(--ink-2); }
+.ant-form-item-explain-error { color: var(--accent); }
+
+/* ---- misc chrome ---- */
+
+.ant-tooltip-inner { background: var(--surface-3); color: var(--ink); }
+.ant-tooltip-arrow-content::before { background: var(--surface-3); }
+.ant-empty-description { color: var(--ink-3); }
+
+/* stops the grey flash WebKit paints over a tapped control */
+* { -webkit-tap-highlight-color: transparent; }

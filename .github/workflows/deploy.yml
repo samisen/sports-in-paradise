@@ -1,0 +1,59 @@
+# Builds the site and publishes it to GitHub Pages on every push to main.
+#
+# Pages serves one origin, https://<user>.github.io/sports-in-paradise/, so
+# the sports cannot have subdomains here: each is reached with ?site=<sport>
+# (see SiteService). In the repository settings, Pages → Source must be set
+# to "GitHub Actions".
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# one deploy at a time; a newer push replaces a queued one
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci
+
+      # the site lives under /<repo>/, so every asset and route is resolved from there
+      - run: npx ng build --base-href "/${{ github.event.repository.name }}/"
+
+      # Pages has no SPA fallback: a reload on /plan would 404. Serving the app
+      # as the 404 page lets the router take over, and .nojekyll stops Pages
+      # from processing the files.
+      - run: |
+          cp dist/sports-in-paradise/browser/index.html dist/sports-in-paradise/browser/404.html
+          touch dist/sports-in-paradise/browser/.nojekyll
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist/sports-in-paradise/browser
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

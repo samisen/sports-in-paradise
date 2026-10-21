@@ -73,6 +73,16 @@ Each site in development:
   add `?site=golf`; the choice is remembered for the tab, and `?site=hub`
   goes back.
 
+## Deploying
+
+`.github/workflows/deploy.yml` builds and publishes to GitHub Pages on every
+push to `main`, at https://samisen.github.io/sports-in-paradise/. Pages has one
+origin per repository and no subdomains, so there the sports are reached with
+`?site=padel`, `?site=golf` and so on. The subdomain set-up needs a host that
+accepts several custom domains for one site (Cloudflare Pages, Netlify).
+
+In the repository settings, Pages → Source must be **GitHub Actions**.
+
 ## Notes
 
 - **Not a booking engine.** Prices are indicative and the forms do not send.

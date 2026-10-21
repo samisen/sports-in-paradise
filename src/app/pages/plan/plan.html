@@ -4,12 +4,18 @@
 <section class="planner-page">
   <div class="container">
     <div class="pl-intro">
-      <p class="eyebrow">Plan your retreat</p>
+      <p class="eyebrow">Plan your {{ sport.name.toLowerCase() }} retreat</p>
       <h1 class="display">Build the Week You Actually Want</h1>
       <p class="lede">
         Set the length, the level and how hard you want to work. The schedule redraws and the price
         recalculates with every choice — then send it to us and we will tell you what we can hold.
       </p>
+      @if (startedFrom(); as from) {
+        <p class="pl-from">
+          <nz-icon nzType="check-circle" />
+          Started from <strong>{{ from }}</strong>. Change anything — it is your week now.
+        </p>
+      }
     </div>
   </div>
 
@@ -25,7 +31,7 @@
           }
           <div class="pl-title">
             <strong>Your week</strong>
-            <span>{{ c.nights }} nights · {{ baseName() }} · {{ levelName() }}</span>
+            <span>{{ sport.name }} · {{ c.nights }} nights · {{ baseName() }} · {{ levelName() }}</span>
           </div>
         </div>
 
@@ -79,30 +85,30 @@
               <div class="fld">
                 <label>Nights <span class="fld-val mono">{{ c.nights }}</span></label>
                 <nz-slider
-                  [nzMin]="nightLimits.min" [nzMax]="nightLimits.max" [nzStep]="1"
+                  [nzMin]="spec.nightLimits.min" [nzMax]="spec.nightLimits.max" [nzStep]="1"
                   [ngModel]="c.nights" (ngModelChange)="setNights($event)" />
                 <span class="fld-hint">{{ s.days.length }} days on the ground</span>
               </div>
 
               <div class="fld">
-                <label>Players <span class="fld-val mono">{{ c.guests }}</span></label>
+                <label>{{ spec.words.people | titlecase }} <span class="fld-val mono">{{ c.guests }}</span></label>
                 <nz-slider
-                  [nzMin]="guestLimits.min" [nzMax]="guestLimits.max" [nzStep]="1"
+                  [nzMin]="spec.guestLimits.min" [nzMax]="spec.guestLimits.max" [nzStep]="1"
                   [ngModel]="c.guests" (ngModelChange)="setGuests($event)" />
                 <span class="fld-hint">
                   @if (s.groupDiscountPct) {
                     {{ s.groupDiscountPct }}% off per person at this group size
                   } @else {
-                    Three or more shares a coach, and the price drops
+                    Groups of three or more pay less per head
                   }
                 </span>
               </div>
             </section>
 
             <section class="grp">
-              <h2 class="grp-title">Where you play now</h2>
+              <h2 class="grp-title">{{ spec.words.levelTitle }}</h2>
               <div class="rows">
-                @for (l of levels; track l.id) {
+                @for (l of spec.levels; track l.id) {
                   <button type="button" class="row" [class.is-on]="c.level === l.id" (click)="setLevel(l.id)">
                     <span class="row-name">{{ l.name }}</span>
                     <span class="row-note">{{ l.note }}</span>
@@ -112,9 +118,9 @@
             </section>
 
             <section class="grp">
-              <h2 class="grp-title">How hard</h2>
+              <h2 class="grp-title">{{ spec.words.intensityTitle }}</h2>
               <div class="rows">
-                @for (i of intensities; track i.id) {
+                @for (i of spec.intensities; track i.id) {
                   <button type="button" class="row" [class.is-on]="c.intensity === i.id" (click)="setIntensity(i.id)">
                     <span class="row-name">{{ i.name }}<span class="row-tag mono">{{ i.sessions }}</span></span>
                     <span class="row-note">{{ i.note }}</span>
@@ -124,12 +130,12 @@
             </section>
 
             <section class="grp">
-              <h2 class="grp-title">Base</h2>
+              <h2 class="grp-title">{{ spec.words.baseTitle }}</h2>
               <div class="pills">
-                @for (b of bases; track b.id) {
-                  <button type="button" class="pill" [class.is-on]="c.base === b.id" (click)="setBase(b.id)">
+                @for (b of spec.bases; track b.id) {
+                  <button type="button" class="pill" [class.is-on]="c.base === b.id" (click)="setBase(b.id)" [nz-tooltip]="b.note">
                     <span class="pill-name">{{ b.name }}</span>
-                    <span class="pill-sub mono">{{ b.courts }}</span>
+                    <span class="pill-sub mono">{{ b.detail }}</span>
                   </button>
                 }
               </div>
@@ -138,7 +144,7 @@
             <section class="grp">
               <h2 class="grp-title">Where you sleep</h2>
               <div class="pills">
-                @for (st of stays; track st.id) {
+                @for (st of spec.stays; track st.id) {
                   <button type="button" class="pill" [class.is-on]="c.stay === st.id" (click)="setStay(st.id)">
                     <span class="pill-name">{{ st.name }}</span>
                     <span class="pill-sub mono">&#36;{{ st.nightly }}/night</span>
@@ -148,7 +154,7 @@
             </section>
 
             @if (isAdvanced()) {
-              @for (g of extraGroups; track g.key) {
+              @for (g of spec.extraGroups; track g.key) {
                 <section class="grp">
                   <h2 class="grp-title">{{ g.title }}</h2>
                   <div class="chips">
@@ -159,11 +165,14 @@
                         [class.is-on]="hasExtra(e.id)"
                         [disabled]="extraDisabled(e.id)"
                         (click)="toggleExtra(e.id)"
-                        [nz-tooltip]="extraNote(e.id) || e.note"
+                        [nz-tooltip]="extraNote(e.id)"
                       >
                         <nz-icon [nzType]="hasExtra(e.id) ? 'check' : 'plus'" />
-                        <span class="chip-name">{{ e.name }}</span>
-                        <span class="chip-cost mono">+&#36;{{ e.perPerson }}</span>
+                        <span class="chip-name">
+                          {{ e.name }}
+                          @if (extraDisabled(e.id)) { <span class="chip-note">{{ extraNote(e.id) }}</span> }
+                        </span>
+                        <span class="chip-cost mono">+&#36;{{ extraPrice(e.id) }}</span>
                       </button>
                     }
                   </div>
@@ -218,6 +227,11 @@
 
         <!-- ============ SCHEDULE ============ -->
         <section class="pl-canvas" aria-label="Your week, day by day">
+          <ul class="pl-legend" aria-label="Key">
+            @for (k of kinds; track k.kind) {
+              <li><span class="sw" [class]="'kind-' + k.kind"></span>{{ k.label }}</li>
+            }
+          </ul>
           <div class="pl-scroll">
             <div class="sched" [style.--hour-px.px]="hourPx()">
               <div class="hours" [style.height.px]="gridHeight()">
@@ -230,7 +244,7 @@
                 <div class="day" animate.enter="day-enter" animate.leave="day-leave">
                   <div class="day-head">
                     <strong>{{ day.name }}</strong>
-                    <span class="day-tag" [class]="'tag-' + day.tag.split(' ')[0].toLowerCase()">{{ day.tag }}</span>
+                    <span class="day-tag" [class]="'tone-' + day.tone">{{ day.tag }}</span>
                   </div>
 
                   <div class="day-grid" [style.height.px]="gridHeight()">
@@ -238,7 +252,7 @@
                       <span class="rule" [style.top.px]="(h - dayStart) * hourPx()"></span>
                     }
 
-                    @for (b of dayBlocks(day); track b.id) {
+                    @for (b of day.blocks; track b.id) {
                       <article
                         class="blk"
                         [class]="'kind-' + b.kind"
@@ -263,16 +277,28 @@
           <div class="pl-status">
             <nz-icon nzType="check-circle" />
             <div>
-              <strong>{{ s.courtHours }} hours</strong> on court over
-              <strong>{{ s.trainingDays }}</strong> training days
-              <span class="pl-status-sub">
-                Sessions sit at either end of the day — nothing is scheduled in the midday heat
-              </span>
+              <strong>{{ s.metric }} {{ spec.metric.label }}</strong> over
+              <strong>{{ s.coachedDays }}</strong> {{ s.coachedDays === 1 ? 'day' : 'days' }}
+              <span class="pl-status-sub">{{ spec.statusNote }}</span>
             </div>
           </div>
         </section>
       </div>
     </div>
+  </div>
+
+  <div class="container">
+    <section class="pl-rules" aria-labelledby="rules-title">
+      <div>
+        <p class="eyebrow">How the week is shaped</p>
+        <h2 id="rules-title">The rules the planner follows</h2>
+      </div>
+      <ol>
+        @for (r of spec.rules; track r) {
+          <li>{{ r }}</li>
+        }
+      </ol>
+    </section>
   </div>
 </section>
 
@@ -320,7 +346,7 @@
           </label>
           <label class="f">
             <span>Anything else <em>optional</em></span>
-            <textarea nz-input formControlName="note" rows="3" placeholder="Injuries, who you are travelling with, a question."></textarea>
+            <textarea nz-input formControlName="note" rows="3" placeholder="Injuries, certifications, who you are travelling with, a question."></textarea>
           </label>
 
           <button nz-button nzType="primary" nzBlock nzSize="large" type="submit" [nzLoading]="sending()">

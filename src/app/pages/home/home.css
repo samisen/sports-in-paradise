@@ -14,9 +14,15 @@
 }
 @media (min-width: 768px) { .hero { min-height: 88svh; padding-bottom: 64px; } }
 
-.hero-art { position: absolute; inset: 0; }
-.hero-veil { position: absolute; inset: 0; background: var(--overlay); }
-.hero-inner { position: relative; }
+.hero-veil {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--bg-deep) 62%, transparent) 0%, transparent 65%),
+    var(--overlay);
+}
+.hero-inner { position: relative; z-index: 2; }
 
 .hero .eyebrow { color: rgba(255, 255, 255, .72); }
 .hero-title { max-width: 18ch; color: #fff; }
@@ -47,7 +53,7 @@
 }
 .value-art {
   display: block;
-  aspect-ratio: 16 / 9;
+  aspect-ratio: 4 / 3;
   border-radius: var(--radius-lg);
   overflow: hidden;
   margin-bottom: 20px;
@@ -187,3 +193,49 @@
 .quote figcaption { margin-top: 16px; display: flex; flex-direction: column; gap: 2px; }
 .quote strong { font-size: 13.6px; color: var(--ink); }
 .quote span { font-size: 12.2px; color: var(--ink-3); }
+
+.value-art:hover ::ng-deep img, .profile:hover ::ng-deep img { transform: scale(1.04); }
+.profile-art { overflow: hidden; }
+.profile-go {
+  display: inline-flex; align-items: center; gap: 7px; margin-top: 10px;
+  font-size: 13.4px; font-weight: 600; color: var(--brand-strong); text-decoration: none;
+}
+.profile-go nz-icon { transition: transform .3s ease; }
+.profile-go:hover nz-icon { transform: translateX(4px); }
+.source strong { color: var(--ink); font-weight: 600; }
+
+/* ---------- Bali now ---------- */
+
+.bali-now { position: relative; overflow: hidden; }
+.bali-now::before {
+  content: '';
+  position: absolute;
+  width: 640px; height: 640px; left: -260px; top: -300px; border-radius: 50%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--brand) 36%, transparent), transparent 70%);
+  pointer-events: none;
+}
+.bali-now .container { position: relative; }
+.bali-now .display { color: #fff; }
+.now-grid { align-items: start; gap: 36px; }
+.head-link.on-dark { color: #fff; }
+
+.now-numbers { margin: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.now-num {
+  padding: 18px 18px 20px;
+  border-radius: var(--radius);
+  background: rgba(255, 255, 255, .05);
+  border: 1px solid rgba(255, 255, 255, .1);
+}
+.now-num dt { font-family: var(--font-display); font-size: clamp(1.6rem, 4vw, 2.2rem); font-weight: 600; color: #fff; line-height: 1.05; }
+.now-num dd { margin: 8px 0 0; font-size: 13px; line-height: 1.55; color: rgba(255, 255, 255, .72); }
+.now-src { display: block; margin-top: 6px; font-size: 11px; color: rgba(255, 255, 255, .45); }
+
+.now-season {
+  margin-top: 40px;
+  padding: 22px 20px 18px;
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  color: var(--ink);
+}
+.now-season-head { margin: 0 0 10px !important; font-size: 14.5px; color: var(--ink-2) !important; }
+.now-season-head strong { color: var(--ink); }

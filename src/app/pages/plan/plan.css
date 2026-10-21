@@ -293,9 +293,9 @@
   text-transform: uppercase;
   color: var(--ink-3);
 }
-.tag-rest { color: var(--brand-strong); }
-.tag-match { color: var(--accent); }
-.tag-arrival, .tag-departure { opacity: .75; }
+.tone-rest { color: var(--brand-strong); }
+.tone-peak { color: var(--accent); font-weight: 600; }
+.tone-arrival, .tone-departure { opacity: .75; }
 
 .day-grid {
   position: relative;
@@ -329,8 +329,8 @@
 .blk-sub { font-size: 10.8px; line-height: 1.35; opacity: .8; }
 
 /* one colour per kind of block, all from the palette */
-.kind-clinic { background: color-mix(in srgb, var(--brand) 16%, var(--surface)); border-color: color-mix(in srgb, var(--brand) 40%, transparent); color: var(--ink); }
-.kind-match { background: color-mix(in srgb, var(--accent) 16%, var(--surface)); border-color: color-mix(in srgb, var(--accent) 42%, transparent); color: var(--ink); }
+.kind-coaching { background: color-mix(in srgb, var(--brand) 16%, var(--surface)); border-color: color-mix(in srgb, var(--brand) 40%, transparent); color: var(--ink); }
+.kind-play { background: color-mix(in srgb, var(--accent) 16%, var(--surface)); border-color: color-mix(in srgb, var(--accent) 42%, transparent); color: var(--ink); }
 .kind-fitness { background: color-mix(in srgb, var(--brand) 9%, var(--surface)); border-color: color-mix(in srgb, var(--brand) 26%, transparent); color: var(--ink-2); }
 .kind-recovery { background: var(--surface-2); border-color: var(--line); color: var(--ink-2); }
 .kind-experience { background: color-mix(in srgb, var(--accent) 10%, var(--surface)); border-color: color-mix(in srgb, var(--accent) 26%, transparent); color: var(--ink-2); }
@@ -444,3 +444,34 @@
 .send-done h3 { margin: 0; font-family: var(--font-display); font-size: 1.4rem; color: var(--ink); }
 .send-done p { margin: 0; font-size: 13.8px; line-height: 1.6; color: var(--ink-2); }
 .send-done a { margin-top: 6px; }
+
+/* ---------- legend and the rules ---------- */
+
+.pl-legend { display: flex; flex-wrap: wrap; gap: 6px 14px; margin: 0; padding: 14px 16px 0; list-style: none; font-size: 11.5px; color: var(--ink-3); }
+.pl-legend li { display: inline-flex; align-items: center; gap: 6px; }
+.pl-legend .sw { width: 12px; height: 12px; border-radius: 4px; border: 1px solid transparent; }
+
+.pl-rules { margin-top: 28px; display: grid; gap: 14px; }
+@media (min-width: 900px) { .pl-rules { grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: 40px; } }
+.pl-rules h2 { margin: 0; font-family: var(--font-display); font-size: 1.4rem; font-weight: 500; color: var(--ink); }
+.pl-rules ol { margin: 0; padding: 0; list-style: none; counter-reset: r; display: grid; gap: 12px; }
+.pl-rules li {
+  counter-increment: r;
+  display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 10px;
+  font-size: 14.2px; line-height: 1.6; color: var(--ink-2);
+}
+.pl-rules li::before {
+  content: counter(r);
+  width: 24px; height: 24px; border-radius: 999px;
+  display: grid; place-items: center;
+  background: var(--brand-soft); color: var(--brand-strong);
+  font-size: 12px; font-weight: 700;
+}
+.pl-from {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  margin: 18px 0 0; padding: 10px 14px; border-radius: 12px;
+  background: var(--brand-soft); color: var(--ink-2); font-size: 13.6px;
+}
+.pl-from nz-icon { color: var(--brand); }
+.chip-note { display: block; font-size: 10.6px; color: var(--ink-3); font-weight: 400; }
+@media (max-width: 699px) { .pl-legend { display: none; } }

@@ -1,78 +1,95 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
 import { NzIconModule } from 'ng-zorro-antd/icon';
-import { AREA_POINTS, BALI_MAP, MAP_LANDMARKS } from '../core/bali-geo';
-import { CatalogService } from '../core/catalog.service';
-import { BaseId } from '../core/retreat-config';
-import { usd } from '../core/format';
+import { BALI_MAP, MAP_LANDMARKS, project } from '../core/bali-geo';
+import { Photo } from '../core/media';
+import { SiteId } from '../core/site/sites';
+import { PhotoComponent } from './photo';
 
-interface BaseMarker {
-  id: BaseId;
+/** One place on the map, whichever site is drawing it. */
+export interface MapPlace {
+  id: string;
   name: string;
-  x: number;
-  y: number;
+  subtitle: string;
+  tagline: string;
+  description: string;
+  lat: number;
+  lon: number;
+  stats: { label: string; value: string }[];
+  /** How many retreats run here — sizes the disc. */
   count: number;
-  radius: number;
+  /** On the hub, which sport the place belongs to; colours the marker. */
+  sport?: SiteId;
+  photo?: Photo;
+  /** Where the panel's action goes, if it leaves the page. */
+  href?: string;
+  hrefLabel?: string;
 }
 
 /**
- * Bali with a marker per area, sized by how many retreats run there.
- * Hovering or selecting an area surfaces its numbers; selecting one tells the
- * parent so the project list can filter to it.
+ * Bali with a marker per place, sized by how many retreats run there.
+ * Hovering or selecting a place surfaces its details; selecting one tells the
+ * parent so a list can filter to it.
  */
 @Component({
   selector: 'app-bali-map',
-  imports: [NzIconModule],
+  imports: [NzIconModule, PhotoComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './bali-map.html',
   styleUrl: './bali-map.css',
 })
 export class BaliMapComponent {
-  private readonly catalog = inject(CatalogService);
-
-  /** Area currently filtered in the parent, if any. */
-  readonly selected = input<BaseId | null>(null);
-  readonly selectBase = output<BaseId | null>();
+  readonly places = input.required<MapPlace[]>();
+  /** Place currently filtered in the parent, if any. */
+  readonly selected = input<string | null>(null);
+  readonly emptyTitle = input('Where we are based');
+  readonly emptyText = input('Pick a marker to see what is there.');
+  readonly countNoun = input('retreats');
+  readonly selectPlace = output<string | null>();
 
   readonly map = BALI_MAP;
   readonly landmarks = MAP_LANDMARKS;
-  readonly hovered = signal<BaseId | null>(null);
+  readonly hovered = signal<string | null>(null);
 
-  readonly markers = computed<BaseMarker[]>(() =>
-    this.catalog.bases().map((base) => {
-      const count = this.catalog.retreats().filter((r) => r.base === base.id).length;
-      return {
-        id: base.id,
-        name: base.name,
-        ...AREA_POINTS[base.id],
-        count,
-        // area of the disc tracks the count, so two retreats do not look like four
-        radius: count ? 13 + Math.sqrt(count) * 7 : 8,
-      };
-    }),
-  );
+  readonly markers = computed(() => {
+    const placed = this.places().map((p) => ({
+      ...p,
+      ...project(p.lat, p.lon),
+      // area of the disc tracks the count, so two retreats do not look like four
+      radius: p.count ? 11 + Math.sqrt(p.count) * 6 : 9,
+    }));
 
-  /** The base whose card is shown: hover wins, then the current selection. */
+    // On the hub several sports share a town (Ubud, Sanur). Markers that
+    // would sit on top of each other are fanned out around their centre, so
+    // every one stays visible and clickable.
+    const clusters: (typeof placed)[] = [];
+    for (const m of placed) {
+      const near = clusters.find((c) => Math.hypot(c[0].x - m.x, c[0].y - m.y) < 26);
+      if (near) near.push(m);
+      else clusters.push([m]);
+    }
+    for (const c of clusters) {
+      if (c.length < 2) continue;
+      const cx = c.reduce((t, m) => t + m.x, 0) / c.length;
+      const cy = c.reduce((t, m) => t + m.y, 0) / c.length;
+      const spread = 16 + c.length * 4;
+      c.forEach((m, i) => {
+        const a = -Math.PI / 2 + (i * 2 * Math.PI) / c.length;
+        m.x = Math.round(cx + Math.cos(a) * spread);
+        m.y = Math.round(cy + Math.sin(a) * spread);
+      });
+    }
+    return placed;
+  });
+
+  /** The place whose card is shown: hover wins, then the current selection. */
   readonly active = computed(() => this.hovered() ?? this.selected());
+  readonly activePlace = computed(() => this.places().find((p) => p.id === this.active()));
 
-  readonly activeBase = computed(() => {
-    const id = this.active();
-    return id ? this.catalog.base(id) : undefined;
-  });
-
-  readonly activeCount = computed(() => {
-    const id = this.active();
-    return id ? this.catalog.retreats().filter((r) => r.base === id).length : 0;
-  });
-
-  toggle(id: BaseId): void {
-    this.selectBase.emit(this.selected() === id ? null : id);
+  toggle(id: string): void {
+    this.selectPlace.emit(this.selected() === id ? null : id);
   }
 
   clear(): void {
-    this.selectBase.emit(null);
-  }
-
-  land(v: number): string {
-    return usd(v);
+    this.selectPlace.emit(null);
   }
 }

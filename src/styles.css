@@ -10,17 +10,11 @@
      which is why dark mode looked half-applied in Safari but fine in Chrome. */
   color-scheme: light;
 
-  /* brand */
-  --brand: #1668c4;
-  --brand-strong: #0f4c93;
-  --brand-soft: #e7f0fb;
-  --accent: #e2653f;
-  --accent-soft: #fdeee8;
+  /* brand: set per site below, under [data-sport] */
 
   /* surfaces */
   --bg: #ffffff;
   --bg-sand: #f4f7fa;
-  --bg-deep: #0b1017;
   --surface: #ffffff;
   --surface-2: #f4f7fa;
   --surface-3: #e8eef4;
@@ -60,15 +54,9 @@
 
 html[data-theme='dark'] {
   color-scheme: dark;
-  --brand: #4a9eff;
-  --brand-strong: #6fb4ff;
-  --brand-soft: #112741;
-  --accent: #ff8a5c;
-  --accent-soft: #331a11;
 
   --bg: #0b1017;
   --bg-sand: #0f151d;
-  --bg-deep: #070b10;
   --surface: #121821;
   --surface-2: #161e29;
   --surface-3: #1e2833;
@@ -88,6 +76,69 @@ html[data-theme='dark'] {
   --shadow-md: 0 10px 34px rgba(0, 0, 0, .45);
   --shadow-lg: 0 26px 70px rgba(0, 0, 0, .55);
   --overlay: linear-gradient(180deg, rgba(4,8,13,.25) 0%, rgba(4,8,13,.62) 55%, rgba(4,8,13,.92) 100%);
+}
+
+/* ==========================================================================
+   Site palettes
+
+   One codebase, six sites. Each site is a [data-sport] value: the hub and
+   the five sports. The attribute is set on <html> by the inline script in
+   index.html before anything paints, and it can also be set on any element —
+   the hub uses that to show each sport card in its own colours.
+
+   Light values sit on [data-sport]; the dark set needs both selectors so it
+   applies on <html> itself and on any element inside a dark document.
+   `--bg-deep` is the sport's own near-black, used behind heroes and CTAs.
+   ========================================================================== */
+
+[data-sport='hub'] {
+  --brand: #d4405f; --brand-strong: #a8274a; --brand-soft: #fbe9ee;
+  --accent: #e08a1e; --accent-soft: #fdf1e1; --bg-deep: #160b12;
+}
+[data-sport='padel'] {
+  --brand: #1668c4; --brand-strong: #0f4c93; --brand-soft: #e7f0fb;
+  --accent: #e2653f; --accent-soft: #fdeee8; --bg-deep: #0b1017;
+}
+[data-sport='tennis'] {
+  --brand: #6b3fd4; --brand-strong: #4e27a8; --brand-soft: #efe9fb;
+  --accent: #6f8a0a; --accent-soft: #f1f6dc; --bg-deep: #110c1d;
+}
+[data-sport='golf'] {
+  --brand: #1d7a4c; --brand-strong: #135c38; --brand-soft: #e6f3ec;
+  --accent: #b07d22; --accent-soft: #f8f0e1; --bg-deep: #08150e;
+}
+[data-sport='diving'] {
+  --brand: #00808f; --brand-strong: #00606c; --brand-soft: #e0f3f5;
+  --accent: #e0573a; --accent-soft: #fde9e4; --bg-deep: #041519;
+}
+[data-sport='hiking'] {
+  --brand: #c2520f; --brand-strong: #973d08; --brand-soft: #fbece1;
+  --accent: #3f7d4e; --accent-soft: #e5f1e8; --bg-deep: #170d07;
+}
+
+html[data-theme='dark'][data-sport='hub'], html[data-theme='dark'] [data-sport='hub'] {
+  --brand: #ff6f8e; --brand-strong: #ff97ae; --brand-soft: #3a1420;
+  --accent: #ffb455; --accent-soft: #352310; --bg-deep: #0c070a;
+}
+html[data-theme='dark'][data-sport='padel'], html[data-theme='dark'] [data-sport='padel'] {
+  --brand: #4a9eff; --brand-strong: #6fb4ff; --brand-soft: #112741;
+  --accent: #ff8a5c; --accent-soft: #331a11; --bg-deep: #070b10;
+}
+html[data-theme='dark'][data-sport='tennis'], html[data-theme='dark'] [data-sport='tennis'] {
+  --brand: #a687ff; --brand-strong: #c0aaff; --brand-soft: #241a40;
+  --accent: #c6e04a; --accent-soft: #262c0c; --bg-deep: #08060e;
+}
+html[data-theme='dark'][data-sport='golf'], html[data-theme='dark'] [data-sport='golf'] {
+  --brand: #4cc38a; --brand-strong: #74d6a6; --brand-soft: #0f2a1d;
+  --accent: #e6b65c; --accent-soft: #2e2410; --bg-deep: #050c08;
+}
+html[data-theme='dark'][data-sport='diving'], html[data-theme='dark'] [data-sport='diving'] {
+  --brand: #2cc4d6; --brand-strong: #63d8e6; --brand-soft: #082a30;
+  --accent: #ff8a6e; --accent-soft: #331812; --bg-deep: #030d10;
+}
+html[data-theme='dark'][data-sport='hiking'], html[data-theme='dark'] [data-sport='hiking'] {
+  --brand: #ff8a45; --brand-strong: #ffa774; --brand-soft: #36190a;
+  --accent: #6cc285; --accent-soft: #11291a; --bg-deep: #0c0704;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -530,3 +581,94 @@ select:-webkit-autofill {
 
 /* stops the grey flash WebKit paints over a tapped control */
 * { -webkit-tap-highlight-color: transparent; }
+
+/* ===========================================================================
+   Ant Design primary colour, bound to the site's brand
+
+   The Ant Less bundles are compiled once with a single primary colour. Six
+   sites cannot share one compiled blue, so everything Ant paints in its
+   primary colour is re-pointed at --brand here.
+   ======================================================================== */
+
+:root { --antd-wave-shadow-color: var(--brand); }
+
+.ant-btn-primary,
+.ant-btn-primary:focus {
+  background: var(--brand);
+  border-color: var(--brand);
+  color: #fff;
+}
+.ant-btn-primary:hover {
+  background: color-mix(in srgb, var(--brand) 86%, #fff);
+  border-color: color-mix(in srgb, var(--brand) 86%, #fff);
+  color: #fff;
+}
+.ant-btn-primary:active {
+  background: var(--brand-strong);
+  border-color: var(--brand-strong);
+}
+html[data-theme='dark'] .ant-btn-primary,
+html[data-theme='dark'] .ant-btn-primary:focus,
+html[data-theme='dark'] .ant-btn-primary:hover { color: #0b0f14; }
+
+.ant-btn-default:not(.ant-btn-background-ghost):hover,
+.ant-btn-default:not(.ant-btn-background-ghost):focus {
+  color: var(--brand-strong);
+  border-color: var(--brand);
+}
+.ant-btn-text:hover, .ant-btn-text:focus { color: var(--brand-strong); }
+.ant-btn-background-ghost:not(.ant-btn-primary):hover,
+.ant-btn-background-ghost:not(.ant-btn-primary):focus {
+  color: #fff;
+  border-color: #fff;
+  background: rgba(255, 255, 255, .08);
+}
+
+a { color: var(--brand-strong); }
+
+.ant-input:hover, .ant-input-affix-wrapper:hover,
+.ant-select:not(.ant-select-disabled):hover .ant-select-selector { border-color: var(--brand); }
+.ant-input:focus, .ant-input-focused, .ant-input-affix-wrapper-focused,
+.ant-select-focused:not(.ant-select-disabled).ant-select:not(.ant-select-customize-input) .ant-select-selector {
+  border-color: var(--brand) !important;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand) 18%, transparent) !important;
+}
+
+.ant-checkbox-wrapper:hover .ant-checkbox-inner,
+.ant-checkbox:hover .ant-checkbox-inner,
+.ant-checkbox-input:focus + .ant-checkbox-inner { border-color: var(--brand); }
+.ant-checkbox-checked::after { border-color: var(--brand); }
+
+.ant-slider-track,
+.ant-slider:hover .ant-slider-track { background-color: var(--brand); }
+.ant-slider-handle,
+.ant-slider:hover .ant-slider-handle:not(.ant-tooltip-open),
+.ant-slider-handle:focus { border-color: var(--brand); }
+.ant-slider-handle:focus { box-shadow: 0 0 0 5px color-mix(in srgb, var(--brand) 18%, transparent); }
+.ant-slider-rail { background-color: var(--surface-3); }
+
+.ant-collapse-header:hover { color: var(--brand-strong) !important; }
+
+/* ---------- section heads and links, shared by every page ---------- */
+
+.head { margin-bottom: 32px; }
+@media (min-width: 768px) { .head { margin-bottom: 44px; } }
+.head > .display { max-width: 22ch; }
+
+.head-link-row { margin: 30px 0 0; }
+.head-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14.4px;
+  font-weight: 500;
+  color: var(--brand-strong);
+  text-decoration: none;
+}
+.head-link nz-icon { transition: transform .3s ease; }
+.head-link:hover nz-icon { transform: translateX(4px); }
+
+/* sources under a block of facts */
+.sources { margin: 28px 0 0; padding: 0; list-style: none; display: grid; gap: 6px; font-size: 12px; color: var(--ink-3); }
+.sources a { color: var(--ink-3); text-decoration: underline; text-underline-offset: 2px; }
+.sources a:hover { color: var(--brand-strong); }

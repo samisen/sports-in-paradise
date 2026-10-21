@@ -2,19 +2,23 @@ import { ChangeDetectionStrategy, Component, computed, inject, input } from '@an
 import { Router, RouterLink } from '@angular/router';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { CatalogService } from '../../core/catalog.service';
-import { CourtArtComponent } from '../../shared/court-art';
+import { PhotoComponent } from '../../shared/photo';
+import { SiteService } from '../../core/site/site.service';
+import { Title } from '@angular/platform-browser';
+import { BRAND } from '../../core/brand';
+import { effect } from '@angular/core';
 import { CtaBandComponent } from '../../shared/cta-band';
 
 @Component({
   selector: 'app-journal-detail',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterLink, NzIconModule, CourtArtComponent, CtaBandComponent],
+  imports: [RouterLink, NzIconModule, PhotoComponent, CtaBandComponent],
   template: `
     @let p = post();
     @if (p) {
       <article class="post-page">
         <header class="post-head">
-          <span class="head-art" aria-hidden="true"><app-court-art [seed]="p.art + 60" /></span>
+          <span class="head-art"><app-photo [photo]="p.photo" [priority]="true" [decorative]="true" [credit]="true" /></span>
           <span class="head-veil" aria-hidden="true"></span>
           <div class="container head-inner">
             <a class="back" routerLink="/journal"><nz-icon nzType="arrow-left" /> Journal</a>
@@ -29,8 +33,8 @@ import { CtaBandComponent } from '../../shared/cta-band';
             <p>{{ para }}</p>
           }
           <p class="disclaimer">
-            Written by a coach who works on these weeks. It is an opinion informed by practice, not
-            medical or training advice for your particular body.
+            Written by someone who coaches or guides on these weeks. It is an opinion informed by
+            practice, not medical, safety or training advice for your particular body.
           </p>
         </div>
 
@@ -58,6 +62,8 @@ import { CtaBandComponent } from '../../shared/cta-band';
         overflow: hidden; background: var(--bg-deep);
       }
       .head-art { position: absolute; inset: 0; }
+      .head-veil { z-index: 1; }
+      .head-inner { z-index: 2; }
       .head-veil { position: absolute; inset: 0; background: var(--overlay); }
       .head-inner { position: relative; }
       .head-inner .eyebrow { color: rgba(255, 255, 255, .72); }
@@ -91,17 +97,25 @@ import { CtaBandComponent } from '../../shared/cta-band';
 export class JournalDetailPage {
   private readonly catalog = inject(CatalogService);
   private readonly router = inject(Router);
+  private readonly isHub = inject(SiteService).isHub;
+  private readonly posts = this.isHub ? this.catalog.all.flatMap((s) => s.journal) : this.catalog.sport.journal;
 
   readonly slug = input<string>('');
 
   readonly post = computed(() => {
-    const found = this.catalog.post(this.slug());
+    const found = this.posts.find((p) => p.slug === this.slug());
     // an unknown slug should not leave the reader on an empty page
     if (!found) queueMicrotask(() => void this.router.navigate(['/journal']));
     return found;
   });
 
-  readonly others = computed(() =>
-    this.catalog.journal.filter((p) => p.slug !== this.slug()).slice(0, 3),
-  );
+  readonly others = computed(() => this.posts.filter((p) => p.slug !== this.slug()).slice(0, 3));
+
+  constructor() {
+    const title = inject(Title);
+    effect(() => {
+      const p = this.post();
+      if (p) title.setTitle(`${p.title} — ${BRAND.name}`);
+    });
+  }
 }

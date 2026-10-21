@@ -47,8 +47,19 @@
   overflow: hidden;
 }
 @media (min-width: 620px) { .coach { flex-direction: row; } }
-.coach-art { display: block; flex: none; background: var(--surface-3); aspect-ratio: 16 / 9; }
-@media (min-width: 620px) { .coach-art { width: 168px; aspect-ratio: auto; } }
+.coach-mono {
+  flex: none;
+  display: grid;
+  place-items: center;
+  min-height: 120px;
+  font-family: var(--font-display);
+  font-size: 2.4rem;
+  font-weight: 600;
+  letter-spacing: .02em;
+  color: #fff;
+  background: linear-gradient(135deg, var(--brand), color-mix(in srgb, var(--brand) 55%, var(--accent)));
+}
+@media (min-width: 620px) { .coach-mono { width: 140px; min-height: 0; } }
 .coach-body { display: flex; flex-direction: column; gap: 6px; padding: 20px 18px 22px; }
 .coach-top { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
 .coach h3 { margin: 0; font-family: var(--font-display); font-size: 1.2rem; font-weight: 600; color: var(--ink); }
@@ -80,3 +91,15 @@
 .faq-answer { margin: 0; font-size: 14.8px; line-height: 1.75; color: var(--ink-2); max-width: 74ch; }
 .faq-more { margin: 26px 0 0; font-size: 14px; color: var(--ink-2); }
 .faq-more a { color: var(--brand-strong); }
+
+.sport-links { display: grid; gap: 10px; margin-top: 32px; }
+@media (min-width: 900px) { .sport-links { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.sport-links a {
+  display: flex; align-items: center; gap: 10px;
+  padding: 14px 16px; border-radius: var(--radius);
+  background: var(--surface); border: 1px solid var(--line);
+  color: var(--ink); text-decoration: none; font-weight: 500;
+}
+.sport-links a:hover { border-color: var(--brand); color: var(--ink); }
+.sport-links app-sport-icon { color: var(--brand); font-size: 20px; }
+.sport-links nz-icon { margin-inline-start: auto; color: var(--brand); }

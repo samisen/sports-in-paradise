@@ -1,30 +1,77 @@
-<app-page-hero
-  [eyebrow]="copy.eyebrow"
-  [heading]="copy.title"
-  [lede]="copy.lead"
-/>
+<app-page-hero [eyebrow]="b.eyebrow" [heading]="b.title" [lede]="b.lead" [photo]="s.hero.photos[1]" />
 
+<!-- ============ THE STATE OF IT ============ -->
 <section class="section">
-  <div class="container container-narrow">
-    @for (p of copy.paragraphs; track p) {
-      <p class="para">{{ p }}</p>
-    }
-    <p class="source">
-      {{ facts.baliArrivals }} — {{ facts.baliArrivalsNote }}.
-      <span>{{ facts.baliArrivalsSource }}</span>
-    </p>
+  <div class="container story">
+    <div class="story-text">
+      @for (p of b.paragraphs; track p) {
+        <p class="para">{{ p }}</p>
+      }
+      <p class="checked"><nz-icon nzType="check-circle" /> Checked {{ b.checked }}. Sources are listed at the foot of the page.</p>
+    </div>
+    <dl class="numbers">
+      @for (n of b.numbers; track n.label; let i = $index) {
+        <div class="num" [appReveal]="i * 60">
+          <dt class="mono">{{ n.value }}</dt>
+          <dd>{{ n.label }}@if (n.source) {<span class="num-src">{{ n.source }}</span>}</dd>
+        </div>
+      }
+    </dl>
   </div>
 </section>
 
+<!-- ============ WHERE TO PLAY ============ -->
 <section class="section section-sand">
   <div class="container">
     <div class="head" appReveal>
-      <p class="eyebrow">What the island gives you</p>
-      <h2 class="display">Six reasons a training week works here.</h2>
+      <p class="eyebrow">On the island</p>
+      <h2 class="display">The places that matter.</h2>
+      <p class="lede">Named so you can look them up. We are not paid to mention any of them.</p>
     </div>
-
     <div class="grid grid-3">
-      @for (f of copy.facets; track f.title; let i = $index) {
+      @for (v of b.venues; track v.name; let i = $index) {
+        <article class="venue" [appReveal]="i * 50">
+          <p class="venue-area"><nz-icon nzType="environment" /> {{ v.area }}</p>
+          <h3>{{ v.name }}</h3>
+          <p>{{ v.note }}</p>
+        </article>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- ============ WHEN ============ -->
+<section class="section">
+  <div class="container">
+    <div class="head" appReveal>
+      <p class="eyebrow">When to come</p>
+      <h2 class="display">The year, month by month.</h2>
+      <p class="lede">{{ b.season.summary }}</p>
+    </div>
+    <div class="season-card" appReveal>
+      <app-season-strip [rows]="[{ label: s.name, sport: s.id, ratings: b.season.ratings }]" />
+    </div>
+    <div class="grid grid-3 season-notes">
+      @for (n of b.season.notes; track n.label; let i = $index) {
+        <article class="snote" [appReveal]="i * 50">
+          <p class="snote-months mono">{{ n.months }}</p>
+          <h3>{{ n.label }}</h3>
+          <p>{{ n.text }}</p>
+        </article>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- ============ PRACTICAL ============ -->
+<section class="section section-sand">
+  <div class="container">
+    <div class="head" appReveal>
+      <p class="eyebrow">Before you come</p>
+      <h2 class="display">What a visitor should know.</h2>
+    </div>
+    <div class="grid grid-2">
+      @for (f of b.practical; track f.title; let i = $index) {
         <article class="facet" [appReveal]="i * 50">
           <nz-icon [nzType]="f.icon" class="facet-icon" />
           <h3>{{ f.title }}</h3>
@@ -35,18 +82,22 @@
   </div>
 </section>
 
+<!-- ============ BASES ============ -->
 <section class="section">
   <div class="container">
     <div class="head" appReveal>
       <p class="eyebrow">The bases</p>
       <h2 class="display">Where a week can be based.</h2>
-      <p class="lede">
-        Four places on one small island, each suiting a different kind of week. Tap a marker for
-        what is there.
-      </p>
+      <p class="lede">{{ s.bases.length }} places on one small island, each suiting a different kind of week.</p>
     </div>
 
-    <app-bali-map [selected]="selected()" (selectBase)="onSelectBase($event)" />
+    <app-bali-map
+      [places]="places"
+      [selected]="selected()"
+      (selectPlace)="selected.set($event)"
+      [emptyTitle]="s.bases.length + ' bases, one island.'"
+      emptyText="Pick a marker to see what is there and which weeks run from it."
+    />
 
     @if (retreatsHere().length) {
       <div class="grid grid-3 here">
@@ -57,49 +108,99 @@
     }
 
     <div class="grid grid-2 base-notes">
-      @for (b of bases(); track b.id; let i = $index) {
+      @for (base of s.bases; track base.id; let i = $index) {
         <article class="base" [appReveal]="i * 50">
-          <div class="base-top">
-            <h3>{{ b.name }}</h3>
-            <span class="base-sub">{{ b.subtitle }}</span>
+          <span class="base-photo">
+            <app-photo [photo]="base.photo" sizes="(min-width: 700px) 50vw, 100vw" />
+          </span>
+          <div class="base-body">
+            <div class="base-top">
+              <h3>{{ base.name }}</h3>
+              <span class="base-sub">{{ base.subtitle }}</span>
+            </div>
+            <p class="base-tag">{{ base.tagline }}</p>
+            <p class="base-desc">{{ base.description }}</p>
+            <dl class="base-stats">
+              @for (st of base.stats; track st.label) {
+                <div><dt>{{ st.label }}</dt><dd class="mono">{{ st.value }}</dd></div>
+              }
+              <div><dt>Airport</dt><dd class="mono">{{ base.driveToAirportMin }} min</dd></div>
+            </dl>
+            <ul class="base-best">
+              @for (t of base.bestFor; track t) {
+                <li><nz-icon nzType="check" /> {{ t }}</li>
+              }
+            </ul>
           </div>
-          <p class="base-tag">{{ b.tagline }}</p>
-          <p class="base-desc">{{ b.description }}</p>
-          <dl class="base-stats">
-            <div><dt>Courts</dt><dd class="mono">{{ b.courts }}</dd></div>
-            <div><dt>Clubs</dt><dd class="mono">{{ b.clubs }}</dd></div>
-            <div><dt>Airport</dt><dd class="mono">{{ b.driveToAirportMin }} min</dd></div>
-          </dl>
-          <ul class="base-best">
-            @for (t of b.bestFor; track t) {
-              <li><nz-icon nzType="check" /> {{ t }}</li>
-            }
-          </ul>
         </article>
       }
     </div>
   </div>
 </section>
 
-<section class="section section-sand">
+<!-- ============ THE ISLAND ============ -->
+<section class="section section-deep island">
   <div class="container">
     <div class="head" appReveal>
-      <p class="eyebrow">Read on</p>
-      <h2 class="display">More on the island and the sport.</h2>
+      <p class="eyebrow">The island</p>
+      <h2 class="display">True whatever you came to do.</h2>
+      <p class="lede">{{ island.paragraphs[0] }}</p>
     </div>
-    <ul class="reading">
-      @for (p of journal; track p.slug) {
-        <li>
-          <a [routerLink]="['/journal', p.slug]">
-            <span class="reading-cat">{{ p.category }}</span>
-            <span class="reading-title">{{ p.title }}</span>
-            <nz-icon nzType="arrow-right" />
-          </a>
-        </li>
+
+    <dl class="island-numbers">
+      @for (n of island.numbers; track n.label; let i = $index) {
+        <div [appReveal]="i * 50">
+          <dt class="mono">{{ n.value }}</dt>
+          <dd>{{ n.label }}<span>{{ n.source }}</span></dd>
+        </div>
+      }
+    </dl>
+
+    <div class="grid grid-3 essentials">
+      @for (e of island.essentials; track e.title; let i = $index) {
+        <article class="ess" [appReveal]="i * 40">
+          <nz-icon [nzType]="e.icon" />
+          <h3>{{ e.title }}</h3>
+          <p>{{ e.text }}</p>
+        </article>
+      }
+    </div>
+
+    <p class="head-link-row">
+      <a class="head-link on-dark" [href]="hubWhy">Bali for every sport, in full <nz-icon nzType="arrow-right" /></a>
+    </p>
+  </div>
+</section>
+
+<!-- ============ OTHER SPORTS ============ -->
+<section class="section">
+  <div class="container">
+    <div class="head" appReveal>
+      <p class="eyebrow">Also on the island</p>
+      <h2 class="display">The same week, another sport.</h2>
+      <p class="lede">Each sport has its own team and its own site. Many guests combine two.</p>
+    </div>
+    <div class="others">
+      @for (o of others; track o.id) {
+        <a class="other" [href]="o.href" [attr.data-sport]="o.id">
+          <span class="other-ico"><app-sport-icon [sport]="o.id" /></span>
+          <span class="other-name">{{ o.label }} in Bali</span>
+          <nz-icon nzType="arrow-right" />
+        </a>
+      }
+    </div>
+
+    <h2 class="sources-title">Sources</h2>
+    <ul class="sources">
+      @for (src of b.sources; track src.url) {
+        <li><a [href]="src.url" target="_blank" rel="noopener noreferrer">{{ src.label }}</a></li>
+      }
+      @for (src of island.sources; track src.url) {
+        <li><a [href]="src.url" target="_blank" rel="noopener noreferrer">{{ src.label }}</a></li>
       }
     </ul>
-    <p class="reading-more">
-      <a class="head-link" routerLink="/journal">The whole journal <nz-icon nzType="arrow-right" /></a>
+    <p class="journal-link">
+      <a class="head-link" routerLink="/journal">More in the journal <nz-icon nzType="arrow-right" /></a>
     </p>
   </div>
 </section>

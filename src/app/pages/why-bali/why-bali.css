@@ -1,9 +1,52 @@
 :host { display: block; }
 
-.container-narrow > * { max-width: 72ch; }
-.para { margin: 0 0 18px; font-size: 16px; line-height: 1.78; color: var(--ink-2); }
-.source { margin-top: 22px; font-size: 12px; line-height: 1.6; color: var(--ink-3); }
-.source span { display: block; opacity: .8; }
+/* ---------- story ---------- */
+
+.story { display: grid; gap: 36px; }
+@media (min-width: 1000px) { .story { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 64px; align-items: start; } }
+.story-text { max-width: 70ch; }
+.para { margin: 0 0 18px; font-size: 16px; line-height: 1.8; color: var(--ink-2); }
+.para:first-child { font-size: 1.12rem; color: var(--ink); }
+.checked { display: inline-flex; align-items: center; gap: 8px; margin: 10px 0 0; font-size: 12.5px; color: var(--ink-3); }
+.checked nz-icon { color: var(--brand); }
+
+.numbers { margin: 0; display: grid; gap: 12px; }
+@media (min-width: 1000px) { .numbers { position: sticky; top: calc(var(--header-h) + 24px); } }
+.num {
+  padding: 18px 20px;
+  border-radius: var(--radius);
+  background: var(--brand-soft);
+  border-inline-start: 3px solid var(--brand);
+}
+.num dt { font-family: var(--font-display); font-size: clamp(1.7rem, 4vw, 2.2rem); font-weight: 600; color: var(--brand-strong); line-height: 1.05; }
+.num dd { margin: 6px 0 0; font-size: 13.6px; line-height: 1.55; color: var(--ink-2); }
+.num-src { display: block; margin-top: 4px; font-size: 11px; color: var(--ink-3); }
+
+/* ---------- venues ---------- */
+
+.venue {
+  height: 100%;
+  padding: 20px 20px 22px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  transition: border-color .25s ease, transform .25s ease;
+}
+.venue:hover { border-color: var(--brand); transform: translateY(-2px); }
+.venue-area { display: flex; align-items: center; gap: 6px; margin: 0 0 8px; font-size: 11.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--brand-strong); }
+.venue h3 { margin: 0 0 6px; font-family: var(--font-display); font-size: 1.2rem; font-weight: 600; color: var(--ink); }
+.venue p:last-child { margin: 0; font-size: 14px; line-height: 1.6; color: var(--ink-2); }
+
+/* ---------- seasons ---------- */
+
+.season-card { padding: 20px 18px 16px; border: 1px solid var(--line); border-radius: var(--radius-lg); background: var(--surface); }
+.season-notes { margin-top: 20px; }
+.snote { padding: 4px 0 0; border-top: 2px solid var(--brand); }
+.snote-months { margin: 12px 0 4px; font-size: 12px; color: var(--brand-strong); font-weight: 600; }
+.snote h3 { margin: 0 0 6px; font-size: 1.05rem; color: var(--ink); }
+.snote p:last-child { margin: 0; font-size: 14px; line-height: 1.6; color: var(--ink-2); }
+
+/* ---------- practical ---------- */
 
 .facet {
   display: grid;
@@ -15,50 +58,59 @@
   border: 1px solid var(--line);
   border-radius: var(--radius);
 }
-.facet-icon { grid-column: 1; grid-row: 1; font-size: 20px; color: var(--brand); line-height: 1; align-self: start; margin-top: 1px; }
+.facet-icon { grid-column: 1; grid-row: 1; font-size: 20px; color: var(--brand); line-height: 1; margin-top: 1px; }
 .facet h3 { grid-column: 2; grid-row: 1; margin: 0; font-size: 1.05rem; font-weight: 600; line-height: 1.35; color: var(--ink); }
 .facet p { grid-column: 1 / -1; grid-row: 2; margin: 10px 0 0; font-size: 14.2px; line-height: 1.6; color: var(--ink-2); }
 
+/* ---------- bases ---------- */
+
 .here { margin-top: 26px; }
 .base-notes { margin-top: 34px; }
-
-.base {
-  padding: 22px 20px 24px;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
-}
-.base-top { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.base { overflow: hidden; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-lg); }
+.base-photo { display: block; aspect-ratio: 16 / 9; }
+.base-body { padding: 20px 20px 24px; }
+.base-top { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
 .base h3 { margin: 0; font-family: var(--font-display); font-size: 1.28rem; font-weight: 600; color: var(--ink); }
 .base-sub { font-size: 11.6px; letter-spacing: .04em; text-transform: uppercase; color: var(--ink-3); }
-.base-tag { margin: 8px 0 0; font-size: 14.6px; color: var(--ink); }
+.base-tag { margin: 8px 0 0; font-size: 14.6px; color: var(--brand-strong); font-weight: 500; }
 .base-desc { margin: 10px 0 0; font-size: 14px; line-height: 1.68; color: var(--ink-2); }
-
-.base-stats { display: flex; gap: 22px; margin: 16px 0 0; padding-top: 14px; border-top: 1px solid var(--line); }
+.base-stats { display: flex; flex-wrap: wrap; gap: 22px; margin: 16px 0 0; padding-top: 14px; border-top: 1px solid var(--line); }
 .base-stats dt { font-size: 10.4px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
 .base-stats dd { margin: 2px 0 0; font-size: 1.02rem; font-weight: 600; color: var(--ink); }
-
 .base-best { margin: 14px 0 0; padding: 0; list-style: none; display: grid; gap: 6px; }
 .base-best li { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 8px; font-size: 13.2px; color: var(--ink-2); }
 .base-best nz-icon { color: var(--brand); font-size: 11px; margin-top: 4px; }
 
-.reading { margin: 0; padding: 0; list-style: none; display: grid; gap: 2px; }
-.reading li { border-top: 1px solid var(--line); }
-.reading li:last-child { border-bottom: 1px solid var(--line); }
-.reading a {
-  display: grid;
-  grid-template-columns: 110px minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 14px;
-  padding: 16px 0;
-  color: var(--ink);
-  text-decoration: none;
+/* ---------- island ---------- */
+
+.island .display { color: #fff; }
+.head-link.on-dark { color: #fff; }
+.island-numbers { margin: 0 0 36px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px 28px; }
+@media (min-width: 900px) { .island-numbers { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.island-numbers dt { font-family: var(--font-display); font-size: clamp(1.6rem, 3.6vw, 2.2rem); font-weight: 600; color: #fff; }
+.island-numbers dd { margin: 6px 0 0; font-size: 13px; line-height: 1.55; color: rgba(255, 255, 255, .72); }
+.island-numbers dd span { display: block; margin-top: 5px; font-size: 11px; color: rgba(255, 255, 255, .45); }
+.ess { padding: 20px; border-radius: var(--radius); background: rgba(255, 255, 255, .05); border: 1px solid rgba(255, 255, 255, .1); }
+.ess nz-icon { font-size: 20px; color: var(--brand-strong); }
+.ess h3 { margin: 10px 0 6px; font-size: 1.02rem; color: #fff; }
+.ess p { margin: 0; font-size: 13.6px; line-height: 1.6; }
+
+/* ---------- other sports, sources ---------- */
+
+.others { display: grid; gap: 10px; grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 700px) { .others { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1040px) { .others { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.other {
+  display: flex; align-items: center; gap: 12px;
+  padding: 16px; border-radius: var(--radius);
+  border: 1px solid var(--line); background: var(--surface);
+  color: var(--ink); text-decoration: none; font-weight: 600;
+  transition: border-color .2s ease, transform .2s ease;
 }
-@media (max-width: 640px) { .reading a { grid-template-columns: minmax(0, 1fr) auto; } .reading-cat { display: none; } }
-.reading-cat { font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); }
-.reading-title { font-size: 15.4px; }
-.reading a:hover { color: var(--brand-strong); }
-.reading nz-icon { color: var(--ink-3); transition: transform .3s ease; }
-.reading a:hover nz-icon { transform: translateX(4px); color: var(--brand-strong); }
-.reading-more { margin: 24px 0 0; }
-.head-link { display: inline-flex; align-items: center; gap: 8px; font-size: 14.4px; font-weight: 500; color: var(--brand-strong); text-decoration: none; }
+.other:hover { border-color: var(--brand); transform: translateY(-2px); color: var(--ink); }
+.other-ico { width: 38px; height: 38px; display: grid; place-items: center; border-radius: 10px; background: var(--brand); color: #fff; font-size: 20px; }
+.other-name { flex: 1; }
+.other nz-icon { color: var(--brand); }
+.sources-title { margin: 48px 0 0; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-3); }
+.sources { margin-top: 12px; }
+.journal-link { margin: 26px 0 0; }

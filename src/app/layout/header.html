@@ -1,21 +1,48 @@
-<header class="site-header" [class.is-solid]="scrolled() || !isHome()">
+<header class="site-header" [class.is-solid]="scrolled() || !isHome() || switcherOpen()">
   <div class="container bar">
-    <a class="brand" routerLink="/" [attr.aria-label]="brand.name + ' — home'">
-      <svg class="brand-mark" viewBox="0 0 64 64" aria-hidden="true">
-        <rect width="64" height="64" rx="15" class="mark-bg" />
-        <rect x="16" y="12" width="32" height="40" rx="3" class="mark-court" />
-        <path d="M16 32h32" class="mark-net" />
-        <path d="M32 12v13M32 39v13" class="mark-line" />
-        <circle cx="41" cy="24" r="3.4" class="mark-ball" />
-      </svg>
+    <a class="brand" routerLink="/" [attr.aria-label]="brand.name + (site.isHub ? '' : ' ' + siteLabel) + ' — home'">
+      <span class="brand-mark" aria-hidden="true"><app-sport-icon [sport]="siteId" /></span>
       <span class="brand-text">
         <span class="brand-name">{{ brand.wordmarkLead }}</span>
         <span class="brand-sub">{{ brand.wordmarkTail }}</span>
       </span>
     </a>
 
+    <!-- which sport: every site can reach every other -->
+    <div class="switcher" [class.is-open]="switcherOpen()">
+      <button
+        type="button"
+        class="switch-btn"
+        (click)="switcherOpen.set(!switcherOpen())"
+        [attr.aria-expanded]="switcherOpen()"
+        aria-haspopup="true"
+        aria-controls="sport-menu"
+      >
+        <span class="switch-label">{{ site.isHub ? 'Choose a sport' : siteLabel }}</span>
+        <nz-icon nzType="down" class="switch-caret" />
+      </button>
+      @if (switcherOpen()) {
+        <div class="switch-menu" id="sport-menu" role="menu">
+          @for (s of sites; track s.id) {
+            <a
+              role="menuitem"
+              class="switch-item"
+              [attr.data-sport]="s.id"
+              [class.is-current]="s.current"
+              [href]="s.href"
+              [attr.aria-current]="s.current ? 'page' : null"
+            >
+              <span class="switch-ico"><app-sport-icon [sport]="s.id" /></span>
+              <span>{{ s.label }}</span>
+              @if (s.current) { <nz-icon nzType="check" class="switch-check" /> }
+            </a>
+          }
+        </div>
+      }
+    </div>
+
     <nav class="nav-desktop" aria-label="Main">
-      @for (item of navBar; track item.link) {
+      @for (item of navMain; track item.link) {
         <a [routerLink]="item.link" routerLinkActive="is-active">{{ item.label }}</a>
       }
     </nav>
@@ -61,7 +88,7 @@
   <ng-container *nzDrawerContent>
     <div class="drawer-inner">
       <div class="drawer-top">
-        <span class="drawer-label">Menu</span>
+        <span class="drawer-label">{{ site.isHub ? 'Menu' : siteLabel }}</span>
         <button type="button" class="icon-btn" (click)="closeDrawer()" aria-label="Close menu">
           <nz-icon nzType="close" />
         </button>
@@ -82,18 +109,30 @@
 
       <nav class="drawer-sub" aria-label="More">
         @for (item of navSecondary; track item.link) {
-          <a [routerLink]="item.link" routerLinkActive="is-current" (click)="closeDrawer()">
-            {{ item.label }}
-          </a>
+          <a [routerLink]="item.link" routerLinkActive="is-current" (click)="closeDrawer()">{{ item.label }}</a>
         }
       </nav>
+
+      <div class="drawer-sports">
+        <span class="drawer-label">Other sports</span>
+        <div class="drawer-sport-grid">
+          @for (s of sites; track s.id) {
+            @if (!s.current) {
+              <a [href]="s.href" [attr.data-sport]="s.id">
+                <app-sport-icon [sport]="s.id" />
+                {{ s.label }}
+              </a>
+            }
+          }
+        </div>
+      </div>
 
       <div class="drawer-foot">
         <button type="button" class="theme-row" (click)="theme.toggle()">
           <span>{{ theme.mode() === 'dark' ? 'Light theme' : 'Dark theme' }}</span>
           <nz-icon nzType="swap" />
         </button>
-        <a class="wa-row" [href]="brand.whatsappUrl" target="_blank" rel="noopener noreferrer">
+        <a class="wa-row" [href]="whatsappUrl" target="_blank" rel="noopener noreferrer">
           <nz-icon nzType="whats-app" />
           WhatsApp
         </a>

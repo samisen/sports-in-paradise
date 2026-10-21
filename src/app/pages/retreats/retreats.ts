@@ -5,7 +5,6 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { FormsModule } from '@angular/forms';
 import { CatalogService } from '../../core/catalog.service';
-import { BASES, LEVELS, LevelId, BaseId } from '../../core/retreat-config';
 import { PageHeroComponent } from '../../shared/page-hero';
 import { RetreatCardComponent } from '../../shared/retreat-card';
 import { CtaBandComponent } from '../../shared/cta-band';
@@ -26,11 +25,12 @@ type Sort = 'soonest' | 'price' | 'length';
 export class RetreatsPage {
   private readonly catalog = inject(CatalogService);
 
-  readonly bases = BASES;
-  readonly levels = LEVELS;
+  readonly sport = this.catalog.sport;
+  readonly bases = this.sport.bases;
+  readonly levels = this.sport.planner.levels;
 
-  readonly base = signal<BaseId | 'all'>('all');
-  readonly level = signal<LevelId | 'all'>('all');
+  readonly base = signal<string>('all');
+  readonly level = signal<string>('all');
   readonly sort = signal<Sort>('soonest');
 
   readonly sortOptions: { value: Sort; label: string }[] = [
@@ -42,8 +42,7 @@ export class RetreatsPage {
   readonly filtered = computed(() => {
     const base = this.base();
     const level = this.level();
-    const list = this.catalog
-      .retreats()
+    const list = this.sport.retreats
       .filter((r) => (base === 'all' ? true : r.base === base))
       .filter((r) => (level === 'all' ? true : r.level === level));
 

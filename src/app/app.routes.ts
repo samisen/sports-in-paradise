@@ -1,46 +1,77 @@
-import { Routes } from '@angular/router';
-import { BRAND } from './core/brand';
+import { inject } from '@angular/core';
+import { CanMatchFn, Routes } from '@angular/router';
+import { SiteService } from './core/site/site.service';
 
-const t = (page: string) => `${page} — ${BRAND.name}`;
+/** The hub and the sport sites share paths; these decide which page answers. */
+const onHub: CanMatchFn = () => inject(SiteService).isHub;
+const onSport: CanMatchFn = () => !inject(SiteService).isHub;
 
 export const routes: Routes = [
+  /* ------------------------------------------------------------- hub --- */
   {
     path: '',
-    title: `${BRAND.name} — ${BRAND.descriptor}`,
+    pathMatch: 'full',
+    canMatch: [onHub],
+    loadComponent: () => import('./pages/hub/hub-home').then((m) => m.HubHomePage),
+  },
+  {
+    path: 'why-bali',
+    title: 'Why Bali',
+    canMatch: [onHub],
+    loadComponent: () => import('./pages/hub/hub-why-bali').then((m) => m.HubWhyBaliPage),
+  },
+  {
+    path: 'plan',
+    title: 'Plan Your Retreat',
+    canMatch: [onHub],
+    loadComponent: () => import('./pages/hub/hub-plan').then((m) => m.HubPlanPage),
+  },
+
+  /* ----------------------------------------------------------- sports --- */
+  {
+    path: '',
+    pathMatch: 'full',
+    canMatch: [onSport],
     loadComponent: () => import('./pages/home/home').then((m) => m.HomePage),
   },
   {
     path: 'why-bali',
-    title: t('Why Bali'),
+    title: 'Why Bali',
+    canMatch: [onSport],
     loadComponent: () => import('./pages/why-bali/why-bali').then((m) => m.WhyBaliPage),
   },
   {
     path: 'retreats',
-    title: t('Retreats'),
+    title: 'Retreats',
+    canMatch: [onSport],
     loadComponent: () => import('./pages/retreats/retreats').then((m) => m.RetreatsPage),
   },
   {
     path: 'retreats/:slug',
+    canMatch: [onSport],
     loadComponent: () => import('./pages/retreats/retreat-detail').then((m) => m.RetreatDetailPage),
   },
   {
     path: 'plan',
-    title: t('Plan Your Retreat'),
+    title: 'Plan Your Retreat',
+    canMatch: [onSport],
     loadComponent: () => import('./pages/plan/plan').then((m) => m.PlanPage),
   },
+
+  /* ---------------------------------------------------------- shared --- */
   {
     path: 'how-it-works',
-    title: t('How a Week Works'),
+    title: 'How a Week Works',
     loadComponent: () => import('./pages/how-it-works/how-it-works').then((m) => m.HowItWorksPage),
   },
   {
     path: 'contact',
-    title: t('Contact'),
+    title: 'Contact',
     loadComponent: () => import('./pages/contact/contact').then((m) => m.ContactPage),
   },
   {
     path: 'journal',
-    title: t('Journal'),
+    title: 'Journal',
     loadComponent: () => import('./pages/journal/journal').then((m) => m.JournalPage),
   },
   {
@@ -55,7 +86,7 @@ export const routes: Routes = [
 
   {
     path: '**',
-    title: t('Page not found'),
+    title: 'Page not found',
     loadComponent: () => import('./pages/not-found/not-found').then((m) => m.NotFoundPage),
   },
 ];

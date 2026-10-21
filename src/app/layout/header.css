@@ -34,17 +34,23 @@
   gap: 10px;
   color: inherit;
   text-decoration: none;
-  margin-inline-end: auto;
   min-width: 0;
 }
 
-.brand-mark { width: 32px; height: 32px; flex: none; }
-.mark-bg { fill: var(--brand); }
-.site-header:not(.is-solid) .mark-bg { fill: rgba(255, 255, 255, .16); }
-.mark-court { fill: none; stroke: rgba(255, 255, 255, .9); stroke-width: 2.6; }
-.mark-net { stroke: rgba(255, 255, 255, .9); stroke-width: 2.6; stroke-linecap: round; }
-.mark-line { stroke: rgba(255, 255, 255, .5); stroke-width: 1.8; stroke-linecap: round; }
-.mark-ball { fill: #fff; }
+.brand-mark {
+  width: 34px;
+  height: 34px;
+  flex: none;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  background: var(--brand);
+  color: #fff;
+  font-size: 20px;
+  transition: background-color .35s ease, transform .35s ease;
+}
+.site-header:not(.is-solid) .brand-mark { background: rgba(255, 255, 255, .16); }
+.brand:hover .brand-mark { transform: rotate(-6deg); }
 
 .brand-text { display: flex; flex-direction: column; line-height: 1; }
 .brand-name {
@@ -69,7 +75,7 @@
     display: flex;
     align-items: center;
     gap: 4px;
-    margin-inline: auto;
+    margin-inline-start: auto;
   }
   .nav-desktop a {
     position: relative;
@@ -101,7 +107,8 @@
 
 /* ---------- actions ---------- */
 
-.bar-actions { display: flex; align-items: center; gap: 8px; }
+.bar-actions { display: flex; align-items: center; gap: 8px; margin-inline-start: auto; }
+@media (min-width: 1200px) { .bar-actions { margin-inline-start: 12px; } }
 
 .icon-btn {
   width: 40px;
@@ -228,3 +235,78 @@
   font-size: 14px;
   cursor: pointer;
 }
+
+/* ---------- sport switcher ---------- */
+
+.switcher { position: relative; flex: none; }
+.switch-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 34px;
+  padding: 0 12px 0 13px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, currentColor 24%, transparent);
+  background: color-mix(in srgb, currentColor 6%, transparent);
+  color: inherit;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color .2s ease;
+}
+.switch-btn:hover { background: color-mix(in srgb, currentColor 12%, transparent); }
+.switch-caret { font-size: 10px; transition: transform .25s ease; }
+.switcher.is-open .switch-caret { transform: rotate(180deg); }
+@media (max-width: 420px) { .switch-label { max-width: 9ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } }
+
+.switch-menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  inset-inline-start: 0;
+  min-width: 220px;
+  padding: 6px;
+  border-radius: 14px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-lg);
+  display: grid;
+  gap: 2px;
+  animation: menu-in .18s ease-out;
+}
+@keyframes menu-in { from { opacity: 0; transform: translateY(-6px); } }
+
+.switch-item {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 9px 10px;
+  border-radius: 10px;
+  color: var(--ink);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+}
+.switch-item:hover { background: var(--surface-2); color: var(--ink); }
+.switch-ico {
+  width: 30px; height: 30px; flex: none;
+  display: grid; place-items: center;
+  border-radius: 8px;
+  background: var(--brand-soft);
+  color: var(--brand);
+  font-size: 17px;
+}
+.switch-item.is-current .switch-ico { background: var(--brand); color: #fff; }
+.switch-check { margin-inline-start: auto; color: var(--brand); font-size: 12px; }
+
+.drawer-sports { padding: 18px 24px 0; }
+.drawer-sport-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-top: 10px; }
+.drawer-sport-grid a {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 12px; border-radius: 12px;
+  border: 1px solid var(--line);
+  color: var(--ink); text-decoration: none; font-size: 13.5px; font-weight: 500;
+}
+.drawer-sport-grid a app-sport-icon { color: var(--brand); font-size: 17px; }
+
+@media (max-width: 399px) { .brand-text { display: none; } }

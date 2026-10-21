@@ -1,6 +1,6 @@
 <app-page-hero
   eyebrow="Contact"
-  heading="Tell us where you play."
+  [heading]="site.isHub ? 'Tell us what you want to do.' : 'Tell us where you are now.'"
   lede="Three fields is enough to start. A coach reads it, and you get a straight answer — not a follow-up sequence."
 />
 
@@ -25,16 +25,29 @@
             </nz-form-item>
           </div>
 
-          <nz-form-item>
-            <nz-form-label nzRequired>Where do you play now?</nz-form-label>
-            <nz-form-control>
-              <nz-select formControlName="level">
-                @for (l of levels; track l.id) {
-                  <nz-option [nzValue]="l.id" [nzLabel]="l.name + ' — ' + l.note" />
-                }
-              </nz-select>
-            </nz-form-control>
-          </nz-form-item>
+          @if (site.isHub) {
+            <nz-form-item>
+              <nz-form-label>Which sports? <span class="opt">Pick any</span></nz-form-label>
+              <nz-form-control>
+                <nz-select formControlName="sports" nzMode="multiple" nzPlaceHolder="Padel, golf, diving…">
+                  @for (s of sports; track s.id) {
+                    <nz-option [nzValue]="s.id" [nzLabel]="s.label" />
+                  }
+                </nz-select>
+              </nz-form-control>
+            </nz-form-item>
+          } @else {
+            <nz-form-item>
+              <nz-form-label nzRequired>{{ levelTitle }}</nz-form-label>
+              <nz-form-control>
+                <nz-select formControlName="level">
+                  @for (l of levels; track l.id) {
+                    <nz-option [nzValue]="l.id" [nzLabel]="l.name + ' — ' + l.note" />
+                  }
+                </nz-select>
+              </nz-form-control>
+            </nz-form-item>
+          }
 
           <nz-form-item>
             <nz-form-label>Your week <span class="opt">Optional</span></nz-form-label>
@@ -61,7 +74,7 @@
               Send the message
               <nz-icon nzType="arrow-right" />
             </button>
-            <a class="wa-inline" [href]="brand.whatsappUrl" target="_blank" rel="noopener noreferrer">
+            <a class="wa-inline" [href]="whatsappUrl" target="_blank" rel="noopener noreferrer">
               <nz-icon nzType="whats-app" /> Or message us on WhatsApp
             </a>
           </div>
@@ -79,7 +92,7 @@
             look at the weeks already running, or build your own.
           </p>
           <div class="done-actions">
-            <a nz-button nzType="primary" nzSize="large" routerLink="/retreats">See the retreats</a>
+            <a nz-button nzType="primary" nzSize="large" [routerLink]="site.isHub ? '/' : '/retreats'">{{ site.isHub ? 'Back to the sports' : 'See the retreats' }}</a>
             <a nz-button nzSize="large" routerLink="/plan">Plan your own</a>
           </div>
         </div>
@@ -99,7 +112,7 @@
             <nz-icon nzType="whats-app" />
             <div>
               <span class="k">WhatsApp</span>
-              <a [href]="brand.whatsappUrl" target="_blank" rel="noopener noreferrer">{{ brand.whatsapp }}</a>
+              <a [href]="whatsappUrl" target="_blank" rel="noopener noreferrer">{{ brand.whatsapp }}</a>
             </div>
           </li>
           <li>

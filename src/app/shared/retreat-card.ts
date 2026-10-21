@@ -1,21 +1,20 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { CatalogService } from '../core/catalog.service';
-import { Retreat } from '../core/models';
+import { Retreat } from '../core/content/types';
 import { usd } from '../core/format';
-import { inject } from '@angular/core';
-import { CourtArtComponent } from './court-art';
+import { PhotoComponent } from './photo';
 
 @Component({
   selector: 'app-retreat-card',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterLink, NzIconModule, CourtArtComponent],
+  imports: [RouterLink, NzIconModule, PhotoComponent],
   template: `
     @let r = retreat();
     <a class="card" [routerLink]="['/retreats', r.slug]">
       <span class="art">
-        <app-court-art [seed]="r.art" [label]="r.name + ' — ' + base().name" />
+        <app-photo [photo]="r.photo" sizes="(min-width: 1040px) 33vw, (min-width: 700px) 50vw, 100vw" />
         <span class="tag" [class.is-filling]="r.status === 'filling'" [class.is-wait]="r.status === 'waitlist'">
           {{ statusLabel() }}
         </span>
@@ -50,14 +49,7 @@ export class RetreatCardComponent {
 
   protected readonly base = computed(() => this.catalog.base(this.retreat().base));
   protected readonly price = computed(() => usd(this.retreat().priceFromUsd));
-
-  protected readonly levelLabel = computed(() => {
-    switch (this.retreat().level) {
-      case 'newcomer': return 'New to padel';
-      case 'improver': return 'Improver';
-      default: return 'Competitor';
-    }
-  });
+  protected readonly levelLabel = computed(() => this.catalog.levelName(this.retreat().level));
 
   protected readonly statusLabel = computed(() => {
     const r = this.retreat();

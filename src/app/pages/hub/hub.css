@@ -1,0 +1,207 @@
+:host { display: block; }
+
+/* ---------- hero ---------- */
+
+.hero {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  min-height: 84svh;
+  padding-top: calc(var(--header-h) + 60px);
+  padding-bottom: 48px;
+  overflow: hidden;
+  background: var(--bg-deep);
+}
+@media (min-width: 768px) { .hero { min-height: 88svh; padding-bottom: 64px; } }
+
+.hero-veil {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--bg-deep) 62%, transparent) 0%, transparent 65%),
+    var(--overlay);
+}
+.hero-inner { position: relative; z-index: 2; }
+
+.hero .eyebrow { color: rgba(255, 255, 255, .72); }
+.hero-title { max-width: 18ch; color: #fff; }
+.hero-lede { max-width: 56ch; margin-top: 16px; color: rgba(255, 255, 255, .84); }
+
+.hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+
+.hero-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px 24px;
+  margin: 40px 0 0;
+  padding-top: 26px;
+  border-top: 1px solid rgba(255, 255, 255, .16);
+}
+@media (min-width: 760px) { .hero-stats { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.hero-stats dt { font-size: 1.7rem; font-weight: 600; color: #fff; }
+.hero-stats dd { margin: 2px 0 0; font-size: 12.4px; line-height: 1.45; color: rgba(255, 255, 255, .66); }
+
+
+.hero-title { max-width: 16ch; }
+
+.hero-sports { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
+.hero-sport {
+  display: inline-flex; align-items: center; gap: 9px;
+  padding: 8px 16px 8px 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .1);
+  border: 1px solid rgba(255, 255, 255, .22);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  color: #fff; text-decoration: none; font-weight: 600; font-size: 14.5px;
+  transition: background-color .25s ease, transform .25s ease;
+}
+.hero-sport:hover { background: var(--brand); border-color: var(--brand); color: #fff; transform: translateY(-2px); }
+.hs-ico { width: 30px; height: 30px; display: grid; place-items: center; border-radius: 999px; background: var(--brand); font-size: 17px; }
+
+/* ---------- sport cards ---------- */
+
+.sports { display: grid; gap: 16px; grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 700px) { .sports { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1040px) {
+  .sports { grid-template-columns: repeat(3, minmax(0, 1fr)); grid-auto-rows: 360px; }
+  .sport-card.is-wide { grid-column: span 2; }
+}
+
+.sport-card {
+  position: relative;
+  display: flex;
+  min-height: 340px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  color: #fff;
+  text-decoration: none;
+  isolation: isolate;
+  box-shadow: var(--shadow-sm);
+  transition: transform .35s cubic-bezier(.22,.61,.36,1), box-shadow .35s ease;
+}
+.sport-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); color: #fff; }
+.sport-card:hover .sc-photo ::ng-deep img { transform: scale(1.06); }
+.sc-photo { position: absolute; inset: 0; z-index: -2; }
+.sc-shade {
+  position: absolute; inset: 0; z-index: -1;
+  background:
+    linear-gradient(180deg, transparent 20%, color-mix(in srgb, var(--bg-deep) 88%, transparent) 100%),
+    linear-gradient(135deg, color-mix(in srgb, var(--brand) 55%, transparent), transparent 55%);
+}
+.sc-body { display: flex; flex-direction: column; justify-content: flex-end; gap: 6px; width: 100%; padding: 22px; }
+.sc-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: auto; }
+.sc-ico { width: 46px; height: 46px; display: grid; place-items: center; border-radius: 14px; background: var(--brand); font-size: 25px; box-shadow: 0 8px 20px rgba(0,0,0,.25); }
+.sc-meta { padding: 5px 11px; border-radius: 999px; background: rgba(0, 0, 0, .35); backdrop-filter: blur(6px); font-size: 12px; font-weight: 500; }
+.sc-name { font-family: var(--font-display); font-size: clamp(2rem, 4vw, 2.6rem); font-weight: 600; line-height: 1; }
+.sc-line { font-size: 14.6px; line-height: 1.5; color: rgba(255, 255, 255, .88); max-width: 46ch; }
+.sc-bali { font-size: 12.6px; color: rgba(255, 255, 255, .64); }
+.sc-go { display: inline-flex; align-items: center; gap: 8px; margin-top: 8px; font-size: 13.8px; font-weight: 600; }
+.sc-go nz-icon { transition: transform .3s ease; }
+.sport-card:hover .sc-go nz-icon { transform: translateX(5px); }
+
+/* ---------- seasons ---------- */
+
+.season-card { padding: 20px 18px 16px; border: 1px solid var(--line); border-radius: var(--radius-lg); background: var(--surface); }
+
+/* ---------- combine ---------- */
+
+.combine .display { color: #fff; }
+.head-link.on-dark { color: #fff; }
+.combo { padding: 22px; border-radius: var(--radius-lg); background: rgba(255, 255, 255, .05); border: 1px solid rgba(255, 255, 255, .1); }
+.combo-icons { display: flex; gap: 6px; }
+.combo-ico { width: 40px; height: 40px; display: grid; place-items: center; border-radius: 12px; background: var(--brand); color: #fff; font-size: 22px; }
+.combo h3 { margin: 14px 0 2px; font-family: var(--font-display); font-size: 1.35rem; color: #fff; }
+.combo-sports { margin: 0 0 10px !important; font-size: 12px !important; letter-spacing: .08em; text-transform: uppercase; color: rgba(255, 255, 255, .5) !important; }
+.combo p:last-child { margin: 0; font-size: 14px; line-height: 1.6; }
+
+/* ---------- why ---------- */
+
+.why-grid { align-items: start; gap: 30px; }
+.why-list { display: grid; gap: 4px; }
+.why-item { display: grid; grid-template-columns: 36px minmax(0, 1fr); gap: 12px; padding: 16px 0; border-bottom: 1px solid var(--line); }
+.why-item > nz-icon { font-size: 22px; color: var(--brand); margin-top: 2px; }
+.why-item.is-step > span { font-size: 13px; color: var(--ink-3); padding-top: 3px; }
+.why-item h3 { margin: 0; font-size: 1.05rem; color: var(--ink); }
+.why-item p { margin: 4px 0 0; font-size: 14px; line-height: 1.6; color: var(--ink-2); }
+
+/* ---------- voices ---------- */
+
+.voices { display: grid; gap: 16px; grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 700px) { .voices { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1100px) { .voices { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.voice { margin: 0; padding: 22px; border-radius: var(--radius-lg); background: var(--surface); border: 1px solid var(--line); border-top: 3px solid var(--brand); }
+.voice-ico { display: inline-flex; align-items: center; gap: 7px; font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--brand-strong); }
+.voice blockquote { margin: 12px 0 0; font-size: 15px; line-height: 1.7; color: var(--ink); }
+.voice figcaption { margin-top: 14px; display: flex; flex-direction: column; gap: 2px; }
+.voice strong { font-size: 13.6px; color: var(--ink); }
+.voice figcaption span { font-size: 12.2px; color: var(--ink-3); }
+
+/* ---------- why bali (hub) ---------- */
+
+.story { display: grid; gap: 36px; }
+@media (min-width: 1000px) { .story { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 64px; align-items: start; } }
+.para { margin: 0 0 18px; font-size: 16px; line-height: 1.8; color: var(--ink-2); max-width: 70ch; }
+.para:first-child { font-size: 1.12rem; color: var(--ink); }
+.numbers { margin: 0; display: grid; gap: 12px; }
+.num { padding: 18px 20px; border-radius: var(--radius); background: var(--brand-soft); border-inline-start: 3px solid var(--brand); }
+.num dt { font-family: var(--font-display); font-size: clamp(1.7rem, 4vw, 2.2rem); font-weight: 600; color: var(--brand-strong); line-height: 1.05; }
+.num dd { margin: 6px 0 0; font-size: 13.6px; line-height: 1.55; color: var(--ink-2); }
+.num-src { display: block; margin-top: 4px; font-size: 11px; color: var(--ink-3); }
+
+.facet {
+  display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: 11px; align-content: start;
+  padding: 22px 20px 24px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); height: 100%;
+}
+.facet-icon { grid-column: 1; grid-row: 1; font-size: 20px; color: var(--brand); line-height: 1; margin-top: 1px; }
+.facet h3 { grid-column: 2; grid-row: 1; margin: 0; font-size: 1.05rem; font-weight: 600; color: var(--ink); }
+.facet p { grid-column: 1 / -1; grid-row: 2; margin: 10px 0 0; font-size: 14.2px; line-height: 1.6; color: var(--ink-2); }
+
+.sport-status { display: grid; gap: 0; border-radius: var(--radius-lg); overflow: hidden; background: var(--surface); border: 1px solid var(--line); }
+.sport-status + .sport-status { margin-top: 22px; }
+@media (min-width: 900px) { .sport-status { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); } }
+.ss-photo { position: relative; min-height: 240px; }
+.ss-badge {
+  position: absolute; top: 16px; left: 16px; z-index: 2;
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 7px 13px 7px 7px; border-radius: 999px;
+  background: var(--brand); color: #fff; font-weight: 600; font-size: 14px;
+}
+.ss-badge span { width: 28px; height: 28px; display: grid; place-items: center; border-radius: 999px; background: rgba(255,255,255,.2); font-size: 16px; }
+.ss-body { padding: 24px 22px 26px; }
+@media (min-width: 900px) { .ss-body { padding: 32px 34px; } }
+.ss-body h3 { margin: 0; font-family: var(--font-display); font-size: clamp(1.4rem, 3vw, 1.8rem); font-weight: 600; line-height: 1.15; color: var(--ink); }
+.ss-lead { margin: 10px 0 0; font-size: 15px; line-height: 1.65; color: var(--ink-2); }
+.ss-nums { margin: 18px 0 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 20px; }
+.ss-nums dt { font-family: var(--font-display); font-size: 1.45rem; font-weight: 600; color: var(--brand-strong); }
+.ss-nums dd { margin: 2px 0 0; font-size: 12.6px; line-height: 1.45; color: var(--ink-3); }
+.ss-links { display: flex; flex-wrap: wrap; gap: 18px; margin-top: 20px; }
+
+.ess { padding: 20px; border-radius: var(--radius); background: rgba(255, 255, 255, .05); border: 1px solid rgba(255, 255, 255, .1); height: 100%; }
+.ess nz-icon { font-size: 20px; color: var(--brand-strong); }
+.ess h3 { margin: 10px 0 6px; font-size: 1.02rem; color: #fff; }
+.ess p { margin: 0; font-size: 13.6px; line-height: 1.6; }
+.island-deep .display { color: #fff; }
+
+.sources-title { margin: 48px 0 0; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-3); }
+
+/* ---------- plan picker ---------- */
+
+.picker { display: grid; gap: 16px; }
+@media (min-width: 800px) { .picker { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1140px) { .picker { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.pick {
+  display: flex; flex-direction: column; overflow: hidden;
+  border-radius: var(--radius-lg); background: var(--surface); border: 1px solid var(--line);
+  color: var(--ink); text-decoration: none;
+  transition: border-color .25s ease, transform .25s ease, box-shadow .25s ease;
+}
+.pick:hover { border-color: var(--brand); transform: translateY(-3px); box-shadow: var(--shadow-md); color: var(--ink); }
+.pick-photo { position: relative; aspect-ratio: 16 / 9; }
+.pick-photo .ss-badge { top: auto; bottom: 14px; }
+.pick-body { display: flex; flex-direction: column; gap: 10px; padding: 18px 20px 22px; flex: 1; }
+.pick-body p { margin: 0; font-size: 14px; line-height: 1.6; color: var(--ink-2); }
+.pick-facts { margin: 4px 0 0; padding: 0; list-style: none; display: grid; gap: 6px; font-size: 13px; color: var(--ink-2); }
+.pick-facts li { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 8px; }
+.pick-facts nz-icon { color: var(--brand); margin-top: 3px; font-size: 12px; }
+.pick-go { margin-top: auto; padding-top: 8px; display: inline-flex; align-items: center; gap: 8px; font-weight: 600; font-size: 14px; color: var(--brand-strong); }

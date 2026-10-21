@@ -2,7 +2,7 @@
 @if (r) {
   <article class="detail">
     <header class="hero">
-      <span class="hero-art" aria-hidden="true"><app-court-art [seed]="r.art" /></span>
+      <span class="hero-art"><app-photo [photo]="r.photo" [priority]="true" [decorative]="true" [credit]="true" /></span>
       <span class="hero-veil" aria-hidden="true"></span>
       <div class="container hero-inner">
         <a class="back" routerLink="/retreats"><nz-icon nzType="arrow-left" /> All retreats</a>
@@ -39,8 +39,8 @@
 
           <h2 class="sub">A day on this week</h2>
           <p class="para">
-            {{ intensity()?.note }} — {{ intensity()?.sessions }}. Play sits at either end of the
-            day, because nothing useful happens on a glass court in the middle of a Bali afternoon.
+            {{ intensity()?.note }} — {{ intensity()?.sessions }}. {{ spec.statusNote }}
+            Across the week: <strong>{{ metric() }} {{ spec.metric.label }}</strong>.
           </p>
 
           <ol class="sample">
@@ -48,7 +48,7 @@
               <li class="sday">
                 <span class="sday-head">
                   <strong>{{ d.name }}</strong>
-                  <span class="sday-tag">{{ d.tag }}</span>
+                  <span class="sday-tag" [class]="'tone-' + d.tone">{{ d.tag }}</span>
                 </span>
                 <span class="sday-blocks">
                   @for (b of d.blocks; track b.id) {
@@ -71,7 +71,7 @@
               <div><dt>Dates</dt><dd>{{ r.dates }}</dd></div>
               <div><dt>Base</dt><dd>{{ base()?.name }}</dd></div>
               <div><dt>Stay</dt><dd>{{ stayName() }}</dd></div>
-              <div><dt>Group</dt><dd>{{ r.spotsTotal }} players</dd></div>
+              <div><dt>Group</dt><dd>{{ r.spotsTotal }} {{ spec.words.people }}</dd></div>
               <div><dt>Places left</dt><dd>{{ r.spotsLeft }}</dd></div>
               <div><dt>Coach</dt><dd>{{ coach()?.name }}</dd></div>
             </dl>
@@ -83,14 +83,14 @@
             <a nz-button nzBlock class="wa" [href]="whatsappHref()" target="_blank" rel="noopener noreferrer">
               <nz-icon nzType="whats-app" /> Ask on WhatsApp
             </a>
-            <a nz-button nzBlock nzType="text" routerLink="/plan">Build a different week</a>
+            <a nz-button nzBlock nzType="text" routerLink="/plan" [queryParams]="{ from: r.slug }">Start the planner from this week</a>
 
             <p class="aside-note">Nothing is held until we have confirmed dates with you.</p>
           </div>
 
           @if (coach(); as c) {
             <div class="aside-card is-quiet">
-              <p class="coach-k">Your coach</p>
+              <p class="coach-k">Who leads it</p>
               <h3>{{ c.name }}</h3>
               <p class="coach-meta">{{ c.from }} · {{ c.level }}</p>
               <p class="coach-bio">{{ c.bio }}</p>

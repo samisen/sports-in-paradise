@@ -1,7 +1,8 @@
 <app-page-hero
-  eyebrow="Retreats"
+  [eyebrow]="sport.name + ' retreats'"
   heading="The weeks that are open."
-  lede="Eight formats, four bases, and dates through the year. If none of them is quite your week, build your own on the planner — most people do."
+  [lede]="sport.retreats.length + ' formats, ' + sport.bases.length + ' bases, and dates through the year. If none of them is quite your week, build your own on the planner — most people do.'"
+  [photo]="sport.hero.photos[2]"
 />
 
 <!-- filters, kept at the top of the page while you scroll the list -->
@@ -69,7 +70,7 @@
 
     <p class="listing-footnote">
       Prices are from, per person, and indicative. Nothing here is a booking — we confirm dates,
-      courts and rooms with you before anything is held.
+      venues and rooms with you before anything is held.
     </p>
   </div>
 </section>

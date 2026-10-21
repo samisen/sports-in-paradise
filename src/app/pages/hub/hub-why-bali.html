@@ -1,0 +1,136 @@
+<app-page-hero [eyebrow]="island.eyebrow" [heading]="island.title" [lede]="island.lead" [photo]="island.photo" />
+
+<section class="section">
+  <div class="container story">
+    <div>
+      @for (p of island.paragraphs; track p) {
+        <p class="para">{{ p }}</p>
+      }
+    </div>
+    <dl class="numbers">
+      @for (n of island.numbers; track n.label; let i = $index) {
+        <div class="num" [appReveal]="i * 60">
+          <dt class="mono">{{ n.value }}</dt>
+          <dd>{{ n.label }}<span class="num-src">{{ n.source }}</span></dd>
+        </div>
+      }
+    </dl>
+  </div>
+</section>
+
+<section class="section section-sand">
+  <div class="container">
+    <div class="head" appReveal>
+      <p class="eyebrow">What the island gives you</p>
+      <h2 class="display">Six reasons a sports week works here.</h2>
+    </div>
+    <div class="grid grid-3">
+      @for (f of island.facets; track f.title; let i = $index) {
+        <article class="facet" [appReveal]="i * 50">
+          <nz-icon [nzType]="f.icon" class="facet-icon" />
+          <h3>{{ f.title }}</h3>
+          <p>{{ f.text }}</p>
+        </article>
+      }
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="head" appReveal>
+      <p class="eyebrow">When to come</p>
+      <h2 class="display">The year, sport by sport.</h2>
+      <p class="lede">Each row is that sport’s own reading of the calendar. Tap a sport for the detail.</p>
+    </div>
+    <div class="season-card" appReveal>
+      <app-season-strip [rows]="seasons" />
+    </div>
+  </div>
+</section>
+
+<!-- ============ EACH SPORT ON THE ISLAND ============ -->
+<section class="section section-sand">
+  <div class="container">
+    <div class="head" appReveal>
+      <p class="eyebrow">The state of play</p>
+      <h2 class="display">Each sport in Bali, as it is today.</h2>
+      <p class="lede">
+        Researched and checked in {{ island.checked }}. Every sport’s own site has the full picture —
+        venues, seasons, prices and what a visitor should know.
+      </p>
+    </div>
+
+    @for (c of cards; track c.site.id) {
+      <article class="sport-status" [attr.data-sport]="c.site.id" appReveal>
+        <div class="ss-photo">
+          <app-photo [photo]="c.site.hero.photos[1]" sizes="(min-width: 900px) 42vw, 100vw" />
+          <span class="ss-badge"><span><app-sport-icon [sport]="c.site.id" /></span>{{ c.site.name }}</span>
+        </div>
+        <div class="ss-body">
+          <h3>{{ c.site.bali.title }}</h3>
+          <p class="ss-lead">{{ c.site.bali.lead }}</p>
+          <dl class="ss-nums">
+            @for (n of c.site.bali.numbers.slice(0, 4); track n.label) {
+              <div>
+                <dt class="mono">{{ n.value }}</dt>
+                <dd>{{ n.label }}</dd>
+              </div>
+            }
+          </dl>
+          <div class="ss-links">
+            <a class="head-link" [href]="c.whyHref">{{ c.site.name }} in Bali, in full <nz-icon nzType="arrow-right" /></a>
+            <a class="head-link" [href]="c.planHref">Plan a {{ c.site.name.toLowerCase() }} week <nz-icon nzType="arrow-right" /></a>
+          </div>
+        </div>
+      </article>
+    }
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="head" appReveal>
+      <p class="eyebrow">Where</p>
+      <h2 class="display">Every base, on one map.</h2>
+    </div>
+    <app-bali-map
+      [places]="places"
+      [selected]="selected()"
+      (selectPlace)="selected.set($event)"
+      [emptyTitle]="places.length + ' bases, one island.'"
+      emptyText="Each colour is a sport. Pick a marker to see the base and go to that sport’s site."
+    />
+  </div>
+</section>
+
+<section class="section section-deep island-deep">
+  <div class="container">
+    <div class="head" appReveal>
+      <p class="eyebrow">Before you book</p>
+      <h2 class="display">What every visitor should know.</h2>
+    </div>
+    <div class="grid grid-3">
+      @for (e of island.essentials; track e.title; let i = $index) {
+        <article class="ess" [appReveal]="i * 40">
+          <nz-icon [nzType]="e.icon" />
+          <h3>{{ e.title }}</h3>
+          <p>{{ e.text }}</p>
+        </article>
+      }
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <h2 class="sources-title">Sources</h2>
+    <ul class="sources">
+      @for (src of sources; track src.url + src.label) {
+        <li><a [href]="src.url" target="_blank" rel="noopener noreferrer">{{ src.label }}</a></li>
+      }
+    </ul>
+  </div>
+</section>
+
+<app-cta-band />

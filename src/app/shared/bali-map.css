@@ -34,7 +34,7 @@
   stroke-linejoin: round;
 }
 
-.landmark circle { fill: var(--ink-3); opacity: .55; }
+.landmark circle, .landmark path { fill: var(--ink-3); opacity: .55; }
 .landmark text {
   font-family: var(--font-sans);
   font-size: 13px;
@@ -131,7 +131,7 @@
 
 .panel-stats {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 14px 18px;
   margin: 0 0 18px;
   padding: 16px 0;
@@ -169,3 +169,14 @@
   color: var(--ink-3);
 }
 .panel-hint nz-icon { color: var(--brand); }
+
+.panel-photo {
+  display: block;
+  aspect-ratio: 16 / 9;
+  margin: -22px -22px 18px;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  overflow: hidden;
+}
+@media (min-width: 768px) { .panel-photo { margin: -26px -26px 20px; } }
+.panel-card { overflow: hidden; }
+a.panel-action { text-decoration: none; }

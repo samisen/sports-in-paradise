@@ -1,0 +1,190 @@
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <app-hero-slides [photos]="heroPhotos" [interval]="5200" />
+  <span class="hero-veil" aria-hidden="true"></span>
+
+  <div class="container hero-inner">
+    <p class="eyebrow">{{ hub.hero.eyebrow }}</p>
+    <h1 class="display hero-title">{{ hub.hero.headline }}</h1>
+    <p class="lede hero-lede">{{ hub.hero.support }}</p>
+
+    <nav class="hero-sports" aria-label="Choose a sport">
+      @for (c of cards; track c.site.id) {
+        <a [href]="c.href" [attr.data-sport]="c.site.id" class="hero-sport">
+          <span class="hs-ico"><app-sport-icon [sport]="c.site.id" /></span>
+          {{ c.site.name }}
+        </a>
+      }
+    </nav>
+
+    <dl class="hero-stats">
+      @for (st of stats; track st.label) {
+        <div>
+          <dt class="mono">{{ st.value }}</dt>
+          <dd>{{ st.label }}</dd>
+        </div>
+      }
+    </dl>
+  </div>
+</section>
+
+<!-- ============ THE SPORTS ============ -->
+<section class="section" id="sports">
+  <div class="container">
+    <div class="head" appReveal>
+      <p class="eyebrow">Choose your sport</p>
+      <h2 class="display">Five sites, five teams, one island.</h2>
+      <p class="lede">
+        Each sport has its own coaches or guides, its own bases and its own planner — because a dive
+        week and a golf week have almost nothing in common except the island.
+      </p>
+    </div>
+
+    <div class="sports">
+      @for (c of cards; track c.site.id; let i = $index) {
+        <a class="sport-card" [href]="c.href" [attr.data-sport]="c.site.id" [appReveal]="i * 60" [class.is-wide]="i === 0">
+          <span class="sc-photo">
+            <app-photo
+              [photo]="c.site.hero.photos[0]"
+              [sizes]="i === 0 ? '(min-width: 1040px) 66vw, 100vw' : '(min-width: 1040px) 33vw, (min-width: 700px) 50vw, 100vw'"
+            />
+          </span>
+          <span class="sc-shade"></span>
+          <span class="sc-body">
+            <span class="sc-top">
+              <span class="sc-ico"><app-sport-icon [sport]="c.site.id" /></span>
+              <span class="sc-meta">{{ c.retreatCount }} weeks · from {{ money(c.fromUsd) }}</span>
+            </span>
+            <span class="sc-name">{{ c.site.name }}</span>
+            <span class="sc-line">{{ c.site.coreIdea }}</span>
+            <span class="sc-bali">{{ c.site.bali.title }}</span>
+            <span class="sc-go">Visit the {{ c.site.name.toLowerCase() }} site <nz-icon nzType="arrow-right" /></span>
+          </span>
+        </a>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- ============ WHEN ============ -->
+<section class="section section-sand">
+  <div class="container">
+    <div class="head" appReveal>
+      <p class="eyebrow">When to come</p>
+      <h2 class="display">Every sport has its months.</h2>
+      <p class="lede">
+        The dry season from April to October suits almost everything. The wet season is not a write-off:
+        mornings stay clear, courts have roofs, and the reefs in the north stay diveable.
+      </p>
+    </div>
+    <div class="season-card" appReveal>
+      <app-season-strip [rows]="seasons" caption="When to come for each sport, month by month" />
+    </div>
+    <p class="head-link-row">
+      <a class="head-link" routerLink="/why-bali">Why Bali, sport by sport <nz-icon nzType="arrow-right" /></a>
+    </p>
+  </div>
+</section>
+
+<!-- ============ WHERE ============ -->
+<section class="section">
+  <div class="container">
+    <div class="head" appReveal>
+      <p class="eyebrow">Where</p>
+      <h2 class="display">From the reef to the rim of a volcano.</h2>
+      <p class="lede">Every base we use, coloured by sport. Tap one to see what is there.</p>
+    </div>
+    <app-bali-map
+      [places]="places"
+      [selected]="selected()"
+      (selectPlace)="selected.set($event)"
+      [emptyTitle]="places.length + ' bases, one island.'"
+      emptyText="Courts on the coast, golf on the cliffs and in the highlands, reefs to the east and north-west, trails in the middle. Pick a marker."
+    />
+  </div>
+</section>
+
+<!-- ============ COMBINE ============ -->
+<section class="section section-deep combine">
+  <div class="container">
+    <div class="head" appReveal>
+      <p class="eyebrow">Two sports, one trip</p>
+      <h2 class="display">The island is small enough to combine.</h2>
+      <p class="lede">One conversation, one set of transfers, one invoice. Three of the weeks people ask for most:</p>
+    </div>
+    <div class="grid grid-3">
+      @for (c of combos; track c.name; let i = $index) {
+        <article class="combo" [appReveal]="i * 60">
+          <span class="combo-icons">
+            @for (s of c.sports; track s) {
+              <span class="combo-ico" [attr.data-sport]="s"><app-sport-icon [sport]="s" /></span>
+            }
+          </span>
+          <h3>{{ c.name }}</h3>
+          <p class="combo-sports">{{ c.labels.join(' + ') }}</p>
+          <p>{{ c.text }}</p>
+        </article>
+      }
+    </div>
+    <p class="head-link-row">
+      <a class="head-link on-dark" routerLink="/contact">Ask for a combined week <nz-icon nzType="arrow-right" /></a>
+    </p>
+  </div>
+</section>
+
+<!-- ============ WHY ONE TEAM ============ -->
+<section class="section">
+  <div class="container">
+    <div class="grid grid-2 why-grid">
+      <div class="head" appReveal>
+        <p class="eyebrow">How it works</p>
+        <h2 class="display">{{ hub.why.title }}.</h2>
+        <p class="lede">The same honest way of planning, run by specialists in each sport.</p>
+      </div>
+      <div class="why-list">
+        @for (p of hub.why.points; track p.title; let i = $index) {
+          <article class="why-item" [appReveal]="i * 60">
+            <nz-icon [nzType]="p.icon" />
+            <div>
+              <h3>{{ p.title }}</h3>
+              <p>{{ p.text }}</p>
+            </div>
+          </article>
+        }
+        @for (s of steps; track s.index) {
+          <article class="why-item is-step" appReveal>
+            <span class="mono">{{ s.index }}</span>
+            <div>
+              <h3>{{ s.name }}</h3>
+              <p>{{ s.line }}</p>
+            </div>
+          </article>
+        }
+        <p class="head-link-row">
+          <a class="head-link" routerLink="/how-it-works">The whole process <nz-icon nzType="arrow-right" /></a>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ VOICES ============ -->
+<section class="section section-sand">
+  <div class="container">
+    <div class="head" appReveal>
+      <p class="eyebrow">From the weeks</p>
+      <h2 class="display">One voice from each sport.</h2>
+    </div>
+    <div class="voices">
+      @for (v of voices; track v.name; let i = $index) {
+        <figure class="voice" [attr.data-sport]="v.sport" [appReveal]="i * 50">
+          <span class="voice-ico"><app-sport-icon [sport]="v.sport" /> {{ v.sportName }}</span>
+          <blockquote>{{ v.quote }}</blockquote>
+          <figcaption><strong>{{ v.name }}</strong><span>{{ v.detail }}</span></figcaption>
+        </figure>
+      }
+    </div>
+  </div>
+</section>
+
+<app-cta-band />

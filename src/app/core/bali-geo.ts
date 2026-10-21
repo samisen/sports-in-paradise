@@ -1,5 +1,3 @@
-import { BaseId } from './retreat-config';
-
 /**
  * Bali's coastline, projected once at build time from the Indonesian province
  * boundary (BAKOSURTANAL 1:250.000 via the indonesia-geojson dataset) with an
@@ -23,14 +21,21 @@ export interface MapPoint {
   y: number;
 }
 
-export const AREA_POINTS: Record<BaseId, MapPoint> = {
-  'canggu': { x: 550.5, y: 462.6 },
-  'uluwatu': { x: 509.6, y: 602.5 },
-  'ubud': { x: 645.1, y: 353.8 },
-  'sanur': { x: 645.2, y: 493.5 },
-};
+/**
+ * Latitude and longitude to the map's own coordinates. The projection is
+ * linear over an island this small; the constants were fitted to the
+ * coastline above, so a place lands where it actually is.
+ */
+export function project(lat: number, lon: number): MapPoint {
+  return {
+    x: Math.round((645.1 + 727.7 * (lon - 115.263)) * 10) / 10,
+    y: Math.round((353.8 - 777 * (lat + 8.507)) * 10) / 10,
+  };
+}
+
 /** Reference points, so the map reads as a map rather than a diagram. */
 export const MAP_LANDMARKS = [
-  { label: 'Ngurah Rai airport', x: 572.6, y: 540.1, kind: 'airport' as const },
-  { label: 'Denpasar', x: 607, y: 480.1, kind: 'city' as const },
+  { label: 'Ngurah Rai airport', ...project(-8.748, 115.167), kind: 'airport' as const },
+  { label: 'Denpasar', ...project(-8.65, 115.216), kind: 'city' as const },
+  { label: 'Mt Agung', ...project(-8.343, 115.508), kind: 'peak' as const },
 ];

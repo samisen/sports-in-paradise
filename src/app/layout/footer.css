@@ -17,7 +17,7 @@
 }
 
 .brand { display: inline-flex; align-items: center; gap: 10px; color: #fff; text-decoration: none; }
-.brand-mark { width: 34px; height: 34px; }
+.brand-mark { width: 36px; height: 36px; display: grid; place-items: center; border-radius: 10px; background: var(--brand); color: #fff; font-size: 21px; }
 .brand-text { display: flex; flex-direction: column; line-height: 1; }
 .brand-name { font-family: var(--font-display); font-size: 22px; }
 .brand-sub { font-size: 9px; letter-spacing: .28em; text-transform: uppercase; opacity: .6; margin-top: 3px; }
@@ -65,8 +65,7 @@
 .foot-legal { max-width: 96ch; line-height: 1.6; }
 .foot-note { opacity: .75; }
 
-/* brand mark — the same court as the header, at footer weight */
-.mark-bg { fill: var(--brand); }
-.mark-court { fill: none; stroke: #fff; stroke-width: 2.6; opacity: .92; }
-.mark-net { stroke: #fff; stroke-width: 2.6; stroke-linecap: round; opacity: .92; }
-.mark-ball { fill: #fff; }
+.foot-sports a { display: inline-flex; align-items: center; gap: 9px; }
+.foot-sports app-sport-icon { font-size: 16px; color: var(--brand); }
+html:not([data-theme='dark']) .foot-sports app-sport-icon { color: color-mix(in srgb, var(--brand) 55%, #fff); }
+.foot-sports a.is-current { color: #fff; font-weight: 600; }

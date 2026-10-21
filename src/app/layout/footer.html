@@ -3,18 +3,13 @@
     <div class="foot-grid">
       <div class="foot-brand">
         <a class="brand" routerLink="/" [attr.aria-label]="brand.name + ' — home'">
-          <svg class="brand-mark" viewBox="0 0 64 64" aria-hidden="true">
-          <rect width="64" height="64" rx="15" class="mark-bg" />
-          <rect x="16" y="12" width="32" height="40" rx="3" class="mark-court" />
-          <path d="M16 32h32" class="mark-net" />
-          <circle cx="41" cy="24" r="3.4" class="mark-ball" />
-        </svg>
+          <span class="brand-mark" aria-hidden="true"><app-sport-icon [sport]="site.id" /></span>
           <span class="brand-text">
             <span class="brand-name">{{ brand.wordmarkLead }}</span>
-            <span class="brand-sub">{{ brand.wordmarkTail }}</span>
+            <span class="brand-sub">{{ brand.wordmarkTail }}{{ site.isHub ? '' : ' · ' + label }}</span>
           </span>
         </a>
-        <p class="foot-blurb">{{ brand.coreIdea }}</p>
+        <p class="foot-blurb">{{ blurb }}</p>
         <div class="foot-social">
           <a href="#" aria-label="WhatsApp"><nz-icon nzType="whats-app" /></a>
           <a href="#" aria-label="Instagram"><nz-icon nzType="instagram" /></a>
@@ -22,16 +17,28 @@
         </div>
       </div>
 
-      @for (col of columns; track col.title) {
-        <nav class="foot-col" [attr.aria-label]="col.title">
-          <h3>{{ col.title }}</h3>
-          <ul>
-            @for (l of col.links; track l.label) {
-              <li><a [routerLink]="l.link">{{ l.label }}</a></li>
-            }
-          </ul>
-        </nav>
-      }
+      <nav class="foot-col" aria-label="Explore">
+        <h3>Explore</h3>
+        <ul>
+          @for (l of explore; track l.link) {
+            <li><a [routerLink]="l.link">{{ l.label }}</a></li>
+          }
+        </ul>
+      </nav>
+
+      <nav class="foot-col" aria-label="Our sports">
+        <h3>Our sports</h3>
+        <ul class="foot-sports">
+          @for (s of sports; track s.id) {
+            <li [attr.data-sport]="s.id">
+              <a [href]="s.href" [class.is-current]="s.current">
+                <app-sport-icon [sport]="s.id" />
+                {{ s.label }}
+              </a>
+            </li>
+          }
+        </ul>
+      </nav>
 
       <div class="foot-col foot-contact">
         <h3>Office</h3>
@@ -53,10 +60,9 @@
         }
       </p>
       <p class="foot-legal">
-        {{ priceClaim.footnote }}
-        Foreign nationals hold Indonesian property under leasehold or company structures; ownership
-        and financial statements on this site should be reviewed with independent legal and tax
-        advice before you act on them. Demonstration site.
+        {{ priceClaim.footnote }} Photography from Unsplash, credited to each photographer where it
+        appears. Facts about Bali were checked in October 2026; rules and prices on the island change,
+        so confirm anything you rely on. Demonstration site.
       </p>
     </div>
   </div>

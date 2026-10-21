@@ -1,12 +1,12 @@
 <!-- ============ HERO ============ -->
 <section class="hero">
-  <span class="hero-art" aria-hidden="true"><app-court-art [seed]="11" /></span>
+  <app-hero-slides [photos]="s.hero.photos" />
   <span class="hero-veil" aria-hidden="true"></span>
 
   <div class="container hero-inner">
-    <p class="eyebrow">{{ brand.descriptor }}</p>
-    <h1 class="display hero-title">{{ hero.headline }}</h1>
-    <p class="lede hero-lede">{{ hero.support }}</p>
+    <p class="eyebrow">{{ s.hero.eyebrow }}</p>
+    <h1 class="display hero-title">{{ s.hero.headline }}</h1>
+    <p class="lede hero-lede">{{ s.hero.support }}</p>
 
     <div class="hero-actions">
       <a nz-button nzType="primary" nzSize="large" routerLink="/plan">
@@ -17,10 +17,10 @@
     </div>
 
     <dl class="hero-stats">
-      @for (s of stats; track s.label) {
+      @for (st of s.stats; track st.label) {
         <div>
-          <dt class="mono">{{ s.value }}{{ s.suffix }}</dt>
-          <dd>{{ s.label }}</dd>
+          <dt class="mono">{{ st.value }}</dt>
+          <dd>{{ st.label }}</dd>
         </div>
       }
     </dl>
@@ -31,9 +31,11 @@
 <section class="section">
   <div class="container">
     <div class="grid grid-2 values">
-      @for (v of values; track v.key; let i = $index) {
+      @for (v of s.values; track v.title; let i = $index) {
         <article class="value" [appReveal]="i * 80">
-          <span class="value-art"><app-court-art [seed]="v.art + 20" /></span>
+          <span class="value-art">
+            <app-photo [photo]="v.photo" sizes="(min-width: 700px) 50vw, 100vw" [credit]="true" />
+          </span>
           <p class="eyebrow">{{ v.eyebrow }}</p>
           <h2 class="value-title">{{ v.title }}</h2>
           <p class="value-lead">{{ v.lead }}</p>
@@ -49,6 +51,45 @@
   </div>
 </section>
 
+<!-- ============ BALI NOW ============ -->
+<section class="section section-deep bali-now">
+  <div class="container">
+    <div class="grid grid-2 now-grid">
+      <div appReveal>
+        <p class="eyebrow">{{ s.bali.eyebrow }}</p>
+        <h2 class="display">{{ s.bali.title }}</h2>
+        <p class="lede">{{ s.bali.lead }}</p>
+        <p class="head-link-row">
+          <a class="head-link on-dark" routerLink="/why-bali">
+            The full picture, venue by venue <nz-icon nzType="arrow-right" />
+          </a>
+        </p>
+      </div>
+      <dl class="now-numbers">
+        @for (n of s.bali.numbers; track n.label; let i = $index) {
+          <div class="now-num" [appReveal]="i * 60">
+            <dt class="mono">{{ n.value }}</dt>
+            <dd>
+              {{ n.label }}
+              @if (n.source) { <span class="now-src">{{ n.source }}</span> }
+            </dd>
+          </div>
+        }
+      </dl>
+    </div>
+
+    <div class="now-season" appReveal>
+      <p class="now-season-head">
+        <strong>When to come.</strong> {{ s.bali.season.summary }}
+      </p>
+      <app-season-strip
+        [rows]="[{ label: s.name, sport: s.id, ratings: s.bali.season.ratings }]"
+        [caption]="'When to come for ' + s.name.toLowerCase() + ', month by month'"
+      />
+    </div>
+  </div>
+</section>
+
 <!-- ============ FEATURED RETREATS ============ -->
 <section class="section section-sand">
   <div class="container">
@@ -56,8 +97,8 @@
       <p class="eyebrow">Open now</p>
       <h2 class="display">Weeks you can join.</h2>
       <p class="lede">
-        Eight formats across four bases. If none of them lands on your dates, the planner will build
-        one that does.
+        {{ s.retreats.length }} formats across {{ s.bases.length }} bases. If none of them lands on
+        your dates, the planner will build one that does.
       </p>
     </div>
 
@@ -68,9 +109,7 @@
     </div>
 
     <p class="head-link-row">
-      <a class="head-link" routerLink="/retreats">
-        See all retreats <nz-icon nzType="arrow-right" />
-      </a>
+      <a class="head-link" routerLink="/retreats">See all retreats <nz-icon nzType="arrow-right" /></a>
     </p>
   </div>
 </section>
@@ -80,18 +119,21 @@
   <div class="container">
     <div class="head" appReveal>
       <p class="eyebrow">Where</p>
-      <h2 class="display">Four bases, one island.</h2>
-      <p class="lede">
-        Each one suits a different week. Tap a marker to see what is there and which retreats run
-        from it.
-      </p>
+      <h2 class="display">{{ s.bases.length }} bases, one island.</h2>
+      <p class="lede">Each one suits a different week. Tap a marker to see what is there and which retreats run from it.</p>
     </div>
 
-    <app-bali-map [selected]="mapBase()" (selectBase)="onSelectBase($event)" />
+    <app-bali-map
+      [places]="places"
+      [selected]="mapBase()"
+      (selectPlace)="mapBase.set($event)"
+      [emptyTitle]="s.bases.length + ' bases, one island.'"
+      [emptyText]="'Every base suits a different kind of ' + s.name.toLowerCase() + ' week. Pick one to see what is there.'"
+    />
 
-    @if (basesWithRetreats().length) {
+    @if (retreatsAtMapBase().length) {
       <div class="grid grid-3 map-retreats">
-        @for (r of basesWithRetreats(); track r.slug) {
+        @for (r of retreatsAtMapBase(); track r.slug) {
           <app-retreat-card [retreat]="r" />
         }
       </div>
@@ -103,24 +145,26 @@
 <section class="section section-sand">
   <div class="container">
     <div class="head" appReveal>
-      <p class="eyebrow">{{ sport.eyebrow }}</p>
-      <h2 class="display">{{ sport.title }}</h2>
-      <p class="lede">{{ sport.lead }}</p>
+      <p class="eyebrow">{{ s.sport.eyebrow }}</p>
+      <h2 class="display">{{ s.sport.title }}</h2>
+      <p class="lede">{{ s.sport.lead }}</p>
     </div>
 
     <div class="grid grid-2 sport-body">
       <div class="sport-text" appReveal>
-        @for (p of sport.paragraphs; track p) {
+        @for (p of s.sport.paragraphs; track p) {
           <p>{{ p }}</p>
         }
-        <p class="source">
-          {{ facts.players }} players · {{ facts.courts }} courts.
-          <span>{{ facts.playersSource }}</span>
-        </p>
+        @for (f of s.sport.facts; track f.label) {
+          <p class="source">
+            <strong>{{ f.value }}</strong> {{ f.label }}.
+            @if (f.source) { <span>{{ f.source }}</span> }
+          </p>
+        }
       </div>
 
       <div class="grid grid-2 drivers">
-        @for (d of sport.drivers; track d.title; let i = $index) {
+        @for (d of s.sport.drivers; track d.title; let i = $index) {
           <article class="driver" [appReveal]="i * 60">
             <nz-icon [nzType]="d.icon" class="driver-icon" />
             <h3>{{ d.title }}</h3>
@@ -139,15 +183,17 @@
       <p class="eyebrow">Who comes</p>
       <h2 class="display">Three very different weeks.</h2>
       <p class="lede">
-        The level you play at changes the whole shape of the week, not just the drills. Pick the one
-        that sounds like you.
+        Your level changes the whole shape of the week, not just the drills. Pick the one that sounds
+        like you — the planner starts from there.
       </p>
     </div>
 
     <div class="grid grid-3">
-      @for (p of profiles; track p.id; let i = $index) {
+      @for (p of s.profiles; track p.id; let i = $index) {
         <article class="profile" [appReveal]="i * 70">
-          <span class="profile-art"><app-court-art [seed]="p.art + 40" /></span>
+          <span class="profile-art">
+            <app-photo [photo]="p.photo" sizes="(min-width: 1040px) 33vw, (min-width: 700px) 50vw, 100vw" />
+          </span>
           <div class="profile-body">
             <h3>{{ p.name }}</h3>
             <p class="profile-sub">{{ p.subtitle }}</p>
@@ -157,6 +203,9 @@
                 <li><nz-icon nzType="check" /> {{ pr }}</li>
               }
             </ul>
+            <a class="profile-go" routerLink="/plan" [queryParams]="{ level: p.id }">
+              Plan this week <nz-icon nzType="arrow-right" />
+            </a>
           </div>
         </article>
       }
@@ -173,22 +222,20 @@
     </div>
 
     <ol class="steps">
-      @for (s of steps; track s.index; let i = $index) {
+      @for (st of steps; track st.index; let i = $index) {
         <li class="step" [appReveal]="i * 50">
-          <span class="step-no mono">{{ s.index }}</span>
+          <span class="step-no mono">{{ st.index }}</span>
           <div class="step-body">
-            <h3><nz-icon [nzType]="s.icon" class="step-icon" />{{ s.name }}</h3>
-            <p class="step-line">{{ s.line }}</p>
-            <p class="step-detail">{{ s.detail }}</p>
+            <h3><nz-icon [nzType]="st.icon" class="step-icon" />{{ st.name }}</h3>
+            <p class="step-line">{{ st.line }}</p>
+            <p class="step-detail">{{ st.detail }}</p>
           </div>
         </li>
       }
     </ol>
 
     <p class="head-link-row">
-      <a class="head-link" routerLink="/how-it-works">
-        The whole process, in detail <nz-icon nzType="arrow-right" />
-      </a>
+      <a class="head-link" routerLink="/how-it-works">The whole process, in detail <nz-icon nzType="arrow-right" /></a>
     </p>
   </div>
 </section>
@@ -197,12 +244,12 @@
 <section class="section">
   <div class="container">
     <div class="head" appReveal>
-      <p class="eyebrow">From the courts</p>
+      <p class="eyebrow">From the week</p>
       <h2 class="display">What people say afterwards.</h2>
     </div>
 
     <div class="grid grid-2">
-      @for (t of testimonials; track t.name; let i = $index) {
+      @for (t of s.testimonials; track t.name; let i = $index) {
         <figure class="quote" [appReveal]="i * 60">
           <blockquote>{{ t.quote }}</blockquote>
           <figcaption>

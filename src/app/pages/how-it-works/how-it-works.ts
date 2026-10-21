@@ -4,55 +4,47 @@ import { NzCollapseModule } from 'ng-zorro-antd/collapse';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { CatalogService } from '../../core/catalog.service';
 import { PRICE_CLAIM } from '../../core/brand';
-import { BELIEF_LINE, PROMISE_LINE, WEEK_STEPS } from '../../core/content';
+import { BELIEF_LINE, PROMISE_LINE, WEEK_STEPS } from '../../core/content/common';
+import { DaySlot, Faq } from '../../core/content/types';
+import { SiteService } from '../../core/site/site.service';
 import { PageHeroComponent } from '../../shared/page-hero';
-import { CourtArtComponent } from '../../shared/court-art';
 import { CtaBandComponent } from '../../shared/cta-band';
 import { RevealDirective } from '../../shared/reveal.directive';
+import { SportIconComponent } from '../../shared/sport-icon';
+import { HUB } from '../../core/content/hub';
 
+/** Shared by the hub and every sport; the sport sections only show on a sport site. */
 @Component({
   selector: 'app-how-it-works',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    RouterLink, NzCollapseModule, NzIconModule,
-    PageHeroComponent, CourtArtComponent, CtaBandComponent, RevealDirective,
-  ],
+  imports: [RouterLink, NzCollapseModule, NzIconModule, PageHeroComponent, CtaBandComponent, RevealDirective, SportIconComponent],
   templateUrl: './how-it-works.html',
   styleUrl: './how-it-works.css',
 })
 export class HowItWorksPage {
   private readonly catalog = inject(CatalogService);
+  readonly site = inject(SiteService);
 
   readonly steps = WEEK_STEPS;
   readonly belief = BELIEF_LINE;
   readonly promise = PROMISE_LINE;
   readonly claim = PRICE_CLAIM;
-  readonly coaches = this.catalog.coaches;
-  readonly faqs = this.catalog.faqs;
+  readonly hub = HUB;
 
-  /** What a day looks like, stated once rather than left for the planner to imply. */
-  readonly shape = [
-    { icon: 'sun', time: '06:15', title: 'Sunrise', text: 'Yoga if you chose it, coffee if you did not.' },
-    { icon: 'trophy', time: '07:30', title: 'Morning court', text: 'The technical session, while the glass is still cool.' },
-    { icon: 'heart', time: '09:45', title: 'Recovery', text: 'Ice, breakfast, and nothing asked of you.' },
-    { icon: 'coffee', time: '13:00', title: 'The middle', text: 'Yours. Nothing useful happens on a court at one in the afternoon.' },
-    { icon: 'thunderbolt', time: '16:15', title: 'Afternoon court', text: 'Match play, using whatever the morning worked on.' },
-    { icon: 'team', time: '19:30', title: 'Dinner', text: 'Together, most nights. Where the tactical talk actually happens.' },
-  ];
+  readonly sport = this.site.isHub ? null : this.catalog.sport;
+  readonly dayShape: DaySlot[] = this.sport?.dayShape ?? [];
+  readonly coaches = this.sport?.coaches ?? [];
+  readonly included = this.sport?.included ?? [];
+  readonly notIncluded = this.sport?.notIncluded ?? [];
 
-  readonly included = [
-    'Coached court time, in groups of four',
-    'Courts booked and paid for',
-    'Accommodation at the tier you pick',
-    'Airport transfers, where the week includes them',
-    'Breakfast daily, and dinner together several nights',
-    'A written plan for the three months after',
-  ];
+  /** On the hub, the first two questions from each sport, labelled. */
+  readonly faqs: (Faq & { sport?: string })[] = this.sport
+    ? this.sport.faqs
+    : this.catalog.all.flatMap((s) => s.faqs.slice(2, 4).map((f) => ({ ...f, sport: s.name })));
 
-  readonly notIncluded = [
-    'Flights — you will find better ones than we would',
-    'Travel and sports insurance, which we ask you to hold',
-    'Lunches and the meals you would rather choose yourself',
-    'Anything at the clubs beyond your booked court time',
-  ];
+  readonly sportLinks = this.catalog.all.map((s) => ({ id: s.id, name: s.name, href: this.site.url(s.id, '/how-it-works') }));
+
+  initials(name: string): string {
+    return name.split(' ').map((p) => p[0]).slice(0, 2).join('');
+  }
 }

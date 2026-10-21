@@ -1,4 +1,5 @@
 import { DOCUMENT, Injectable, inject, signal } from '@angular/core';
+import { SiteService } from './site/site.service';
 
 export type ThemeMode = 'light' | 'dark';
 const STORAGE_KEY = 'sip-theme';
@@ -6,6 +7,7 @@ const STORAGE_KEY = 'sip-theme';
 @Injectable({ providedIn: 'root' })
 export class ThemeService {
   private readonly doc = inject(DOCUMENT);
+  private readonly site = inject(SiteService);
   readonly mode = signal<ThemeMode>('light');
 
   constructor() {
@@ -48,7 +50,7 @@ export class ThemeService {
     // Two theme-color metas are declared, one per preferred scheme, so Safari
     // has the right value before any stylesheet loads. An explicit choice
     // overrides the OS preference, so both are set to the active colour.
-    const color = mode === 'dark' ? '#0b1017' : '#1668c4';
+    const color = this.site.themeColor(mode === 'dark');
     this.doc
       .querySelectorAll('meta[name="theme-color"]')
       .forEach((meta) => meta.setAttribute('content', color));

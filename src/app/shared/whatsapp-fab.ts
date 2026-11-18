@@ -1,47 +1,64 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { NavigationEnd, Router } from '@angular/router';
+import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { filter, map } from 'rxjs/operators';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { BRAND, DEFAULT_WHATSAPP, whatsappLink } from '../core/brand';
 import { tourById } from '../core/content/tours';
 
 /**
- * The always-available conversion route. Most enquiries start on WhatsApp
- * rather than in a form, so it follows the visitor down every page, with a
- * message that already names the tour they were looking at.
+ * The always-available way to get in touch.
+ *
+ * On phones (many visitors arrive from Instagram) it is a sticky bar along
+ * the bottom: Enquire, and WhatsApp beside it. On larger screens the header
+ * already carries Enquire, so only a small WhatsApp button remains. On a tour
+ * page both already name the tour.
  */
 @Component({
   selector: 'app-whatsapp-fab',
-  imports: [NzIconModule],
+  imports: [RouterLink, NzIconModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <a class="fab" [href]="href()" target="_blank" rel="noopener noreferrer" [attr.aria-label]="'Talk to us on WhatsApp, ' + brand.whatsapp">
-      <nz-icon nzType="whats-app" />
-      <span class="fab-label">WhatsApp</span>
-    </a>
+    @if (!onEnquire()) {
+      <div class="bar">
+        <a class="enquire" routerLink="/enquire" [queryParams]="tourId() ? { tour: tourId() } : {}">Enquire</a>
+        <a class="wa" [href]="href()" target="_blank" rel="noopener noreferrer" [attr.aria-label]="'WhatsApp ' + brand.whatsapp">
+          <nz-icon nzType="whats-app" />
+        </a>
+      </div>
+    }
   `,
   styles: [
     `
       :host { display: contents; }
-      .fab {
-        position: fixed;
-        inset-inline-end: 18px;
-        inset-block-end: calc(18px + env(safe-area-inset-bottom));
-        z-index: 90;
-        display: inline-flex; align-items: center; gap: 9px;
-        padding: 13px 18px; border-radius: 999px;
-        background: #25d366; color: #05301a;
-        font-size: 14.5px; font-weight: 600; text-decoration: none;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, .28);
-        transition: transform .25s cubic-bezier(.22,.61,.36,1), box-shadow .25s ease;
+      .bar {
+        position: fixed; z-index: 90;
+        inset-inline: 0; inset-block-end: 0;
+        display: grid; grid-template-columns: minmax(0, 1fr) var(--mobile-bar-h);
+        height: calc(var(--mobile-bar-h) + env(safe-area-inset-bottom));
+        padding-bottom: env(safe-area-inset-bottom);
+        background: var(--navy);
       }
-      .fab:hover { transform: translateY(-2px); box-shadow: 0 14px 38px rgba(0, 0, 0, .34); color: #05301a; }
-      .fab:active { transform: translateY(0) scale(.97); }
-      .fab nz-icon { font-size: 21px; }
-      .fab-label { display: none; }
-      @media (min-width: 620px) { .fab-label { display: inline; } }
-      @media (max-width: 619px) { .fab { padding: 14px; } }
+      .enquire, .wa { display: grid; place-items: center; text-decoration: none; }
+      .enquire {
+        background: var(--jungle); color: #fff;
+        font-size: 12.5px; letter-spacing: .26em; text-transform: uppercase;
+      }
+      .enquire:hover, .enquire:active { background: var(--jungle-deep); color: #fff; }
+      .wa { color: var(--sand); font-size: 22px; }
+      .wa:hover { color: #fff; }
+
+      @media (min-width: 768px) {
+        .bar {
+          inset-inline: auto 24px; inset-block-end: 24px;
+          grid-template-columns: 52px; height: 52px; padding: 0;
+          box-shadow: var(--shadow-md);
+          transition: background-color .35s var(--ease);
+        }
+        .bar:hover { background: var(--jungle); }
+        .enquire { display: none; }
+        .wa { font-size: 21px; }
+      }
     `,
   ],
 })
@@ -55,8 +72,7 @@ export class WhatsappFabComponent {
     ),
     { initialValue: this.router.url },
   );
-  readonly href = computed(() => {
-    const m = this.url().match(/^\/tours\/([a-z-]+)/);
-    return whatsappLink(tourById(m?.[1])?.whatsapp ?? DEFAULT_WHATSAPP);
-  });
+  readonly tourId = computed(() => tourById(this.url().match(/^\/tours\/([a-z-]+)/)?.[1])?.id ?? null);
+  readonly onEnquire = computed(() => this.url().startsWith('/enquire'));
+  readonly href = computed(() => whatsappLink(tourById(this.tourId() ?? undefined)?.whatsapp ?? DEFAULT_WHATSAPP));
 }

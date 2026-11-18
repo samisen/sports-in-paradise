@@ -17,7 +17,7 @@ export const PADEL: Tour = {
   name: 'Padel in Paradise',
   short: 'Padel',
   badge: 'Flagship',
-  tagline: 'Ten days of coached padel, a team cup and a community tournament with Bali’s own players.',
+  tagline: 'Coached padel, a team cup and Bali’s own players.',
   description:
     'Padel in Paradise: a 10-day hosted padel tour in Bali for 8 to 12 guests of every level. Coaching, the Paradise Cup, a community tournament with local players, recovery and the island. From $2,200 per person, excluding flights.',
   ledBy: 'Head of Sports Tours',
@@ -62,7 +62,7 @@ export const PADEL: Tour = {
     { question: 'Do I need to bring a racket?', answer: 'Bring yours if you have one. If not, tell us when you book and we will arrange one.' },
   ],
 
-  hero: [P.padel.courtsOutdoor, P.people.padelPair, P.padel.smash],
+  hero: [P.people.padelPair, P.padel.courtsOutdoor, P.padel.smash],
   gallery: [P.padel.pair, P.padel.lunge, P.people.padelOverhead, P.padel.courtGlass, P.people.dinner, P.people.trophy],
 
   whatsapp: 'Hello Sports in Paradise, I would like to know more about Padel in Paradise.',
@@ -72,7 +72,7 @@ export const GOLF: Tour = {
   id: 'golf',
   name: 'Golf in Paradise',
   short: 'Golf',
-  tagline: 'Five rounds on five of Bali’s courses, a clinic with a pro and the Bali Links Cup.',
+  tagline: 'Five courses, a pro clinic and the Bali Links Cup.',
   description:
     'Golf in Paradise: a 10-day hosted golf tour in Bali for 6 guests. Five rounds on different courses, a clinic with a pro, the Bali Links Cup stableford series, recovery and culture. From $3,250 per person, excluding flights.',
   ledBy: 'Head of Sports Tours',
@@ -128,7 +128,7 @@ export const MARTIAL_ARTS: Tour = {
   id: 'martial-arts',
   name: 'Martial Arts in Paradise',
   short: 'Martial Arts',
-  tagline: 'Serious, friendly training in a main discipline and a second one, ending in a showcase day.',
+  tagline: 'Serious, friendly training, ending in a showcase day.',
   description:
     'Martial Arts in Paradise: a 10-day hosted martial arts tour in Bali for up to 8 guests. Muay Thai, boxing, Kung Fu or Taekwondo, a Pencak Silat workshop, the Warrior’s Path skill passport and a showcase day. From $2,500 per person, excluding flights.',
   ledBy: 'Head of Sports Tours',
@@ -184,7 +184,7 @@ export const WELLNESS: Tour = {
   name: 'Wellness in Paradise',
   short: 'Wellness',
   badge: 'Signature wellness tour',
-  tagline: 'Train smart, recover well and leave with a personal plan — without the retreat atmosphere.',
+  tagline: 'Train smart, recover well, leave with a plan.',
   description:
     'Wellness in Paradise: a 10-day hosted wellness tour in Bali for up to 10 guests. Strength and conditioning, Pilates and mobility, breathing, nutrition and sleep, a personal baseline and a take-home plan. From $2,750 per person, excluding flights.',
   ledBy: 'Head of Wellness',
@@ -242,7 +242,7 @@ export const HYBRID: Tour = {
   name: 'Hybrid in Paradise',
   short: 'Hybrid',
   badge: 'HYROX-style',
-  tagline: 'Twelve days, two training blocks and a timed HYROX-style challenge with medals.',
+  tagline: 'Two training blocks and a timed race, with medals.',
   description:
     'Hybrid in Paradise: a 12-day hosted HYROX-style hybrid fitness tour in Bali for 6 guests. A baseline test, two coached training blocks and the Bali Hybrid Challenge with timing and medals. From $3,050 per person, excluding flights.',
   ledBy: 'Head of Wellness',

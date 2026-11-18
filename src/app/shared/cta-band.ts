@@ -1,79 +1,58 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { NzButtonModule } from 'ng-zorro-antd/button';
-import { NzIconModule } from 'ng-zorro-antd/icon';
 import { BRAND, DEFAULT_WHATSAPP, whatsappLink } from '../core/brand';
 import { RevealDirective } from './reveal.directive';
 
-/** The closing call to action on every page: organisers first, then everyone else. */
+/** The closing enquiry section on every page: navy, two clear ways in. */
 @Component({
   selector: 'app-cta-band',
-  imports: [RouterLink, NzButtonModule, NzIconModule, RevealDirective],
+  imports: [RouterLink, RevealDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section class="cta">
       <div class="container inner" appReveal>
-        <p class="eyebrow">{{ eyebrow() }}</p>
-        <h2 class="display">{{ heading() }}</h2>
+        @if (eyebrow()) { <p class="eyebrow">{{ eyebrow() }}</p> }
+        <h2 class="display">{{ heading() }} @if (emphasis()) { <em>{{ emphasis() }}</em> }</h2>
         <p class="lede">{{ lede() }}</p>
         <div class="actions">
-          <a nz-button nzType="primary" nzSize="large" routerLink="/plan-your-group-trip">
-            {{ brand.cta.group }}
-            <nz-icon nzType="arrow-right" />
-          </a>
-          <a nz-button nzSize="large" nzGhost routerLink="/departures">{{ brand.cta.departures }}</a>
-          <a class="wa" [href]="whatsappUrl()" target="_blank" rel="noopener noreferrer">
-            <nz-icon nzType="whats-app" /> {{ brand.cta.whatsapp }}
-          </a>
+          <a class="btn btn-solid" routerLink="/enquire" [queryParams]="tour() ? { tour: tour() } : {}">Enquire now</a>
+          <a class="btn btn-line" [href]="whatsappUrl()" target="_blank" rel="noopener noreferrer">Message on WhatsApp</a>
         </div>
-        <p class="reassure">
-          <nz-icon nzType="check" /> {{ brand.replyWithin }}
-          <span class="sep"></span>
-          <nz-icon nzType="check" /> 30% deposit to book
-          <span class="sep"></span>
-          <nz-icon nzType="check" /> One tour leader, airport to departure
-        </p>
       </div>
     </section>
   `,
   styles: [
     `
       :host { display: block; }
-      .cta { background: var(--bg-deep); color: #fff; padding-block: 64px; position: relative; overflow: hidden; }
-      @media (min-width: 768px) { .cta { padding-block: 104px; } }
-      .cta::after {
-        content: ''; position: absolute; width: 620px; height: 620px; right: -200px; top: -260px; border-radius: 50%;
-        background: radial-gradient(circle, color-mix(in srgb, var(--brand) 46%, transparent), transparent 68%);
-        pointer-events: none;
+      .cta { background: var(--navy); color: var(--sand); padding-block: 104px; text-align: center; }
+      @media (min-width: 768px) { .cta { padding-block: 168px; } }
+      .inner { display: flex; flex-direction: column; align-items: center; }
+      .eyebrow { color: rgba(245, 239, 230, .6); }
+      .display { color: var(--sand); max-width: 22ch; }
+      .display em { display: block; }
+      .lede { color: rgba(245, 239, 230, .78); margin-inline: auto; max-width: 44ch; }
+      .actions { display: flex; flex-direction: column; align-items: center; gap: 14px; margin-top: 48px; width: 100%; }
+      @media (min-width: 620px) { .actions { flex-direction: row; justify-content: center; width: auto; } }
+      .btn {
+        display: inline-grid; place-items: center; min-width: 260px; height: 58px; padding-inline: 34px;
+        font-size: 12.5px; letter-spacing: .24em; text-transform: uppercase; text-decoration: none;
+        transition: background-color .35s var(--ease), color .35s var(--ease), border-color .35s var(--ease);
       }
-      .cta::before {
-        content: ''; position: absolute; width: 420px; height: 420px; left: -160px; bottom: -240px; border-radius: 50%;
-        background: radial-gradient(circle, color-mix(in srgb, var(--accent) 30%, transparent), transparent 70%);
-        pointer-events: none;
-      }
-      .inner { position: relative; z-index: 1; }
-      .inner > * { max-width: 760px; }
-      .display { color: #fff; }
-      .eyebrow { color: rgba(255, 255, 255, .55); }
-      .lede { color: rgba(255, 255, 255, .74); }
-      .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; margin-top: 30px; }
-      .actions a[nz-button] { min-width: 190px; justify-content: center; }
-      .wa { display: inline-flex; align-items: center; gap: 8px; color: #fff; font-weight: 500; text-decoration: none; }
-      .wa nz-icon { color: #25d366; font-size: 18px; }
-      .wa:hover { text-decoration: underline; text-underline-offset: 3px; }
-      .reassure { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 22px 0 0; font-size: 13px; color: rgba(255, 255, 255, .55); }
-      .reassure nz-icon { color: var(--brand-strong); }
-      .sep { width: 1px; height: 13px; background: rgba(255, 255, 255, .2); margin-inline: 6px; }
+      .btn-solid { background: var(--jungle); color: #fff; border: 1px solid var(--jungle); }
+      .btn-solid:hover { background: var(--jungle-deep); border-color: var(--jungle-deep); color: #fff; }
+      .btn-line { border: 1px solid rgba(245, 239, 230, .55); color: var(--sand); }
+      .btn-line:hover { background: var(--sand); color: var(--navy); border-color: var(--sand); }
     `,
   ],
 })
 export class CtaBandComponent {
   readonly brand = BRAND;
-  readonly eyebrow = input('Your trip');
-  readonly heading = input('Your game. Your people. Bali.');
-  readonly lede = input(
-    'Bring your group, or join one at your level. Tell us the sport and roughly when — we reply within 24 hours with a tour, dates and a price.',
-  );
+  readonly eyebrow = input('');
+  readonly heading = input('Every trip starts with');
+  readonly emphasis = input('a conversation.');
+  readonly lede = input('Tell us your sport, your group and your dates. We reply within 24 hours.');
   readonly whatsappMessage = input(DEFAULT_WHATSAPP);
+  /** Preselects the tour on the enquiry page. */
+  readonly tour = input<string | null>(null);
   protected readonly whatsappUrl = () => whatsappLink(this.whatsappMessage());
 }

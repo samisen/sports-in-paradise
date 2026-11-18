@@ -2,80 +2,74 @@
 
 <!-- ============ HERO ============ -->
 <section class="hero">
-  <span class="hero-art"><app-photo [photo]="t.hero[0]" [priority]="true" [decorative]="true" [credit]="true" /></span>
+  <span class="hero-art"><app-photo [photo]="t.hero[0]" [priority]="true" [decorative]="true" [credit]="true" sizes="100vw" /></span>
   <span class="hero-veil" aria-hidden="true"></span>
   <div class="container hero-inner">
-    <a class="back" routerLink="/tours"><nz-icon nzType="arrow-left" /> All tours</a>
-    <p class="eyebrow">
-      <span class="h-ico"><app-sport-icon [sport]="t.id" /></span>
-      {{ t.badge ?? 'Tour' }} · {{ t.days }} days · {{ t.group }}
-    </p>
+    <p class="hero-kicker">{{ number() }} <span class="sep"></span> {{ t.badge ?? 'Experience' }}</p>
     <h1 class="display">{{ t.name }}</h1>
-    <p class="lede">{{ t.tagline }}</p>
-    <div class="hero-actions">
-      <a nz-button nzType="primary" nzSize="large" routerLink="." fragment="enquire">
-        Ask about this tour <nz-icon nzType="arrow-right" />
-      </a>
-      <a nz-button nzSize="large" nzGhost routerLink="/plan-your-group-trip" [queryParams]="{ tour: t.id }">{{ brand.cta.group }}</a>
-    </div>
-    <p class="hero-price">
-      From <strong class="mono">{{ price() }}</strong> {{ claim.short }}
-      <span class="tbc-light">Final prices to confirm</span>
-    </p>
+    <p class="hero-line">{{ t.tagline }}</p>
   </div>
 </section>
 
-<!-- ============ OVERVIEW + FACT SHEET ============ -->
-<section class="section">
-  <div class="container split top">
-    <div appReveal>
-      <p class="eyebrow">The tour</p>
-      <h2 class="display">{{ t.thread.name }}.</h2>
-      <p class="lede">{{ t.intro }}</p>
-      <div class="thread-card">
-        <nz-icon nzType="flag" />
-        <div>
-          <strong>The thread: {{ t.thread.name }}</strong>
-          <p>{{ t.thread.text }}</p>
-        </div>
+<!-- key facts: nights, group, price, dates -->
+<div class="facts">
+  <div class="container facts-inner">
+    <dl>
+      <div><dt>Nights</dt><dd>{{ t.nights }} nights</dd></div>
+      <div><dt>Group</dt><dd>{{ t.group }}</dd></div>
+      <div><dt>From</dt><dd>{{ price() }} <span class="pp">per person</span></dd></div>
+      <div>
+        <dt>Dates</dt>
+        <dd>
+          @if (departures().length) {
+            <a routerLink="/departures" [queryParams]="{ tour: t.id }">See dates</a>
+          } @else {
+            First dates soon
+          }
+        </dd>
       </div>
-      <p class="best"><strong>Best for:</strong> {{ t.bestFor }}</p>
+    </dl>
+    <a class="facts-cta" routerLink="/enquire" [queryParams]="{ tour: t.id }">Enquire</a>
+  </div>
+</div>
+
+<!-- ============ THE STORY ============ -->
+<section class="section story">
+  <div class="container">
+    <div class="story-grid">
+      <div appReveal>
+        <p class="eyebrow">The story</p>
+        <h2 class="display">{{ t.thread.name }}</h2>
+      </div>
+      <div class="story-text" appReveal>
+        <p class="lede">{{ t.intro }}</p>
+        <p class="thread"><span>The thread</span> {{ t.thread.text }}</p>
+      </div>
     </div>
 
-    <aside class="facts" appReveal aria-label="Fact sheet">
-      <h2 class="facts-title">Fact sheet</h2>
-      <dl>
-        <div><dt>Duration</dt><dd>{{ t.days }} days, {{ t.nights }} nights</dd></div>
-        <div><dt>Group</dt><dd>{{ t.group }}</dd></div>
-        <div><dt>Led by</dt><dd>Our {{ t.ledBy }}, with your tour leader every day</dd></div>
-        @for (f of t.facts; track f.label) {
-          <div><dt>{{ f.label }}</dt><dd>{{ f.value }}</dd></div>
-        }
-        <div class="price-row">
-          <dt>List price</dt>
-          <dd>From <strong class="mono">{{ price() }}</strong> per person, shared (twin) room, excluding flights <app-tbc /></dd>
-        </div>
-      </dl>
-      <a nz-button nzType="primary" nzBlock nzSize="large" routerLink="." fragment="enquire">Ask about this tour</a>
-      <a class="wa" [href]="whatsapp()" target="_blank" rel="noopener noreferrer"><nz-icon nzType="whats-app" /> {{ brand.cta.whatsapp }}</a>
-    </aside>
+    <div class="gallery">
+      @for (p of gallery(); track p.id; let i = $index) {
+        <span class="g" [class.g-wide]="i === 0" [appReveal]="i * 90">
+          <app-photo [photo]="p" [sizes]="i === 0 ? '(min-width: 900px) 60vw, 100vw' : '(min-width: 900px) 30vw, 50vw'" [credit]="true" />
+        </span>
+      }
+    </div>
   </div>
 </section>
 
 <!-- ============ DAY BY DAY ============ -->
-<section class="section section-sand">
+<section class="section section-white">
   <div class="container">
     <div class="head" appReveal>
       <p class="eyebrow">Day by day</p>
-      <h2 class="display">The journey at a glance.</h2>
-      <p class="lede">A sample programme. The final programme is confirmed for each departure.</p>
+      <h2 class="display">The itinerary</h2>
+      <p class="lede">A sample programme. The final one is confirmed for each departure.</p>
     </div>
-    <ol class="timeline">
-      @for (d of t.journey; track d.day; let i = $index) {
-        <li class="day" [attr.data-kind]="d.kind" [appReveal]="i * 30">
-          <span class="dot"><nz-icon [nzType]="kindIcon[d.kind]" /></span>
-          <div class="day-body">
-            <p class="day-top"><span class="day-no mono">{{ d.day }}</span> <span class="kind">{{ kindLabel[d.kind] }}</span></p>
+    <ol class="days">
+      @for (d of t.journey; track d.day) {
+        <li appReveal>
+          <span class="d-no">{{ d.day }}</span>
+          <div>
             <h3>{{ d.title }}</h3>
             <p>{{ d.text }}</p>
           </div>
@@ -85,152 +79,88 @@
   </div>
 </section>
 
-<!-- ============ RECOVERY ============ -->
-<section class="section section-deep">
-  <div class="container">
-    <div class="head" appReveal>
-      <p class="eyebrow">Recovery built in</p>
-      <h2 class="display on-dark">The Recovery Ritual.</h2>
-      <p class="lede">Part of {{ t.name }}, as it is of every tour.</p>
-    </div>
-    <div appReveal><app-recovery-ritual [onDark]="true" /></div>
-  </div>
-</section>
-
 <!-- ============ INCLUDED ============ -->
 <section class="section">
   <div class="container">
     <div class="head" appReveal>
       <p class="eyebrow">What is included</p>
-      <h2 class="display">Everything but the flight.</h2>
+      <h2 class="display">Everything <em>but the flight.</em></h2>
     </div>
-    <div class="grid grid-2">
-      <div class="incl" appReveal>
+    <div class="incl">
+      <div appReveal>
         <h3>Included</h3>
-        <ul class="check-list">
-          @for (i of included(); track i) { <li><nz-icon nzType="check" /> {{ i }}</li> }
+        <ul>
+          @for (i of included(); track i) { <li>{{ i }}</li> }
         </ul>
       </div>
-      <div class="incl" appReveal>
+      <div appReveal>
         <h3>Not included</h3>
-        <ul class="check-list is-no">
-          @for (i of notIncluded; track i) { <li><nz-icon nzType="minus" /> {{ i }}</li> }
-        </ul>
-        <h3 class="addons-title">Add-ons</h3>
-        <ul class="check-list">
-          @for (a of addOns; track a.title) {
-            <li><nz-icon nzType="plus" /> <span><strong>{{ a.title }}.</strong> {{ a.text }} @if (a.toConfirm) { <app-tbc /> }</span></li>
-          }
+        <ul class="is-no">
+          @for (i of notIncluded; track i) { <li>{{ i }}</li> }
         </ul>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ============ GALLERY ============ -->
-<section class="section section-sand">
-  <div class="container">
-    <div class="head" appReveal>
-      <p class="eyebrow">Gallery</p>
-      <h2 class="display">A feel for the days.</h2>
-      <p class="lede">Placeholder photography until our own pictures from the pilot trips arrive.</p>
-    </div>
-    <div class="gallery">
-      @for (p of t.gallery; track p.id; let i = $index) {
-        <span class="g-item" [appReveal]="i * 40">
-          <app-photo [photo]="p" sizes="(min-width: 1040px) 33vw, 50vw" [credit]="true" />
-        </span>
-      }
-    </div>
-  </div>
-</section>
-
-<!-- ============ WHEN + DEPARTURES ============ -->
-<section class="section">
-  <div class="container split top">
+<!-- ============ PRICING AND BOOKING ============ -->
+<section class="section section-white">
+  <div class="container pricing">
     <div appReveal>
-      <p class="eyebrow">When to come</p>
-      <h2 class="display">Season and departures.</h2>
-      <p class="lede">{{ t.season.note }}</p>
-      <div class="season-card"><app-season-strip [rows]="season()" [caption]="'When to come for ' + t.name" /></div>
+      <p class="eyebrow">Pricing and booking</p>
+      <p class="price"><span class="from">From</span> {{ price() }}</p>
+      <p class="price-note">Per person in a shared (twin) room, excluding flights. <app-tbc /></p>
     </div>
-    <div class="dep-card" appReveal>
-      <h3>Departures</h3>
-      @if (departures().length) {
-        <p>See the dates and places left on the departures page.</p>
-      } @else {
-        <p>
-          Dates for the first season are being set now <app-tbc />. Join the waiting list and you will
-          hear first — or bring your own group on the dates that suit you.
-        </p>
+    <dl class="terms" appReveal>
+      <div><dt>To book</dt><dd>{{ payment.deposit }}</dd></div>
+      <div><dt>Balance</dt><dd>{{ payment.balance }}</dd></div>
+      <div><dt>Payment</dt><dd>{{ payment.currency }}</dd></div>
+      @for (a of addOns; track a.title) {
+        <div><dt>{{ a.title }}</dt><dd>{{ a.text }} @if (a.toConfirm) { <app-tbc /> }</dd></div>
       }
-      <div class="dep-actions">
-        <a nz-button nzType="primary" routerLink="/departures" [queryParams]="{ tour: t.id }">{{ brand.cta.departures }}</a>
-        <a nz-button routerLink="/plan-your-group-trip" [queryParams]="{ tour: t.id }">{{ brand.cta.group }}</a>
-      </div>
-    </div>
+      <div><dt>Cancellation</dt><dd>Policy being finalised <app-tbc /> · <a routerLink="/legal/cancellation">Booking conditions</a></dd></div>
+    </dl>
   </div>
 </section>
 
-<!-- ============ FAQ ============ -->
-<section class="section section-sand">
-  <div class="container container-narrow">
-    <div class="head" appReveal>
-      <p class="eyebrow">Questions</p>
-      <h2 class="display">About {{ t.name }}.</h2>
-    </div>
-    <nz-collapse nzGhost nzExpandIconPosition="end" class="faq" appReveal>
-      @for (f of faqs(); track f.question) {
-        <nz-collapse-panel [nzHeader]="f.question">
-          <p class="faq-answer">{{ f.answer }} @if (f.toConfirm) { <app-tbc /> }</p>
-        </nz-collapse-panel>
-      }
-    </nz-collapse>
-    <p class="head-link-row"><a class="head-link" routerLink="/faq">All questions <nz-icon nzType="arrow-right" /></a></p>
-  </div>
-</section>
-
-<!-- ============ ENQUIRE ============ -->
-<section class="section" id="enquire">
-  <div class="container form-grid">
-    <div class="form-card" appReveal>
-      <p class="eyebrow">Enquire</p>
-      <h2 class="title-md">Ask about {{ t.name }}.</h2>
-      <p class="form-lede">{{ brand.replyWithin }} with dates and a price. Nothing is booked until you pay the 30% deposit.</p>
-      <app-enquiry-form mode="tour" [tour]="t.id" />
-    </div>
-    <aside>
-      <div class="aside-card">
-        <h3>Bringing a group?</h3>
-        <p>Club captains, coaches and friends organising 6 to 12 people: we design the tour around your group.</p>
-        <a nz-button nzBlock routerLink="/plan-your-group-trip" [queryParams]="{ tour: t.id }">{{ brand.cta.group }}</a>
-      </div>
-      <div class="aside-card">
-        <h3>Travelling with a partner who does not play?</h3>
-        <p>The companion programme gives them a parallel wellness programme, with shared meals, excursions and evenings.</p>
-        <a class="head-link" routerLink="/how-it-works" fragment="companion">The companion programme <nz-icon nzType="arrow-right" /></a>
-      </div>
-    </aside>
-  </div>
-</section>
-
-<!-- ============ OTHER TOURS ============ -->
-<section class="section section-sand others">
+<!-- ============ PRACTICAL ============ -->
+<section class="section">
   <div class="container">
     <div class="head" appReveal>
-      <p class="eyebrow">Other tours</p>
-      <h2 class="display">Or try something else.</h2>
+      <p class="eyebrow">Practical information</p>
+      <h2 class="display">Good to know</h2>
     </div>
-    <div class="other-grid">
-      @for (o of others(); track o.id) {
-        <a class="other" [routerLink]="['/tours', o.id]" [attr.data-sport]="o.id">
-          <span class="o-ico"><app-sport-icon [sport]="o.id" /></span>
-          <span class="o-name">{{ o.name }}</span>
-          <span class="o-meta">{{ o.days }} days · from {{ o.priceFromUsd | number }} USD</span>
-        </a>
-      }
-    </div>
+    <dl class="practical">
+      <div appReveal><dt>Season</dt><dd>{{ t.season.note }}</dd></div>
+      <div [appReveal]="80"><dt>Level</dt><dd>{{ level() }}</dd></div>
+      <div [appReveal]="160">
+        <dt>Accommodation</dt>
+        <dd>Boutique hotels, resorts or villas near the venues, in shared (twin) rooms. <a routerLink="/where-we-stay">Where we stay</a></dd>
+      </div>
+      <div [appReveal]="240">
+        <dt>Getting there</dt>
+        <dd>Fly into Bali (DPS). We meet you at the airport; transfers are included. <a routerLink="/faq">Questions</a></dd>
+      </div>
+    </dl>
   </div>
 </section>
 
-<app-cta-band [heading]="'Your game. Your people. Bali.'" [whatsappMessage]="t.whatsapp" />
+<!-- ============ YOUR HOST ============ -->
+<section class="host section-green">
+  <span class="host-photo"><app-photo [photo]="hostPhoto" sizes="(min-width: 900px) 50vw, 100vw" [credit]="true" /></span>
+  <div class="host-body" appReveal>
+    <p class="eyebrow">Meet your host</p>
+    <h2 class="display">{{ host.heading }}</h2>
+    @for (p of host.text; track p) { <p class="host-text">{{ p }}</p> }
+    <p class="host-role">Led by our {{ t.ledBy }} <app-tbc label="Name and photo to confirm" /></p>
+    <a class="host-link" routerLink="/about">Our story <nz-icon nzType="arrow-right" /></a>
+  </div>
+</section>
+
+<app-cta-band
+  heading="Ask about"
+  [emphasis]="t.name + '.'"
+  lede="Tell us your group and your dates. We reply within 24 hours."
+  [tour]="t.id"
+  [whatsappMessage]="t.whatsapp"
+/>

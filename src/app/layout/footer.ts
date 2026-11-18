@@ -4,11 +4,10 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { BRAND, DEFAULT_WHATSAPP, PRICE_CLAIM, whatsappLink } from '../core/brand';
 import { LEGAL } from '../core/content/site';
 import { TOURS, tourPath } from '../core/content/tours';
-import { SportIconComponent } from '../shared/sport-icon';
 
 @Component({
   selector: 'app-footer',
-  imports: [RouterLink, NzIconModule, SportIconComponent],
+  imports: [RouterLink, NzIconModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './footer.html',
   styleUrl: './footer.css',
@@ -22,7 +21,6 @@ export class FooterComponent {
   readonly tours = TOURS.map((t) => ({ id: t.id, label: t.name, link: tourPath(t.id) }));
 
   readonly explore = [
-    { label: 'All tours', link: '/tours' },
     { label: 'Departures', link: '/departures' },
     { label: 'Plan your group trip', link: '/plan-your-group-trip' },
     { label: 'How it works', link: '/how-it-works' },
@@ -31,7 +29,7 @@ export class FooterComponent {
     { label: 'Partners', link: '/partners' },
     { label: 'Journal', link: '/journal' },
     { label: 'FAQ', link: '/faq' },
-    { label: 'Contact', link: '/contact' },
+    { label: 'Enquire', link: '/enquire' },
   ];
 
   readonly legal = LEGAL.map((d) => ({ label: d.title, link: `/legal/${d.slug}` }));

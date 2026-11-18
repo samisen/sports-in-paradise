@@ -1,256 +1,92 @@
 <!-- ============ HERO ============ -->
 <section class="hero">
-  <app-hero-slides [photos]="photos.hero" [interval]="5600" />
+  <app-hero-media [photos]="photos.hero" [video]="video" />
   <span class="hero-veil" aria-hidden="true"></span>
 
   <div class="container hero-inner">
-    <p class="eyebrow">Hosted sports and wellness tours in Bali</p>
-    <h1 class="display hero-title">Play your sport in paradise.</h1>
-    <p class="hero-signature">{{ brand.signature }}</p>
-    <p class="lede hero-lede">{{ messages.core }}</p>
-
+    <h1 class="hero-title">
+      @for (line of headline; track line; let last = $last) {
+        <span class="hl" [class.is-em]="last">{{ line }}</span>
+      }
+    </h1>
+    <p class="hero-sub">Hosted sports and wellness trips in Bali</p>
     <div class="hero-actions">
-      <a nz-button nzType="primary" nzSize="large" routerLink="/tours">
-        {{ brand.cta.tours }}
-        <nz-icon nzType="arrow-right" />
-      </a>
-      <a nz-button nzSize="large" nzGhost routerLink="/plan-your-group-trip">{{ brand.cta.group }}</a>
+      <a class="btn btn-light" routerLink="/" fragment="experiences">Discover the experiences</a>
+      <a class="btn btn-ghost" routerLink="/enquire">Enquire</a>
+    </div>
+  </div>
+
+  <a class="scroll-cue" routerLink="/" fragment="signature" aria-label="Scroll to the experiences"><span></span></a>
+</section>
+
+<!-- ============ SIGNATURE ============ -->
+<section class="signature" id="signature">
+  <p appReveal>Train <i>·</i> Play <i>·</i> Discover <i>·</i> Connect</p>
+</section>
+
+<!-- ============ THE FIVE EXPERIENCES ============ -->
+<section class="section experiences" id="experiences">
+  <div class="container">
+    <div class="head" appReveal>
+      <p class="eyebrow">The experiences</p>
+      <h2 class="display">Five experiences</h2>
+      <p class="lede">Every trip is hosted from airport to farewell, for small groups matched by level.</p>
     </div>
 
-    <nav class="hero-tours" aria-label="The tours">
-      @for (t of tours; track t.id) {
-        <a [routerLink]="['/tours', t.id]" [attr.data-sport]="t.id" class="hero-tour">
-          <span class="ht-ico"><app-sport-icon [sport]="t.id" /></span>
-          {{ t.short }}
+    <div class="exp-grid">
+      @for (e of experiences; track e.id; let i = $index) {
+        <a class="exp" [routerLink]="e.link" [appReveal]="(i % 3) * 90">
+          <span class="exp-photo">
+            <app-photo [photo]="e.photo" [sizes]="i < 2 ? '(min-width: 1040px) 50vw, (min-width: 700px) 50vw, 100vw' : '(min-width: 1040px) 33vw, (min-width: 700px) 50vw, 100vw'" />
+          </span>
+          <span class="exp-no">{{ e.no }}</span>
+          <span class="exp-name">{{ e.name }}</span>
+          <span class="exp-line">{{ e.line }}</span>
+          <span class="exp-meta">{{ e.meta }}</span>
+          <span class="exp-go">Discover <nz-icon nzType="arrow-right" /></span>
         </a>
       }
-    </nav>
+    </div>
+  </div>
+</section>
 
-    <dl class="hero-stats">
-      @for (f of facts; track f.label) {
-        <div>
-          <dt class="mono">{{ f.value }}</dt>
-          <dd>{{ f.label }}</dd>
+<!-- ============ WHAT MAKES US DIFFERENT ============ -->
+<section class="section section-white">
+  <div class="container diff">
+    <div class="diff-head" appReveal>
+      <p class="eyebrow">What makes us different</p>
+      <h2 class="display">Not a package.<br /><em>A journey.</em></h2>
+    </div>
+    <ul class="diff-list">
+      @for (d of differentiators; track d.title; let i = $index) {
+        <li [appReveal]="i * 80">
+          <h3>{{ d.title }}</h3>
+          <p>{{ d.text }}</p>
+        </li>
+      }
+    </ul>
+  </div>
+</section>
+
+<!-- ============ THE BALI LIFESTYLE ============ -->
+<section class="lifestyle section-green">
+  <span class="ls-photo">
+    <app-photo [photo]="photos.lifestyle" sizes="(min-width: 900px) 50vw, 100vw" [credit]="true" />
+  </span>
+  <div class="ls-body">
+    <div appReveal>
+      <p class="eyebrow">The Bali lifestyle</p>
+      <h2 class="display">Between games,<br /><em>the island.</em></h2>
+    </div>
+    <dl class="ls-rows">
+      @for (r of lifestyle; track r.time; let i = $index) {
+        <div [appReveal]="i * 80">
+          <dt>{{ r.time }}</dt>
+          <dd>{{ r.text }}</dd>
         </div>
       }
     </dl>
-  </div>
-</section>
-
-<!-- ============ THE FIVE TOURS ============ -->
-<section class="section" id="tours">
-  <div class="container">
-    <div class="head" appReveal>
-      <p class="eyebrow">Five tours</p>
-      <h2 class="display">Choose your sport. We design the journey.</h2>
-      <p class="lede">
-        Every tour is 10 to 12 days in a small group, with coaching or training, friendly competition,
-        recovery, the island and people like you. Prices are from, per person in a shared room,
-        excluding flights.
-      </p>
-    </div>
-
-    <div class="tour-grid">
-      @for (t of tours; track t.id; let i = $index) {
-        <div [appReveal]="i * 60" [class.is-wide]="i === 0">
-          <app-tour-card
-            [tour]="t"
-            [sizes]="i === 0 ? '(min-width: 1040px) 66vw, 100vw' : '(min-width: 1040px) 33vw, (min-width: 700px) 50vw, 100vw'"
-          />
-        </div>
-      }
-    </div>
-
-    <p class="head-link-row">
-      <a class="head-link" routerLink="/tours">Compare the five tours side by side <nz-icon nzType="arrow-right" /></a>
-    </p>
-  </div>
-</section>
-
-<!-- ============ WHAT MAKES IT DIFFERENT ============ -->
-<section class="section section-sand">
-  <div class="container">
-    <div class="split top">
-      <div class="head" appReveal>
-        <p class="eyebrow">What makes it different</p>
-        <h2 class="display">The sports holiday where everything is organised.</h2>
-        <p class="lede">
-          A mix of play, discovery, recovery and social time — designed and hosted by people who play,
-          coach and live in Bali.
-        </p>
-        <ul class="chip-row not-this" aria-label="What it is not">
-          @for (n of notThis; track n) {
-            <li><nz-icon nzType="close" /> {{ n }}</li>
-          }
-        </ul>
-      </div>
-      <span class="frame" appReveal>
-        <app-photo [photo]="photos.community" sizes="(min-width: 900px) 50vw, 100vw" [credit]="true" />
-      </span>
-    </div>
-
-    <div class="grid grid-3 elements">
-      @for (e of elements; track e.title; let i = $index) {
-        <article class="feature" [appReveal]="i * 50">
-          <nz-icon [nzType]="e.icon" />
-          <h3>{{ e.title }}</h3>
-          <p>{{ e.text }}</p>
-        </article>
-      }
-    </div>
-  </div>
-</section>
-
-<!-- ============ THE THREAD ============ -->
-<section class="section">
-  <div class="container">
-    <div class="head" appReveal>
-      <p class="eyebrow">The thread</p>
-      <h2 class="display">A story that links every day.</h2>
-      <p class="lede">
-        Each tour has its own thread — a competition or a journey that runs from day 2 to the last
-        night, and gives everyone a reason to turn up every morning.
-      </p>
-    </div>
-    <ol class="threads">
-      @for (t of tours; track t.id; let i = $index) {
-        <li class="thread" [attr.data-sport]="t.id" [appReveal]="i * 50">
-          <span class="th-ico"><app-sport-icon [sport]="t.id" /></span>
-          <span class="th-body">
-            <span class="th-name">{{ t.thread.name }}</span>
-            <span class="th-tour">{{ t.name }}</span>
-            <span class="th-text">{{ t.thread.text }}</span>
-          </span>
-        </li>
-      }
-    </ol>
-  </div>
-</section>
-
-<!-- ============ RECOVERY RITUAL ============ -->
-<section class="section section-deep ritual-band">
-  <div class="container">
-    <div class="head" appReveal>
-      <p class="eyebrow">Recovery built in</p>
-      <h2 class="display">The Recovery Ritual.</h2>
-      <p class="lede">
-        Five steps, part of every tour — so you can play hard all week and still enjoy the island.
-      </p>
-    </div>
-    <div appReveal><app-recovery-ritual [onDark]="true" /></div>
-  </div>
-</section>
-
-<!-- ============ WHO IT IS FOR ============ -->
-<section class="section">
-  <div class="container">
-    <div class="head" appReveal>
-      <p class="eyebrow">Who comes</p>
-      <h2 class="display">Your game. Your people. Bali.</h2>
-      <p class="lede">{{ messages.individuals }}</p>
-    </div>
-    <div class="grid grid-3 personas">
-      @for (p of personas; track p.name; let i = $index) {
-        <a class="persona" [routerLink]="p.link.split('#')[0]" [fragment]="p.link.split('#')[1]" [appReveal]="i * 40">
-          <span class="p-name">{{ p.name }}</span>
-          <span class="p-who">{{ p.who }}</span>
-          <span class="p-wants">{{ p.wants }}</span>
-          <span class="p-go">{{ p.linkLabel }} <nz-icon nzType="arrow-right" /></span>
-        </a>
-      }
-    </div>
-  </div>
-</section>
-
-<!-- ============ ORGANISERS ============ -->
-<section class="section section-sand">
-  <div class="container split">
-    <div appReveal>
-      <p class="eyebrow">For group organisers</p>
-      <h2 class="display">You organise the group. We organise everything else.</h2>
-      <p class="lede">{{ messages.organisers }}</p>
-      <ul class="check-list organiser-list">
-        @for (b of benefits; track b.title) {
-          <li>
-            <nz-icon nzType="check" />
-            <span><strong>{{ b.title }}.</strong> {{ b.text }} @if (b.toConfirm) { <app-tbc /> }</span>
-          </li>
-        }
-      </ul>
-      <div class="hero-actions">
-        <a nz-button nzType="primary" nzSize="large" routerLink="/plan-your-group-trip">
-          {{ brand.cta.group }} <nz-icon nzType="arrow-right" />
-        </a>
-      </div>
-    </div>
-    <span class="frame" appReveal>
-      <app-photo [photo]="photos.organiser" sizes="(min-width: 900px) 50vw, 100vw" [credit]="true" />
-    </span>
-  </div>
-</section>
-
-<!-- ============ HOW IT WORKS ============ -->
-<section class="section">
-  <div class="container">
-    <div class="head" appReveal>
-      <p class="eyebrow">How it works</p>
-      <h2 class="display">From your first message to the airport, and after.</h2>
-    </div>
-    <ol class="journey">
-      @for (s of journey; track s.index; let i = $index) {
-        <li class="journey-stage" [appReveal]="i * 40">
-          <div class="js-top">
-            <span class="js-no mono">{{ s.index }}</span>
-            <h3><nz-icon [nzType]="s.icon" /> {{ s.name }}</h3>
-          </div>
-          <dl>
-            <div><dt>You</dt><dd>{{ s.you }}</dd></div>
-            <div><dt>We</dt><dd>{{ s.we }}</dd></div>
-          </dl>
-        </li>
-      }
-    </ol>
-    <p class="head-link-row">
-      <a class="head-link" routerLink="/how-it-works">Payments, inclusions and what to bring <nz-icon nzType="arrow-right" /></a>
-    </p>
-  </div>
-</section>
-
-<!-- ============ WHEN ============ -->
-<section class="section section-sand">
-  <div class="container">
-    <div class="head" appReveal>
-      <p class="eyebrow">When to come</p>
-      <h2 class="display">Every tour has its season.</h2>
-      <p class="lede">
-        April to October is the dry season, best for outdoor sports. November to March suits wellness,
-        indoor training and martial arts.
-      </p>
-    </div>
-    <div class="season-card" appReveal>
-      <app-season-strip [rows]="seasons" caption="When to come for each tour, month by month" />
-    </div>
-    <p class="head-link-row">
-      <a class="head-link" routerLink="/departures">{{ brand.cta.departures }} <nz-icon nzType="arrow-right" /></a>
-    </p>
-  </div>
-</section>
-
-<!-- ============ PROOF ============ -->
-<section class="section">
-  <div class="container">
-    <div class="head" appReveal>
-      <p class="eyebrow">Our standards</p>
-      <h2 class="display">What you can count on.</h2>
-    </div>
-    <ul class="proof">
-      @for (p of proof; track p; let i = $index) {
-        <li [appReveal]="i * 40"><nz-icon nzType="check-circle" /> {{ p }}</li>
-      }
-    </ul>
-    <p class="head-link-row">
-      <a class="head-link" routerLink="/about">Who we are <nz-icon nzType="arrow-right" /></a>
-    </p>
+    <a class="ls-link" routerLink="/where-we-stay">Where we stay <nz-icon nzType="arrow-right" /></a>
   </div>
 </section>
 

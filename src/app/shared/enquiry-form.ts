@@ -35,6 +35,52 @@ export type EnquiryMode = 'general' | 'tour' | 'group' | 'waitlist';
   template: `
     @if (!sent()) {
       <form nz-form nzLayout="vertical" [formGroup]="form" (ngSubmit)="submit()">
+        @if (short()) {
+          <nz-form-item>
+            <nz-form-label nzRequired>Sport</nz-form-label>
+            <nz-form-control nzErrorTip="Please choose a sport">
+              <nz-select formControlName="tour" nzPlaceHolder="Choose an experience">
+                @for (t of tours; track t.id) {
+                  <nz-option [nzValue]="t.id" [nzLabel]="t.name" />
+                }
+                <nz-option nzValue="unsure" nzLabel="Not sure yet" />
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+          <div class="two">
+            <nz-form-item>
+              <nz-form-label nzRequired>Group size</nz-form-label>
+              <nz-form-control nzErrorTip="Please choose a group size">
+                <nz-select formControlName="size" nzPlaceHolder="How many?">
+                  @for (s of partySizes; track s) { <nz-option [nzValue]="s" [nzLabel]="s" /> }
+                </nz-select>
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+              <nz-form-label>Dates</nz-form-label>
+              <nz-form-control>
+                <nz-select formControlName="month" nzPlaceHolder="Roughly when?" nzAllowClear>
+                  @for (m of months; track m) { <nz-option [nzValue]="m" [nzLabel]="m" /> }
+                  <nz-option nzValue="Flexible" nzLabel="Flexible" />
+                </nz-select>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+          <div class="two">
+            <nz-form-item>
+              <nz-form-label nzRequired nzFor="enq-name">Name</nz-form-label>
+              <nz-form-control nzErrorTip="Please tell us your name">
+                <input nz-input id="enq-name" formControlName="name" autocomplete="name" />
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+              <nz-form-label nzRequired nzFor="enq-email">Email</nz-form-label>
+              <nz-form-control nzErrorTip="We need a valid email to reply">
+                <input nz-input id="enq-email" formControlName="email" type="email" autocomplete="email" />
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        } @else {
         <div class="two">
           <nz-form-item>
             <nz-form-label nzRequired nzFor="enq-name">Your name</nz-form-label>
@@ -110,25 +156,6 @@ export type EnquiryMode = 'general' | 'tour' | 'group' | 'waitlist';
               </nz-form-control>
             </nz-form-item>
           </div>
-        } @else if (mode() !== 'waitlist') {
-          <div class="two">
-            <nz-form-item>
-              <nz-form-label>Travelling as <span class="opt">Optional</span></nz-form-label>
-              <nz-form-control>
-                <nz-select formControlName="role" nzPlaceHolder="Choose one" nzAllowClear>
-                  @for (r of travelling; track r) { <nz-option [nzValue]="r" [nzLabel]="r" /> }
-                </nz-select>
-              </nz-form-control>
-            </nz-form-item>
-            <nz-form-item>
-              <nz-form-label>Your level <span class="opt">Optional</span></nz-form-label>
-              <nz-form-control>
-                <nz-select formControlName="level" nzPlaceHolder="Choose one" nzAllowClear>
-                  @for (l of levels; track l) { <nz-option [nzValue]="l" [nzLabel]="l" /> }
-                </nz-select>
-              </nz-form-control>
-            </nz-form-item>
-          </div>
         }
 
         <nz-form-item>
@@ -137,8 +164,9 @@ export type EnquiryMode = 'general' | 'tour' | 'group' | 'waitlist';
             <input nz-input id="enq-wa" formControlName="phone" type="tel" autocomplete="tel" />
           </nz-form-control>
         </nz-form-item>
+        }
 
-        @if (mode() !== 'waitlist') {
+        @if (mode() === 'group') {
           <nz-form-item>
             <nz-form-label nzFor="enq-note">Anything else? <span class="opt">Optional</span></nz-form-label>
             <nz-form-control>
@@ -194,7 +222,8 @@ export type EnquiryMode = 'general' | 'tour' | 'group' | 'waitlist';
       :host { display: block; }
       .two { display: grid; grid-template-columns: minmax(0, 1fr); column-gap: 18px; }
       @media (min-width: 640px) { .two { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-      .opt { margin-inline-start: 6px; font-size: 11.5px; font-weight: 400; color: var(--ink-3); }
+      .opt { margin-inline-start: 6px; font-size: 11.5px; font-weight: 300; color: var(--ink-3); }
+      :host ::ng-deep .ant-form-item-label > label { font-size: 11px; letter-spacing: .22em; text-transform: uppercase; color: var(--ink-3); }
       .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 20px; margin-top: 6px; }
       .wa-inline { display: inline-flex; align-items: center; gap: 8px; font-weight: 500; color: var(--ink); text-decoration: none; }
       .wa-inline nz-icon { color: #25d366; font-size: 18px; }
@@ -205,7 +234,7 @@ export type EnquiryMode = 'general' | 'tour' | 'group' | 'waitlist';
       .done h3 { margin: 0; font-family: var(--font-display); font-size: 1.6rem; color: var(--ink); }
       .done p { margin: 0; font-size: 14.6px; line-height: 1.7; color: var(--ink-2); max-width: 62ch; }
       .summary {
-        margin: 6px 0; padding: 14px 16px; border-radius: 12px; background: var(--surface-2);
+        margin: 6px 0; padding: 14px 16px; border-radius: 0; background: var(--surface-2);
         border: 1px solid var(--line); font-family: var(--font-sans); font-size: 13px; line-height: 1.7;
         color: var(--ink-2); white-space: pre-wrap;
       }
@@ -226,11 +255,15 @@ export class EnquiryFormComponent implements OnInit {
   readonly months = MONTHS;
   readonly roles = ['Club captain', 'Coach or instructor', 'A friend organising a group', 'Company or association', 'Other'];
   readonly travelling = ['On my own', 'As a couple', 'With friends', 'With my club'];
+  /** The short form: anyone from one person to a club. */
+  readonly partySizes = ['Just me', '2', '3 to 5', '6 to 12', 'More than 12'];
   readonly sizes = ['6 to 7', '8 to 9', '10 to 12', 'More than 12', 'Not sure yet'];
   readonly levels = ['Beginner', 'Intermediate', 'Advanced', 'Mixed levels'];
   readonly budgets = ['Up to $2,500', '$2,500 to $3,000', '$3,000 to $3,500', 'More than $3,500', 'Not sure yet'];
 
   readonly sent = signal(false);
+  /** General and tour enquiries use the short form the team asked for. */
+  readonly short = computed(() => this.mode() === 'general' || this.mode() === 'tour');
 
   readonly form = this.fb.nonNullable.group({
     name: ['', [Validators.required, Validators.minLength(2)]],
@@ -247,7 +280,7 @@ export class EnquiryFormComponent implements OnInit {
   });
 
   readonly submitLabel = computed(() =>
-    ({ general: 'Send my enquiry', tour: 'Ask about this tour', group: 'Plan our group trip', waitlist: 'Join the waiting list' })[this.mode()],
+    ({ general: 'Send enquiry', tour: 'Send enquiry', group: 'Plan our group trip', waitlist: 'Join the waiting list' })[this.mode()],
   );
 
   readonly notePlaceholder = computed(() =>
@@ -264,10 +297,10 @@ export class EnquiryFormComponent implements OnInit {
       const preset = this.tour();
       if (preset && tourById(preset)) this.form.controls.tour.setValue(preset);
       const m = this.mode();
-      if (m !== 'general') this.form.controls.tour.addValidators(Validators.required);
+      this.form.controls.tour.addValidators(Validators.required);
+      if (m === 'group' || this.short()) this.form.controls.size.addValidators(Validators.required);
       if (m === 'group') {
         this.form.controls.role.addValidators(Validators.required);
-        this.form.controls.size.addValidators(Validators.required);
       }
       this.form.updateValueAndValidity();
     }

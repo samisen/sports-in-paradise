@@ -1,153 +1,80 @@
 <a class="skip" href="#main">Skip to content</a>
-<header class="site-header" [class.is-solid]="scrolled() || !isHome() || toursOpen()">
+<header
+  class="site-header"
+  [class.is-solid]="scrolled() || !overImage() || toursOpen()"
+  [class.menu-open]="menuOpen()"
+>
   <div class="container bar">
-    <a class="brand" routerLink="/" [attr.aria-label]="brand.name + ' — home'">
-      <span class="brand-mark" aria-hidden="true"><app-sport-icon sport="paradise" /></span>
-      <span class="brand-text">
-        <span class="brand-name">{{ brand.wordmarkLead }}</span>
-        <span class="brand-sub">{{ brand.wordmarkTail }}</span>
-      </span>
+    <a class="wordmark" routerLink="/" [attr.aria-label]="brand.name + ' — home'">
+      Sports <span class="wm-in">in</span> Paradise
     </a>
 
-    <!-- the five tours, from every page -->
-    <div class="switcher" [class.is-open]="toursOpen()">
-      <button
-        type="button"
-        class="switch-btn"
-        (click)="toursOpen.set(!toursOpen())"
-        [attr.aria-expanded]="toursOpen()"
-        aria-haspopup="true"
-        aria-controls="tour-menu"
-      >
-        <span class="switch-label">Tours</span>
-        <nz-icon nzType="down" class="switch-caret" />
-      </button>
-      @if (toursOpen()) {
-        <div class="switch-menu" id="tour-menu" role="menu">
-          @for (t of tours; track t.id) {
-            <a
-              role="menuitem"
-              class="switch-item"
-              [attr.data-sport]="t.id"
-              [routerLink]="t.link"
-              routerLinkActive="is-current"
-              (click)="toursOpen.set(false)"
-            >
-              <span class="switch-ico"><app-sport-icon [sport]="t.id" /></span>
-              <span class="switch-text">
-                <span>{{ t.name }}</span>
-                <span class="switch-meta">{{ t.meta }}</span>
-              </span>
-            </a>
-          }
-          <a role="menuitem" class="switch-item is-all" routerLink="/tours" (click)="toursOpen.set(false)">
-            Compare all five tours <nz-icon nzType="arrow-right" />
-          </a>
-        </div>
-      }
-    </div>
-
     <nav class="nav-desktop" aria-label="Main">
-      @for (item of navMain; track item.link) {
-        <a [routerLink]="item.link" routerLinkActive="is-active">{{ item.label }}</a>
+      <div class="tours" [class.is-open]="toursOpen()">
+        <button
+          type="button"
+          class="nav-link tours-btn"
+          (click)="toursOpen.set(!toursOpen())"
+          [attr.aria-expanded]="toursOpen()"
+          aria-controls="tour-menu"
+        >
+          Experiences <nz-icon nzType="down" class="caret" />
+        </button>
+        @if (toursOpen()) {
+          <div class="tours-menu" id="tour-menu">
+            @for (t of tours; track t.id; let i = $index) {
+              <a class="tm-item" [routerLink]="t.link" routerLinkActive="is-current">
+                <span class="tm-no">0{{ i + 1 }}</span>
+                <span class="tm-name">{{ t.name }}</span>
+                <span class="tm-meta">{{ t.meta }}</span>
+              </a>
+            }
+            <a class="tm-all" routerLink="/tours">Compare all five <nz-icon nzType="arrow-right" /></a>
+          </div>
+        }
+      </div>
+      @for (item of nav; track item.link) {
+        <a class="nav-link" [routerLink]="item.link" routerLinkActive="is-active">{{ item.label }}</a>
       }
     </nav>
 
     <div class="bar-actions">
+      <a class="enquire" routerLink="/enquire">Enquire</a>
       <button
         type="button"
-        class="icon-btn theme-btn"
-        (click)="theme.toggle()"
-        [attr.aria-label]="theme.mode() === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'"
+        class="menu-btn"
+        (click)="toggleMenu()"
+        [attr.aria-expanded]="menuOpen()"
+        aria-controls="mobile-menu"
+        [attr.aria-label]="menuOpen() ? 'Close menu' : 'Open menu'"
       >
-        @if (theme.mode() === 'dark') {
-          <svg viewBox="0 0 24 24" aria-hidden="true" class="ico">
-            <circle cx="12" cy="12" r="4.4" />
-            <g stroke-linecap="round">
-              <path d="M12 2.5v2.2M12 19.3v2.2M4.2 4.2l1.6 1.6M18.2 18.2l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.2 19.8l1.6-1.6M18.2 5.8l1.6-1.6" />
-            </g>
-          </svg>
-        } @else {
-          <svg viewBox="0 0 24 24" aria-hidden="true" class="ico">
-            <path d="M20.5 14.3A8.6 8.6 0 0 1 9.7 3.5a8.6 8.6 0 1 0 10.8 10.8z" />
-          </svg>
-        }
-      </button>
-
-      <a class="cta-desktop" nz-button nzType="primary" routerLink="/plan-your-group-trip">{{ brand.cta.group }}</a>
-
-      <button type="button" class="icon-btn menu-btn" (click)="openDrawer()" aria-label="Open menu">
-        <nz-icon nzType="menu" />
+        <span class="burger" aria-hidden="true"><i></i><i></i></span>
       </button>
     </div>
   </div>
 </header>
 
-<nz-drawer
-  [nzVisible]="drawerOpen()"
-  nzPlacement="right"
-  [nzClosable]="false"
-  [nzWidth]="320"
-  nzWrapClassName="nav-drawer"
-  (nzOnClose)="closeDrawer()"
->
-  <ng-container *nzDrawerContent>
-    <div class="drawer-inner">
-      <div class="drawer-top">
-        <span class="drawer-label">Menu</span>
-        <button type="button" class="icon-btn" (click)="closeDrawer()" aria-label="Close menu">
-          <nz-icon nzType="close" />
-        </button>
-      </div>
-
-      <nav class="drawer-nav" aria-label="Mobile">
-        <a routerLink="/" routerLinkActive="is-current" [routerLinkActiveOptions]="{ exact: true }" (click)="closeDrawer()">
-          <span class="d-label">Home</span>
-          <span class="d-blurb">Start here</span>
-        </a>
-        <a routerLink="/tours" routerLinkActive="is-current" [routerLinkActiveOptions]="{ exact: true }" (click)="closeDrawer()">
-          <span class="d-label">All tours</span>
-          <span class="d-blurb">Compare the five tours</span>
-        </a>
-        @for (item of navMain; track item.link) {
-          <a [routerLink]="item.link" routerLinkActive="is-current" (click)="closeDrawer()">
-            <span class="d-label">{{ item.label }}</span>
-            <span class="d-blurb">{{ item.blurb }}</span>
-          </a>
-        }
-      </nav>
-
-      <div class="drawer-sports">
-        <span class="drawer-label">The tours</span>
-        <div class="drawer-sport-grid">
-          @for (t of tours; track t.id) {
-            <a [routerLink]="t.link" [attr.data-sport]="t.id" (click)="closeDrawer()">
-              <app-sport-icon [sport]="t.id" />
-              {{ t.short }}
-            </a>
-          }
-        </div>
-      </div>
-
-      <nav class="drawer-sub" aria-label="More">
-        @for (item of navSecondary; track item.link) {
-          <a [routerLink]="item.link" routerLinkActive="is-current" (click)="closeDrawer()">{{ item.label }}</a>
-        }
-      </nav>
-
-      <div class="drawer-foot">
-        <button type="button" class="theme-row" (click)="theme.toggle()">
-          <span>{{ theme.mode() === 'dark' ? 'Light theme' : 'Dark theme' }}</span>
-          <nz-icon nzType="swap" />
-        </button>
-        <a class="wa-row" [href]="whatsappUrl" target="_blank" rel="noopener noreferrer">
-          <nz-icon nzType="whats-app" />
-          {{ brand.cta.whatsapp }}
-        </a>
-        <a nz-button nzType="primary" nzBlock nzSize="large" routerLink="/plan-your-group-trip" (click)="closeDrawer()">
-          {{ brand.cta.group }}
-        </a>
-      </div>
+<div class="menu" id="mobile-menu" [class.is-open]="menuOpen()" [attr.aria-hidden]="!menuOpen()" [attr.inert]="menuOpen() ? null : ''">
+  <div class="container menu-inner">
+    <p class="menu-label">Experiences</p>
+    <nav class="menu-tours" aria-label="Experiences">
+      @for (t of tours; track t.id) {
+        <a [routerLink]="t.link">{{ t.name }}</a>
+      }
+    </nav>
+    <nav class="menu-main" aria-label="Mobile">
+      @for (item of nav; track item.link) {
+        <a [routerLink]="item.link">{{ item.label }}</a>
+      }
+    </nav>
+    <nav class="menu-more" aria-label="More">
+      @for (item of navMore; track item.link) {
+        <a [routerLink]="item.link">{{ item.label }}</a>
+      }
+    </nav>
+    <div class="menu-foot">
+      <a class="btn-solid" routerLink="/enquire">Enquire</a>
+      <a class="btn-line" [href]="whatsappUrl" target="_blank" rel="noopener noreferrer">WhatsApp</a>
     </div>
-  </ng-container>
-</nz-drawer>
+  </div>
+</div>

@@ -31,7 +31,7 @@ export const routes: Routes = [
   { path: 'about', title: 'About us', loadComponent: () => import('./pages/about/about').then((m) => m.AboutPage) },
   { path: 'partners', title: 'Partners', loadComponent: () => import('./pages/partners/partners').then((m) => m.PartnersPage) },
   { path: 'faq', title: 'FAQ', loadComponent: () => import('./pages/faq/faq').then((m) => m.FaqPage) },
-  { path: 'contact', title: 'Contact', loadComponent: () => import('./pages/contact/contact').then((m) => m.ContactPage) },
+  { path: 'enquire', title: 'Enquire', loadComponent: () => import('./pages/contact/contact').then((m) => m.ContactPage) },
   { path: 'journal', title: 'Journal', loadComponent: () => import('./pages/journal/journal').then((m) => m.JournalPage) },
   { path: 'journal/:slug', loadComponent: () => import('./pages/journal/journal-detail').then((m) => m.JournalDetailPage) },
   {
@@ -48,7 +48,8 @@ export const routes: Routes = [
   { path: 'retreats/:slug', redirectTo: 'tours' },
   { path: 'plan', redirectTo: 'plan-your-group-trip', pathMatch: 'full' },
   { path: 'plan-your-retreat', redirectTo: 'plan-your-group-trip', pathMatch: 'full' },
-  { path: 'book', redirectTo: 'contact', pathMatch: 'full' },
+  { path: 'book', redirectTo: 'enquire', pathMatch: 'full' },
+  { path: 'contact', redirectTo: 'enquire', pathMatch: 'full' },
   { path: 'why-bali', redirectTo: 'where-we-stay', pathMatch: 'full' },
   { path: 'legal', redirectTo: 'legal/terms', pathMatch: 'full' },
 

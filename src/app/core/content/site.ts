@@ -305,7 +305,7 @@ export const LEGAL: LegalDoc[] = [
     title: 'Cookie policy',
     summary: 'What this site stores on your device.',
     sections: [
-      { heading: 'What we store', text: 'This site stores only what it needs to work: your light or dark theme choice, your cookie choice, and an organiser code if you arrived through an organiser’s link. It sets no advertising or tracking cookies.' },
+      { heading: 'What we store', text: 'This site stores only what it needs to work: an organiser code if you arrived through an organiser’s link. It sets no advertising or tracking cookies.' },
       { heading: 'Analytics', text: 'If we add analytics or advertising tools later, they will only run after you agree to them, and this page will list them.' },
     ],
   },
@@ -325,10 +325,49 @@ export const LEGAL: LegalDoc[] = [
 /* --------------------------------------------------------------- photos --- */
 
 export const SITE_PHOTOS = {
-  hero: [PHOTOS.people.padelPair, PHOTOS.golf.oceanCliff, PHOTOS.wellness.studio, PHOTOS.martial.gymKick, PHOTOS.hybrid.beachRun],
+  /** The home hero, shown while there is no hero video (and as its poster). */
+  hero: [PHOTOS.bali.tanahLot, PHOTOS.people.padelPair, PHOTOS.golf.palmsOcean, PHOTOS.wellness.beachMeditation, PHOTOS.hybrid.beachRun],
+  lifestyle: PHOTOS.bali.tegalalang,
+  host: PHOTOS.people.dinner,
   community: PHOTOS.people.dinner,
   leader: PHOTOS.people.courtyard,
   recovery: PHOTOS.wellness.herbal,
   island: PHOTOS.bali.tanahLot,
   organiser: PHOTOS.people.golfToast,
+};
+
+/* ------------------------------------------------------- home page copy --- */
+
+/**
+ * The home hero video. The team will supply cinematic footage; until then
+ * this is null and the hero shows the photographs in SITE_PHOTOS.hero. Keep
+ * the file light (around 3 to 6 MB, 1080p, no sound): the first photograph
+ * is its poster, so the page never waits for it.
+ */
+export const HERO_VIDEO: { mp4: string; webm?: string } | null = null;
+
+export const HERO_HEADLINE = ['Your sport.', 'Your people.', 'Your paradise.'] as const;
+
+/** "What makes us different", in the team's four points. */
+export const DIFFERENTIATORS = [
+  { title: 'Your host', text: 'One person looks after everything, from the airport to your last dinner. One chat, one contact.' },
+  { title: 'The thread', text: 'Every trip has a story — a cup, a path, a finale — and a reason to show up every day.' },
+  { title: 'Matched by level', text: 'Small groups, assessed on day two, so you always play with the right people.' },
+  { title: 'Local clubs and players', text: 'Bali’s own clubs, coaches and players, on court and at the table.' },
+] as const;
+
+/** "A glimpse of the Bali lifestyle". */
+export const LIFESTYLE = [
+  { time: 'Morning', text: 'Training, sunrise mobility, an ocean swim' },
+  { time: 'Afternoon', text: 'Temples, rice terraces, the coastline' },
+  { time: 'Evening', text: 'Massage, sunset, dinner with local players' },
+] as const;
+
+/** "Meet your host". Names and photographs follow once the team confirms them. */
+export const HOST = {
+  heading: 'One host, from arrival to farewell.',
+  text: [
+    'Every trip has one host. They meet you at the airport, know every coach and venue, and are with the group every day.',
+    'One chat, one contact, one person who knows your name.',
+  ],
 };

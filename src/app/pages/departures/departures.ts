@@ -72,7 +72,7 @@ const RATING = ['Not recommended', 'Possible', 'Good', 'Best'];
                   <p>{{ d.start | date: 'd MMMM y' }} · {{ days(d.tour) }} days</p>
                 </div>
                 <p class="places">{{ d.placesLeft }} of {{ d.placesTotal }} places left</p>
-                <a nz-button nzType="primary" routerLink="/contact" [queryParams]="{ tour: d.tour }">Enquire</a>
+                <a nz-button nzType="primary" routerLink="/enquire" [queryParams]="{ tour: d.tour }">Enquire</a>
               </article>
             }
           </div>

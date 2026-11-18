@@ -13,9 +13,9 @@ import { PageHeroComponent } from '../../shared/page-hero';
   imports: [RouterLink, NzButtonModule, NzIconModule, EnquiryFormComponent, PageHeroComponent],
   template: `
     <app-page-hero
-      eyebrow="Contact"
-      heading="Talk to us."
-      lede="A short form, a WhatsApp message or an email — whichever is easiest. We reply within 24 hours with a tour, dates and a price."
+      eyebrow="Enquire"
+      heading="Every trip starts with a conversation."
+      lede="Tell us your sport, your group and your dates. We reply within 24 hours."
     />
 
     <section class="section">
@@ -26,8 +26,8 @@ import { PageHeroComponent } from '../../shared/page-hero';
 
         <aside>
           <div class="aside-card">
-            <h2>Straight to a person</h2>
-            <p>Your enquiry is read by the team who designs and hosts the tours.</p>
+            <h2>Prefer to talk?</h2>
+            <p>Your message goes to the people who design and host the trips.</p>
             <ul class="info">
               <li>
                 <nz-icon nzType="whats-app" />
@@ -41,15 +41,11 @@ import { PageHeroComponent } from '../../shared/page-hero';
                 <nz-icon nzType="environment" />
                 <div><span class="k">Where</span><span class="v">{{ brand.location }}</span></div>
               </li>
-              <li>
-                <nz-icon nzType="clock-circle" />
-                <div><span class="k">Office hours</span><span class="v">{{ brand.hours }}</span></div>
-              </li>
-            </ul>
+              </ul>
           </div>
           <div class="aside-card">
-            <h3>Organising a group?</h3>
-            <p>Tell us the group size, dates, sport, level and budget, and we will design the trip around you.</p>
+            <h3>Organising a club trip?</h3>
+            <p>Bring 6 to 12 people and we design the trip around your group.</p>
             <a nz-button nzBlock routerLink="/plan-your-group-trip">{{ brand.cta.group }} <nz-icon nzType="arrow-right" /></a>
           </div>
         </aside>
@@ -76,7 +72,7 @@ export class ContactPage {
 
   constructor() {
     const seo = inject(SeoService);
-    seo.setDescription('Contact Sports in Paradise: enquiry form, WhatsApp and email. We reply within 24 hours.');
+    seo.setDescription('Enquire about a Sports in Paradise trip: your sport, group and dates. We reply within 24 hours.');
     seo.setJsonLd(null);
   }
 }

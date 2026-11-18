@@ -30,11 +30,6 @@
                 "bundleName": "theme-light",
                 "inject": false
               },
-              {
-                "input": "src/themes/dark.less",
-                "bundleName": "theme-dark",
-                "inject": false
-              },
               "src/styles.css"
             ]
           },

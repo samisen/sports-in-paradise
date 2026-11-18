@@ -117,7 +117,7 @@ import { PHOTOS } from '../../core/media';
       </div>
     </section>
 
-    <app-cta-band heading="Not sure which tour?" lede="Tell us your sport, your level and roughly when. We reply within 24 hours with the tour that fits, the dates and a price." />
+    <app-cta-band heading="Not sure which" emphasis="experience?" lede="Tell us your sport, your level and roughly when. We reply within 24 hours." />
   `,
   styles: [
     `

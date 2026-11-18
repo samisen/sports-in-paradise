@@ -115,7 +115,7 @@ import { TourCardComponent } from '../../shared/tour-card';
             Partners who do not play padel, golf or martial arts follow a parallel wellness programme —
             movement, recovery and the island — and join the group for meals, excursions and evenings.
           </p>
-          <div class="actions"><a nz-button nzType="primary" nzSize="large" routerLink="/contact">Ask about the companion programme</a></div>
+          <div class="actions"><a nz-button nzType="primary" nzSize="large" routerLink="/enquire">Ask about the companion programme</a></div>
         </div>
       </div>
     </section>
@@ -154,7 +154,7 @@ import { TourCardComponent } from '../../shared/tour-card';
       </div>
     </section>
 
-    <app-cta-band heading="Train smart. Recover well." [whatsappMessage]="tours[0].whatsapp" />
+    <app-cta-band heading="Train smart." emphasis="Recover well." tour="wellness" [whatsappMessage]="tours[0].whatsapp" />
   `,
   styles: [
     `

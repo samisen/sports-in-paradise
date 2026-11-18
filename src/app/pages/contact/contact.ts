@@ -1,61 +1,82 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NzButtonModule } from 'ng-zorro-antd/button';
-import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
-import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzIconModule } from 'ng-zorro-antd/icon';
-import { NzInputModule } from 'ng-zorro-antd/input';
-import { NzSelectModule } from 'ng-zorro-antd/select';
-import { BRAND, whatsappLink } from '../../core/brand';
-import { CatalogService } from '../../core/catalog.service';
-import { SiteService } from '../../core/site/site.service';
-import { SITE_LABEL, SPORT_IDS } from '../../core/site/sites';
+import { BRAND, DEFAULT_WHATSAPP, whatsappLink } from '../../core/brand';
+import { SeoService } from '../../core/seo.service';
+import { EnquiryFormComponent } from '../../shared/enquiry-form';
 import { PageHeroComponent } from '../../shared/page-hero';
 
 @Component({
   selector: 'app-contact',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    ReactiveFormsModule, RouterLink, NzButtonModule, NzCheckboxModule,
-    NzFormModule, NzIconModule, NzInputModule, NzSelectModule, PageHeroComponent,
+  imports: [RouterLink, NzButtonModule, NzIconModule, EnquiryFormComponent, PageHeroComponent],
+  template: `
+    <app-page-hero
+      eyebrow="Contact"
+      heading="Talk to us."
+      lede="A short form, a WhatsApp message or an email — whichever is easiest. We reply within 24 hours with a tour, dates and a price."
+    />
+
+    <section class="section">
+      <div class="container form-grid">
+        <div class="form-card">
+          <app-enquiry-form mode="general" [tour]="tour() ?? null" />
+        </div>
+
+        <aside>
+          <div class="aside-card">
+            <h2>Straight to a person</h2>
+            <p>Your enquiry is read by the team who designs and hosts the tours.</p>
+            <ul class="info">
+              <li>
+                <nz-icon nzType="whats-app" />
+                <div><span class="k">WhatsApp</span><a [href]="whatsappUrl" target="_blank" rel="noopener noreferrer">{{ brand.whatsapp }}</a></div>
+              </li>
+              <li>
+                <nz-icon nzType="mail" />
+                <div><span class="k">Email</span><a [href]="'mailto:' + brand.email">{{ brand.email }}</a></div>
+              </li>
+              <li>
+                <nz-icon nzType="environment" />
+                <div><span class="k">Where</span><span class="v">{{ brand.location }}</span></div>
+              </li>
+              <li>
+                <nz-icon nzType="clock-circle" />
+                <div><span class="k">Office hours</span><span class="v">{{ brand.hours }}</span></div>
+              </li>
+            </ul>
+          </div>
+          <div class="aside-card">
+            <h3>Organising a group?</h3>
+            <p>Tell us the group size, dates, sport, level and budget, and we will design the trip around you.</p>
+            <a nz-button nzBlock routerLink="/plan-your-group-trip">{{ brand.cta.group }} <nz-icon nzType="arrow-right" /></a>
+          </div>
+        </aside>
+      </div>
+    </section>
+  `,
+  styles: [
+    `
+      :host { display: block; }
+      .info { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 14px; }
+      .info li { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 12px; }
+      .info nz-icon { font-size: 18px; color: var(--brand); margin-top: 3px; }
+      .info div { display: flex; flex-direction: column; }
+      .k { font-size: 11px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); }
+      .v, .info a { font-size: 14.4px; color: var(--ink); }
+    `,
   ],
-  templateUrl: './contact.html',
-  styleUrl: './contact.css',
 })
 export class ContactPage {
-  private readonly fb = inject(FormBuilder);
-
+  /** ?tour=golf preselects the tour. */
+  readonly tour = input<string | undefined>();
   readonly brand = BRAND;
-  readonly site = inject(SiteService);
-  private readonly catalog = inject(CatalogService);
-  readonly levels = this.site.isHub ? [] : this.catalog.sport.planner.levels;
-  readonly whatsappUrl = whatsappLink(this.site.isHub ? `Hello ${BRAND.name}, I'd like to talk about a sports retreat in Bali.` : this.catalog.sport.whatsapp);
-  readonly sports = SPORT_IDS.map((id) => ({ id, label: SITE_LABEL[id] }));
-  readonly levelTitle = this.site.isHub ? '' : this.catalog.sport.planner.words.levelTitle;
+  readonly whatsappUrl = whatsappLink(DEFAULT_WHATSAPP);
 
-  readonly sending = signal(false);
-  readonly sent = signal(false);
-
-  readonly form = this.fb.nonNullable.group({
-    name: ['', [Validators.required, Validators.minLength(2)]],
-    email: ['', [Validators.required, Validators.email]],
-    level: [this.site.isHub ? '' : this.catalog.sport.planner.defaultConfig.level],
-    sports: [this.site.isHub ? ([] as string[]) : [this.site.id as string]],
-    note: [''],
-    consent: [false, [Validators.requiredTrue]],
-  });
-
-  submit(): void {
-    if (this.form.invalid) {
-      this.form.markAllAsTouched();
-      return;
-    }
-    this.sending.set(true);
-    // a demonstration site: nothing leaves the browser
-    setTimeout(() => {
-      this.sending.set(false);
-      this.sent.set(true);
-    }, 700);
+  constructor() {
+    const seo = inject(SeoService);
+    seo.setDescription('Contact Sports in Paradise: enquiry form, WhatsApp and email. We reply within 24 hours.');
+    seo.setJsonLd(null);
   }
 }

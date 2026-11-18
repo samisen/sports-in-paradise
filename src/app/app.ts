@@ -5,10 +5,11 @@ import { filter } from 'rxjs/operators';
 import { HeaderComponent } from './layout/header';
 import { FooterComponent } from './layout/footer';
 import { WhatsappFabComponent } from './shared/whatsapp-fab';
+import { CookieBannerComponent } from './shared/cookie-banner';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, HeaderComponent, FooterComponent, WhatsappFabComponent],
+  imports: [RouterOutlet, HeaderComponent, FooterComponent, WhatsappFabComponent, CookieBannerComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './app.html',
   styleUrl: './app.css',

@@ -6,10 +6,8 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzDrawerModule } from 'ng-zorro-antd/drawer';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { ThemeService } from '../core/theme.service';
-import { BRAND, whatsappLink } from '../core/brand';
-import { SiteService } from '../core/site/site.service';
-import { SITE_LABEL, SPORT_IDS, SiteId } from '../core/site/sites';
-import { CatalogService } from '../core/catalog.service';
+import { BRAND, DEFAULT_WHATSAPP, whatsappLink } from '../core/brand';
+import { TOURS, tourPath } from '../core/content/tours';
 import { SportIconComponent } from '../shared/sport-icon';
 
 interface NavItem {
@@ -29,7 +27,7 @@ interface NavItem {
   host: {
     '(window:scroll)': 'onScroll()',
     '(document:click)': 'onDocClick($event)',
-    '(document:keydown.escape)': 'switcherOpen.set(false)',
+    '(document:keydown.escape)': 'toursOpen.set(false)',
   },
 })
 export class HeaderComponent {
@@ -37,42 +35,27 @@ export class HeaderComponent {
   private readonly doc = inject(DOCUMENT);
   private readonly host = inject(ElementRef<HTMLElement>);
   readonly theme = inject(ThemeService);
-  readonly site = inject(SiteService);
 
   readonly scrolled = signal(false);
   readonly drawerOpen = signal(false);
-  readonly switcherOpen = signal(false);
+  readonly toursOpen = signal(false);
 
   readonly brand = BRAND;
-  readonly siteId = this.site.id;
-  readonly siteLabel = SITE_LABEL[this.site.id];
-  readonly whatsappUrl = whatsappLink(
-    this.site.isHub ? `Hello ${BRAND.name}, I'd like to talk about a sports retreat in Bali.` : inject(CatalogService).sport.whatsapp,
-  );
+  readonly whatsappUrl = whatsappLink(DEFAULT_WHATSAPP);
 
-  /** Every other site, as absolute links: a different sport is a different origin. */
-  readonly sites = (['hub', ...SPORT_IDS] as SiteId[]).map((id) => ({
-    id,
-    label: SITE_LABEL[id],
-    href: this.site.url(id),
-    current: id === this.site.id,
-  }));
+  readonly tours = TOURS.map((t) => ({ id: t.id, name: t.name, short: t.short, link: tourPath(t.id), meta: `${t.days} days · ${t.group}` }));
 
-  readonly nav: NavItem[] = this.site.isHub
-    ? [
-        { label: 'Why Bali', link: '/why-bali', blurb: 'The island, the seasons, each sport' },
-        { label: 'How It Works', link: '/how-it-works', blurb: 'From first message to last day' },
-        { label: 'Journal', link: '/journal', blurb: 'Writing from all five sports' },
-        { label: 'Contact', link: '/contact', blurb: 'Talk to a person', secondary: true },
-      ]
-    : [
-        { label: 'Why Bali', link: '/why-bali', blurb: 'The sport on the island today' },
-        { label: 'Retreats', link: '/retreats', blurb: 'The weeks that are open' },
-        { label: 'Plan Your Retreat', link: '/plan', blurb: 'Build the week, see the price' },
-        { label: 'How It Works', link: '/how-it-works', blurb: 'From first message to last day' },
-        { label: 'Journal', link: '/journal', blurb: 'Technique, training and the island', secondary: true },
-        { label: 'Contact', link: '/contact', blurb: 'Talk to a person', secondary: true },
-      ];
+  readonly nav: NavItem[] = [
+    { label: 'Wellness', link: '/wellness', blurb: 'Our wellness division' },
+    { label: 'Departures', link: '/departures', blurb: 'Dates, places and the waiting list' },
+    { label: 'How it works', link: '/how-it-works', blurb: 'From enquiry to departure' },
+    { label: 'About us', link: '/about', blurb: 'The founders and our standards' },
+    { label: 'FAQ', link: '/faq', blurb: 'Answers to common questions' },
+    { label: 'Where we stay', link: '/where-we-stay', blurb: 'Areas and accommodation', secondary: true },
+    { label: 'Partners', link: '/partners', blurb: 'Clubs, venues and coaches', secondary: true },
+    { label: 'Journal', link: '/journal', blurb: 'Guides and stories', secondary: true },
+    { label: 'Contact', link: '/contact', blurb: 'Talk to a person', secondary: true },
+  ];
 
   readonly navMain = this.nav.filter((i) => !i.secondary);
   readonly navSecondary = this.nav.filter((i) => i.secondary);
@@ -91,9 +74,9 @@ export class HeaderComponent {
   }
 
   onDocClick(e: Event): void {
-    if (!this.switcherOpen()) return;
+    if (!this.toursOpen()) return;
     const sw = this.host.nativeElement.querySelector('.switcher');
-    if (sw && !sw.contains(e.target as Node)) this.switcherOpen.set(false);
+    if (sw && !sw.contains(e.target as Node)) this.toursOpen.set(false);
   }
 
   openDrawer(): void { this.drawerOpen.set(true); }

@@ -1,12 +1,13 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { MONTHS, SEASON_LEGEND } from '../core/content/island';
 import { SeasonRow } from '../core/content/types';
-import { SiteId } from '../core/site/sites';
+import { PaletteId } from '../core/content/types';
+import { RouterLink } from '@angular/router';
 import { SportIconComponent } from './sport-icon';
 
 export interface SeasonLine {
   label: string;
-  sport: SiteId;
+  sport: PaletteId;
   ratings: SeasonRow;
   href?: string;
 }
@@ -21,7 +22,7 @@ const WORD = ['Avoid', 'Possible', 'Good', 'Best'];
  */
 @Component({
   selector: 'app-season-strip',
-  imports: [SportIconComponent],
+  imports: [SportIconComponent, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="wrap">
@@ -40,7 +41,7 @@ const WORD = ['Avoid', 'Possible', 'Good', 'Best'];
             <tr [attr.data-sport]="row.sport">
               <th scope="row" class="lbl">
                 @if (row.href) {
-                  <a [href]="row.href"><app-sport-icon [sport]="row.sport" />{{ row.label }}</a>
+                  <a [routerLink]="row.href"><app-sport-icon [sport]="row.sport" />{{ row.label }}</a>
                 } @else {
                   <span><app-sport-icon [sport]="row.sport" />{{ row.label }}</span>
                 }
@@ -66,7 +67,7 @@ const WORD = ['Avoid', 'Possible', 'Good', 'Best'];
       :host { display: block; }
       .wrap { overflow-x: auto; }
       .tbl { width: 100%; min-width: 560px; border-collapse: separate; border-spacing: 4px; table-layout: fixed; }
-      .corner { width: 118px; }
+      .corner { width: 140px; }
       .m { font-size: 11px; font-weight: 600; letter-spacing: .04em; color: var(--ink-3); text-align: center; padding-bottom: 4px; }
       .lbl { text-align: start; font-weight: 600; font-size: 14px; color: var(--ink); padding-inline-end: 8px; white-space: nowrap; }
       .lbl a, .lbl span { display: inline-flex; align-items: center; gap: 8px; color: inherit; text-decoration: none; }

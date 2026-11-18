@@ -1,11 +1,14 @@
 /**
  * Photography.
  *
- * Every image on the site is an Unsplash photo served from the Unsplash CDN
+ * Every image on the site is, for now, an Unsplash photo served from the Unsplash CDN
  * (an imgix host), so the browser is handed a correctly sized, modern-format
  * file through the loader in app.config.ts rather than a 6000px original.
  * Unsplash Plus images are excluded: everything here is under the free
  * Unsplash licence, and the photographer is credited where the photo appears.
+ *
+ * These stand in until the company's own photography from the pilot trips
+ * arrives (see the brief: real people, real action, no stock clichés).
  *
  * `w` and `h` are the original dimensions — NgOptimizedImage uses the ratio
  * to reserve space before the file arrives, so nothing shifts on load.
@@ -44,21 +47,6 @@ export const PHOTOS = {
     courtsOutdoor: p('1709587824751-dd30420f5cf3', 6000, 3376, 'Bruno Vaccaro Vercellino', 'A row of outdoor padel courts with glass and mesh'),
     racketsBalls: p('1658723745294-89c5e056efb5', 3024, 4032, 'Sergio Contreras', 'A pair of padel rackets and balls on the ground'),
   },
-  tennis: {
-    fromAbove: p('1545151414-8a948e1ea54f', 3456, 5184, 'Renith R', 'A tennis player on a green court, seen from above'),
-    courtTrees: p('1499510318569-1a3d67dc3976', 2196, 2745, 'Ryan Searle', 'Aerial view of a tennis court surrounded by trees'),
-    racket: p('1622163642998-1ea32b0bbc67', 3024, 4032, 'Hoi Pham', 'A tennis racket and ball on a blue court'),
-    balls: p('1595435742656-5272d0b3fa82', 4024, 5030, 'Jeffery Erhunse', 'A player holding a racket and two tennis balls'),
-    serve: p('1714840961998-8d6c02ace00b', 3200, 4800, 'Andrew Heald', 'A tennis player tossing the ball to serve'),
-    aerialPlayer: p('1548920168-70d61248a912', 6000, 4000, 'Prashant Gurung', 'A tennis player and her long shadow on court'),
-    serveDark: p('1637071692126-d0ee7df18271', 4000, 6000, 'Fei Chao', 'A tennis player serving under floodlights'),
-    blueCourt: p('1714840961579-6b072a12536e', 4068, 2654, 'Andrew Heald', 'A tennis player moving on a blue hard court'),
-    forehand: p('1714841197541-aa64d90cb6a8', 3200, 3601, 'Andrew Heald', 'A tennis player swinging through a forehand'),
-    rally: p('1516742720271-6ae39cbc5bd1', 5184, 3888, 'flou gaupr', 'A tennis player in a rally on a hard court'),
-    serveTall: p('1714841197683-9bb219f6dca5', 3200, 4800, 'Andrew Heald', 'A tennis player at full stretch on the serve'),
-    palms: p('1763913771541-4d43d5c3bc93', 5827, 3885, 'Michael Moloney', 'Empty tennis courts lined with palm trees under a clear sky'),
-    net: p('1699117686612-ece525e4f91a', 3712, 5568, 'C Cai', 'A tennis net across a blue court'),
-  },
   golf: {
     oceanCliff: p('1672825952732-ecef34882416', 4000, 6000, 'Frederik Rosar', 'A golf course above the ocean'),
     greenHills: p('1679011734667-165e56d79037', 9072, 16128, 'Caleb Bennetts', 'A green fairway rolling into wooded hills'),
@@ -82,32 +70,6 @@ export const PHOTOS = {
     aerialGreen: p('1605144884374-ecbb643615f6', 3336, 4944, 'Welcome', 'A green and its bunkers from the air'),
     tee: p('1562204320-31975a5e09ce', 6073, 4160, 'Will Porada', 'A golf ball sitting on a tee'),
     putt: p('1532508583690-538a1436f423', 3008, 2000, 'Mick De Paola', 'A putter lined up behind a golf ball'),
-  },
-  diving: {
-    cave: p('1682687982167-d7fb3ed8541d', 7733, 5155, 'NEOM', 'A scuba diver swimming through an underwater cave'),
-    reef: p('1583212292454-1fe6229603b7', 3648, 2736, 'Hiroko Yoshii', 'Fish over a shallow coral reef'),
-    schoolDiver: p('1544551763-46a013bb70d5', 5472, 3648, 'Sebastian Pena Lambarri', 'A diver beside a school of yellow fish'),
-    silhouette: p('1517627043994-b991abb62fc8', 5304, 7380, 'Francisco Jesús Navarro Hernández', 'A diver silhouetted against the sun from below'),
-    camera: p('1682687982502-1529b3b33f85', 8256, 5504, 'NEOM', 'A diver with a camera over the reef'),
-    fishDiver: p('1586508577428-120d6b072945', 4000, 2500, 'Aviv Perets', 'A diver in a wetsuit among a school of fish'),
-    colourReef: p('1682687981630-cefe9cd73072', 7406, 4937, 'NEOM', 'A diver over a colourful coral reef'),
-    manta: p('1618265909156-0507770ef0d0', 2668, 3484, 'naushad mohamed', 'A manta ray gliding overhead'),
-    mantas: p('1544552866-fef1d68c69b5', 5472, 3648, 'Sebastian Pena Lambarri', 'Manta rays feeding in blue water'),
-    mantaBelly: p('1604294069552-a94330e12a33', 5168, 3448, 'Andre Kaim', 'A manta ray showing its pale underside'),
-    mantaShadow: p('1582012446386-1682363c2f1c', 2250, 2250, 'Mohamed Nashah', 'A manta ray silhouetted against the surface'),
-    mantaGlide: p('1604294069613-a76c24206361', 5168, 3448, 'Andre Kaim', 'A manta ray swimming close to the reef'),
-    coralDiver: p('1682687982049-b3d433368cd1', 8024, 5349, 'NEOM', 'A diver swimming over a coral reef'),
-    fishWall: p('1682687982360-3fbab65f9d50', 8256, 5504, 'NEOM', 'A diver surrounded by fish'),
-    reefDiver: p('1682687982470-8f1b0e79151a', 8256, 5504, 'NEOM', 'A diver drifting past a reef wall full of fish'),
-    splitVolcano: p('1682695797873-aa4cb6edd613', 8189, 5462, 'NEOM', 'A half-underwater view of a reef with a mountain above the waterline'),
-    surface: p('1581771085083-2353cf475ff5', 4851, 3234, 'Uber Scuba Gili', 'Divers at the surface before a descent'),
-    statue: p('1544642058-2d2bfc88a86a', 4939, 3293, 'Sebastian Pena Lambarri', 'A diver beside an underwater statue'),
-    shoal: p('1515474594679-6a13c25afb99', 5437, 3625, 'Milos Prelevic', 'A dense shoal of silver fish'),
-    nudibranch: p('1578854186802-b234962d05bc', 4608, 3072, 'Pascal van de Vendel', 'A small orange and white nudibranch'),
-    turtle: p('1437622368342-7a3d73a34c8f', 1920, 1200, 'Wexor Tmg', 'A sea turtle swimming underwater'),
-    turtleBlue: p('1710668167382-18a14edf253d', 2160, 3840, 'Sercan Jenkins', 'A sea turtle gliding through blue water'),
-    turtleReef: p('1554555263-f440a3f535f3', 4272, 2848, 'Zdeněk Macháček', 'A sea turtle over the reef'),
-    turtleClear: p('1759202096361-809b7e083709', 1702, 3018, 'Flaviu Costin', 'A sea turtle in clear blue water'),
   },
   hiking: {
     baturClouds: p('1508591086314-d7deb00cede9', 6868, 4584, 'Hugo Villegas', 'A volcano rising above a sea of cloud at sunrise'),
@@ -136,6 +98,47 @@ export const PHOTOS = {
     forestFall: p('1593901138884-02ee723a96f7', 4689, 5861, 'Rolands Varsbergs', 'A waterfall in green forest'),
     river: p('1578494688088-8260d62a79c1', 3086, 4629, 'Frans Daniels', 'A waterfall and river in the forest'),
     twinFalls: p('1598960383478-bcc6dddb4781', 3918, 7148, 'Maxim Romanyuk', 'Twin waterfalls over dark rock'),
+  },
+  martial: {
+    padWoman: p('1773289338244-b3e881c7020c', 4000, 6000, 'Anastase Maragos', 'A woman training Muay Thai in a gym'),
+    boxingWoman: p('1773289338309-50476faedda2', 4000, 6000, 'Anastase Maragos', 'A woman boxing in a gym'),
+    gloves: p('1549719386-74dfcbf7dbed', 5472, 3648, 'Bogdan Yukhymchuk', 'A pair of black boxing gloves'),
+    belt: p('1656653121475-e33829581294', 6000, 4000, 'Nguyen Hung', 'A martial artist tightening a black belt over a white gi'),
+    gymKick: p('1765302816396-975b6ca73b0a', 6000, 4000, 'Anastase Maragos', 'A man throwing a high kick in a dim gym'),
+    silhouette: p('1539465386388-838f814495bd', 4000, 6000, 'Alci Alliata', 'A martial artist punching, in silhouette against the sky'),
+    drill: p('1611824916173-508ca2931d4d', 4000, 6000, 'Jonathan Tomas', 'A woman in a red and black kit doing a striking drill'),
+  },
+  hybrid: {
+    ropes: p('1599058917212-d750089bc07e', 6000, 4000, 'Karsten Winegeart', 'A man working with battle ropes outdoors'),
+    kettlebells: p('1758875570600-8daf8d2f05f3', 6000, 4000, 'Vitaly Gariev', 'A man and a woman doing kettlebell swings side by side'),
+    rower: p('1780398585038-d77d3817c3c6', 6000, 4000, 'Grace Anne Bobadilla', 'A man training on a rowing machine'),
+    barbell: p('1517836357463-d25dfeac3438', 5184, 3456, 'Victor Freitas', 'An athlete chalked up and about to lift a barbell'),
+    highFives: p('1785861632239-3945f4e5a28c', 6000, 4000, 'Sum Sum', 'A group giving each other high fives in a gym'),
+    beachRun: p('1772764768073-c95db4f77864', 6000, 4000, 'cool guy jon', 'Three runners racing along a misty beach'),
+    pair: p('1534258936925-c58bed479fcb', 5472, 3648, 'Meghan Holmes', 'Two people training together in a gym'),
+  },
+  wellness: {
+    reformer: p('1747239069226-55382c570116', 4000, 6000, 'Roxana Popovici', 'A woman doing a Pilates exercise on a reformer'),
+    studio: p('1761035005546-62b8018b212a', 6000, 4000, 'Christian Harb', 'A group stretching on mats in a bright studio'),
+    massage: p('1745327883508-b6cd32e5dde5', 6000, 4000, 'Jakub Klucký', 'A therapist giving a back massage'),
+    herbal: p('1775133262667-316bd4d9e5b5', 6000, 4000, 'Charanjeet Dhiman', 'A massage with warm herbal compresses'),
+    bowls: p('1767277672167-18105701959b', 6000, 4000, 'Monaz Hastam', 'A table of healthy breakfast bowls'),
+    beachMeditation: p('1775169726139-82f78b87b8a4', 6000, 4000, 'Vadim Berg', 'A woman meditating on a mat by the ocean'),
+    ridge: p('1484766280341-87861644c80d', 5472, 3648, 'John Towner', 'A small group on a hilltop at golden hour'),
+    stretch: p('1552196563-55cd4e45efb3', 4000, 6000, 'Dane Wetton', 'A woman in a deep stretch'),
+  },
+  people: {
+    dinner: p('1778694277039-5cbf0b9a1fcf', 6000, 4000, 'Romain Gal', 'A group sharing a candlelit dinner'),
+    outdoorDinner: p('1621112904887-419379ce6824', 6000, 4000, 'Considerate Agency', 'Friends at a long outdoor dinner table'),
+    golfToast: p('1629673120178-53a664eec9e8', 6000, 4000, 'Sugar Golf', 'Three golfers raising a drink on a sunny course'),
+    golfThree: p('1775326424702-4eca92f63cef', 6000, 4000, 'Will Haddock', 'Three friends playing golf on a sunny day'),
+    padelPair: p('1770230901556-4e1c0bacfb09', 6000, 4000, 'Ashford Marx', 'Two men playing padel on a blue court'),
+    padelOverhead: p('1767128890439-1af9ca2ff1ac', 4000, 6000, 'Erjola Qerimi', 'A man holding a padel racket above his head'),
+    trophy: p('1578269174936-2709b6aeb913', 4000, 6000, 'Giorgio Trovato', 'A gold trophy'),
+    medals: p('1706374503312-7a4a4c030d2d', 6000, 4000, 'George Pisarevsky', 'A row of gold medals on red ribbons'),
+    ulunDanuGold: p('1711609110590-5ad5c4599e56', 6000, 4000, 'Katarzyna Zygnerska', 'Pura Ulun Danu Bratan on its lake at golden hour'),
+    courtyard: p('1761521456079-1b513aec0add', 6000, 4000, 'Nicole Arango Lang', 'A traditional Balinese courtyard full of greenery'),
+    whiteVilla: p('1613977257592-4871e5fcd7c4', 6000, 4000, 'John Fornander', 'A modern white villa and its pool'),
   },
   bali: {
     penidaBeach: p('1577717903315-1691ae25ab3f', 6000, 4000, 'Alfiano Sutianto', 'Turquoise water below limestone cliffs on Nusa Penida'),

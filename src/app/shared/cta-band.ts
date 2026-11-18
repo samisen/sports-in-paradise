@@ -1,11 +1,11 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
-import { CatalogService } from '../core/catalog.service';
-import { SiteService } from '../core/site/site.service';
+import { BRAND, DEFAULT_WHATSAPP, whatsappLink } from '../core/brand';
 import { RevealDirective } from './reveal.directive';
 
+/** The closing call to action on every page: organisers first, then everyone else. */
 @Component({
   selector: 'app-cta-band',
   imports: [RouterLink, NzButtonModule, NzIconModule, RevealDirective],
@@ -14,23 +14,24 @@ import { RevealDirective } from './reveal.directive';
     <section class="cta">
       <div class="container inner" appReveal>
         <p class="eyebrow">{{ eyebrow() }}</p>
-        <h2 class="display">{{ heading() || copy().heading }}</h2>
-        <p class="lede">{{ lede() || copy().lede }}</p>
+        <h2 class="display">{{ heading() }}</h2>
+        <p class="lede">{{ lede() }}</p>
         <div class="actions">
-          <a nz-button nzType="primary" nzSize="large" routerLink="/plan">
-            {{ primaryLabel() }}
+          <a nz-button nzType="primary" nzSize="large" routerLink="/plan-your-group-trip">
+            {{ brand.cta.group }}
             <nz-icon nzType="arrow-right" />
           </a>
-          @if (isHub) {
-            <a nz-button nzSize="large" nzGhost routerLink="/contact">Talk to the team</a>
-          } @else {
-            <a nz-button nzSize="large" nzGhost routerLink="/retreats">See the retreats</a>
-          }
+          <a nz-button nzSize="large" nzGhost routerLink="/departures">{{ brand.cta.departures }}</a>
+          <a class="wa" [href]="whatsappUrl()" target="_blank" rel="noopener noreferrer">
+            <nz-icon nzType="whats-app" /> {{ brand.cta.whatsapp }}
+          </a>
         </div>
         <p class="reassure">
-          <nz-icon nzType="check" /> Nothing is held until you confirm
+          <nz-icon nzType="check" /> {{ brand.replyWithin }}
           <span class="sep"></span>
-          <nz-icon nzType="check" /> Reply within one working day
+          <nz-icon nzType="check" /> 30% deposit to book
+          <span class="sep"></span>
+          <nz-icon nzType="check" /> One tour leader, airport to departure
         </p>
       </div>
     </section>
@@ -55,8 +56,11 @@ import { RevealDirective } from './reveal.directive';
       .display { color: #fff; }
       .eyebrow { color: rgba(255, 255, 255, .55); }
       .lede { color: rgba(255, 255, 255, .74); }
-      .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
-      .actions a { min-width: 190px; justify-content: center; }
+      .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; margin-top: 30px; }
+      .actions a[nz-button] { min-width: 190px; justify-content: center; }
+      .wa { display: inline-flex; align-items: center; gap: 8px; color: #fff; font-weight: 500; text-decoration: none; }
+      .wa nz-icon { color: #25d366; font-size: 18px; }
+      .wa:hover { text-decoration: underline; text-underline-offset: 3px; }
       .reassure { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 22px 0 0; font-size: 13px; color: rgba(255, 255, 255, .55); }
       .reassure nz-icon { color: var(--brand-strong); }
       .sep { width: 1px; height: 13px; background: rgba(255, 255, 255, .2); margin-inline: 6px; }
@@ -64,20 +68,12 @@ import { RevealDirective } from './reveal.directive';
   ],
 })
 export class CtaBandComponent {
-  private readonly catalog = inject(CatalogService);
-  protected readonly isHub = inject(SiteService).isHub;
-
-  readonly eyebrow = input('Your week');
-  readonly heading = input('');
-  readonly lede = input('');
-  readonly primaryLabel = input('Plan Your Retreat');
-
-  protected readonly copy = computed(() =>
-    this.isHub
-      ? {
-          heading: 'Pick a Sport. We Will Build the Week.',
-          lede: 'Tell us what you want to do, roughly when, and how hard. You will get a real schedule and a real price back — and nothing is held until you say so.',
-        }
-      : this.catalog.sport.cta,
+  readonly brand = BRAND;
+  readonly eyebrow = input('Your trip');
+  readonly heading = input('Your game. Your people. Bali.');
+  readonly lede = input(
+    'Bring your group, or join one at your level. Tell us the sport and roughly when — we reply within 24 hours with a tour, dates and a price.',
   );
+  readonly whatsappMessage = input(DEFAULT_WHATSAPP);
+  protected readonly whatsappUrl = () => whatsappLink(this.whatsappMessage());
 }

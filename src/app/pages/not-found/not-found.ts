@@ -11,13 +11,10 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
       <div class="container">
         <p class="eyebrow">404</p>
         <h1 class="display">That page has wandered off.</h1>
-        <p class="lede">
-          The page you were after has moved, or the week it described has already run. Either way
-          there is plenty still open.
-        </p>
+        <p class="lede">The page you were after has moved or never existed. The tours are still here.</p>
         <div class="actions">
-          <a nz-button nzType="primary" nzSize="large" routerLink="/">Back to the home page</a>
-          <a nz-button nzSize="large" routerLink="/plan">Plan a retreat</a>
+          <a nz-button nzType="primary" nzSize="large" routerLink="/tours">Find your tour</a>
+          <a nz-button nzSize="large" routerLink="/">Back to the home page</a>
         </div>
       </div>
     </section>

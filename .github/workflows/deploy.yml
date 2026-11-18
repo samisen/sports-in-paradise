@@ -1,9 +1,6 @@
-# Builds the site and publishes it to GitHub Pages on every push to main.
-#
-# Pages serves one origin, https://<user>.github.io/sports-in-paradise/, so
-# the sports cannot have subdomains here: each is reached with ?site=<sport>
-# (see SiteService). In the repository settings, Pages → Source must be set
-# to "GitHub Actions".
+# Builds the site and publishes it to GitHub Pages on every push to main, at
+# https://<user>.github.io/sports-in-paradise/. In the repository settings,
+# Pages → Source must be set to "GitHub Actions".
 name: Deploy to GitHub Pages
 
 on:
@@ -37,7 +34,7 @@ jobs:
       # the site lives under /<repo>/, so every asset and route is resolved from there
       - run: npx ng build --base-href "/${{ github.event.repository.name }}/"
 
-      # Pages has no SPA fallback: a reload on /plan would 404. Serving the app
+      # Pages has no SPA fallback: a reload on /tours/padel would 404. Serving the app
       # as the 404 page lets the router take over, and .nojekyll stops Pages
       # from processing the files.
       - run: |

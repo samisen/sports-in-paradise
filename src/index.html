@@ -1,17 +1,20 @@
 <!doctype html>
-<html lang="en" data-theme="light">
+<html lang="en" data-theme="light" data-sport="paradise">
 <head>
   <meta charset="utf-8">
-  <title>Sports in Paradise — Sports retreats in Bali</title>
+  <title>Sports in Paradise — Hosted sports and wellness tours in Bali</title>
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="description" content="Coached padel, tennis, golf, diving and hiking weeks in Bali. Pick a sport, build the week you want, and talk to the people who run it.">
+  <meta name="description" content="Small-group, hosted sports and wellness tours in Bali: padel, golf, martial arts, wellness and HYROX-style hybrid fitness. Train. Play. Discover. Connect.">
   <!-- Safari reads these before any stylesheet, and uses them for the area
        outside the page (the overscroll underlay) as well as the browser
        chrome. The JS below keeps them in step with an explicit toggle. -->
-  <meta name="theme-color" content="#d4405f" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#0d0a10" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#0e6f78" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#08130f" media="(prefers-color-scheme: dark)">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Sports in Paradise">
+  <meta property="og:title" content="Sports in Paradise — Hosted sports and wellness tours in Bali">
   <!-- every photo comes from here; NgOptimizedImage expects the early connection -->
   <link rel="preconnect" href="https://images.unsplash.com">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -23,19 +26,6 @@
   <link id="theme-css" rel="stylesheet" href="theme-light.css">
   <script>
     (function () {
-      // Which site is this? Mirrors SiteService, so the sport's palette is
-      // the first thing painted rather than a flash of the hub's.
-      var sports = ['padel', 'tennis', 'golf', 'diving', 'hiking'];
-      var site = 'hub';
-      var first = location.hostname.split('.')[0];
-      var asked = new URLSearchParams(location.search).get('site');
-      var kept = null;
-      try { kept = sessionStorage.getItem('sip-site'); } catch (e) {}
-      if (asked === 'hub' || sports.indexOf(asked) > -1) site = asked;
-      else if (sports.indexOf(first) > -1) site = first;
-      else if (sports.indexOf(kept) > -1) site = kept;
-      document.documentElement.setAttribute('data-sport', site);
-
       var stored = null;
       try { stored = localStorage.getItem('sip-theme'); } catch (e) {}
       var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;

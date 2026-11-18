@@ -14,20 +14,20 @@
 
   /* surfaces */
   --bg: #ffffff;
-  --bg-sand: #f4f7fa;
+  --bg-sand: #f7f3ec;
   --surface: #ffffff;
-  --surface-2: #f4f7fa;
-  --surface-3: #e8eef4;
+  --surface-2: #f6f2ea;
+  --surface-3: #ebe5da;
 
   /* ink */
-  --ink: #0e1b2a;
-  --ink-2: #40505f;
-  --ink-3: #6c7d8c;
+  --ink: #13211e;
+  --ink-2: #43524e;
+  --ink-3: #6b7a75;
   --ink-on-dark: #f1f5f9;
 
   /* lines */
-  --line: #dde3ea;
-  --line-strong: #c7d1db;
+  --line: #e4ded3;
+  --line-strong: #cdc5b7;
 
   /* charts: one neutral for the single data series, contrast-checked
      against the surface in both themes */
@@ -79,66 +79,67 @@ html[data-theme='dark'] {
 }
 
 /* ==========================================================================
-   Site palettes
+   Palettes
 
-   One codebase, six sites. Each site is a [data-sport] value: the hub and
-   the five sports. The attribute is set on <html> by the inline script in
-   index.html before anything paints, and it can also be set on any element —
-   the hub uses that to show each sport card in its own colours.
+   The master brand ("paradise") is ocean, jungle green and warm sand, as the
+   brief asks; the logo and final colours are still to be supplied, so these
+   are working values. Each tour has its own accent palette, applied with
+   [data-sport] on any element: the tour pages set it on their host, cards set
+   it on themselves. <html> carries data-sport="paradise".
 
    Light values sit on [data-sport]; the dark set needs both selectors so it
    applies on <html> itself and on any element inside a dark document.
-   `--bg-deep` is the sport's own near-black, used behind heroes and CTAs.
+   `--bg-deep` is the near-black used behind heroes and CTAs.
    ========================================================================== */
 
-[data-sport='hub'] {
-  --brand: #d4405f; --brand-strong: #a8274a; --brand-soft: #fbe9ee;
-  --accent: #e08a1e; --accent-soft: #fdf1e1; --bg-deep: #160b12;
+[data-sport='paradise'] {
+  --brand: #0e6f78; --brand-strong: #0a545b; --brand-soft: #e1f0f0;
+  --accent: #c47a2c; --accent-soft: #f8ecdc; --bg-deep: #0a1714;
 }
 [data-sport='padel'] {
   --brand: #1668c4; --brand-strong: #0f4c93; --brand-soft: #e7f0fb;
   --accent: #e2653f; --accent-soft: #fdeee8; --bg-deep: #0b1017;
 }
-[data-sport='tennis'] {
-  --brand: #6b3fd4; --brand-strong: #4e27a8; --brand-soft: #efe9fb;
-  --accent: #6f8a0a; --accent-soft: #f1f6dc; --bg-deep: #110c1d;
-}
 [data-sport='golf'] {
   --brand: #1d7a4c; --brand-strong: #135c38; --brand-soft: #e6f3ec;
   --accent: #b07d22; --accent-soft: #f8f0e1; --bg-deep: #08150e;
 }
-[data-sport='diving'] {
-  --brand: #00808f; --brand-strong: #00606c; --brand-soft: #e0f3f5;
-  --accent: #e0573a; --accent-soft: #fde9e4; --bg-deep: #041519;
+[data-sport='martial-arts'] {
+  --brand: #b3392a; --brand-strong: #8a281c; --brand-soft: #fbeae6;
+  --accent: #b8891f; --accent-soft: #f8f0dc; --bg-deep: #170a08;
 }
-[data-sport='hiking'] {
-  --brand: #c2520f; --brand-strong: #973d08; --brand-soft: #fbece1;
-  --accent: #3f7d4e; --accent-soft: #e5f1e8; --bg-deep: #170d07;
+[data-sport='wellness'] {
+  --brand: #2f7d64; --brand-strong: #215d4a; --brand-soft: #e5f2ec;
+  --accent: #c0814a; --accent-soft: #f8ede2; --bg-deep: #08130f;
+}
+[data-sport='hybrid'] {
+  --brand: #c9531d; --brand-strong: #9c3d10; --brand-soft: #fcebe1;
+  --accent: #2d6fb8; --accent-soft: #e5eefa; --bg-deep: #150b06;
 }
 
-html[data-theme='dark'][data-sport='hub'], html[data-theme='dark'] [data-sport='hub'] {
-  --brand: #ff6f8e; --brand-strong: #ff97ae; --brand-soft: #3a1420;
-  --accent: #ffb455; --accent-soft: #352310; --bg-deep: #0c070a;
+html[data-theme='dark'][data-sport='paradise'], html[data-theme='dark'] [data-sport='paradise'] {
+  --brand: #3fc1c9; --brand-strong: #74d6dc; --brand-soft: #0c2a2c;
+  --accent: #f0a85a; --accent-soft: #33220f; --bg-deep: #050d0b;
 }
 html[data-theme='dark'][data-sport='padel'], html[data-theme='dark'] [data-sport='padel'] {
   --brand: #4a9eff; --brand-strong: #6fb4ff; --brand-soft: #112741;
   --accent: #ff8a5c; --accent-soft: #331a11; --bg-deep: #070b10;
 }
-html[data-theme='dark'][data-sport='tennis'], html[data-theme='dark'] [data-sport='tennis'] {
-  --brand: #a687ff; --brand-strong: #c0aaff; --brand-soft: #241a40;
-  --accent: #c6e04a; --accent-soft: #262c0c; --bg-deep: #08060e;
-}
 html[data-theme='dark'][data-sport='golf'], html[data-theme='dark'] [data-sport='golf'] {
   --brand: #4cc38a; --brand-strong: #74d6a6; --brand-soft: #0f2a1d;
   --accent: #e6b65c; --accent-soft: #2e2410; --bg-deep: #050c08;
 }
-html[data-theme='dark'][data-sport='diving'], html[data-theme='dark'] [data-sport='diving'] {
-  --brand: #2cc4d6; --brand-strong: #63d8e6; --brand-soft: #082a30;
-  --accent: #ff8a6e; --accent-soft: #331812; --bg-deep: #030d10;
+html[data-theme='dark'][data-sport='martial-arts'], html[data-theme='dark'] [data-sport='martial-arts'] {
+  --brand: #ff7a66; --brand-strong: #ff9d8e; --brand-soft: #3a1510;
+  --accent: #e8c25a; --accent-soft: #2f250c; --bg-deep: #0d0605;
 }
-html[data-theme='dark'][data-sport='hiking'], html[data-theme='dark'] [data-sport='hiking'] {
-  --brand: #ff8a45; --brand-strong: #ffa774; --brand-soft: #36190a;
-  --accent: #6cc285; --accent-soft: #11291a; --bg-deep: #0c0704;
+html[data-theme='dark'][data-sport='wellness'], html[data-theme='dark'] [data-sport='wellness'] {
+  --brand: #5cc9a2; --brand-strong: #85d9bb; --brand-soft: #0f2b21;
+  --accent: #eba975; --accent-soft: #33220f; --bg-deep: #050c09;
+}
+html[data-theme='dark'][data-sport='hybrid'], html[data-theme='dark'] [data-sport='hybrid'] {
+  --brand: #ff8a4f; --brand-strong: #ffa777; --brand-soft: #38190a;
+  --accent: #6fa8ec; --accent-soft: #10223a; --bg-deep: #0c0604;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -586,7 +587,7 @@ select:-webkit-autofill {
    Ant Design primary colour, bound to the site's brand
 
    The Ant Less bundles are compiled once with a single primary colour. Six
-   sites cannot share one compiled blue, so everything Ant paints in its
+   palettes cannot share one compiled colour, so everything Ant paints in its
    primary colour is re-pointed at --brand here.
    ======================================================================== */
 
@@ -672,3 +673,78 @@ a { color: var(--brand-strong); }
 .sources { margin: 28px 0 0; padding: 0; list-style: none; display: grid; gap: 6px; font-size: 12px; color: var(--ink-3); }
 .sources a { color: var(--ink-3); text-decoration: underline; text-underline-offset: 2px; }
 .sources a:hover { color: var(--brand-strong); }
+
+/* ===========================================================================
+   Shared page patterns: used by several pages, so defined once here
+   ======================================================================== */
+
+/* an icon, a title and a line, in a bordered card */
+.feature {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: 12px;
+  align-content: start;
+  height: 100%;
+  padding: 20px 18px 22px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+.feature > nz-icon { grid-column: 1; grid-row: 1; font-size: 20px; color: var(--brand); line-height: 1; margin-top: 2px; }
+.feature h3 { grid-column: 2; grid-row: 1; margin: 0; font-size: 1.02rem; font-weight: 600; line-height: 1.35; color: var(--ink); }
+.feature p { grid-column: 1 / -1; grid-row: 2; margin: 9px 0 0; font-size: 14px; line-height: 1.6; color: var(--ink-2); }
+.section-deep .feature { background: rgba(255, 255, 255, .04); border-color: rgba(255, 255, 255, .1); }
+.section-deep .feature h3 { color: #fff; }
+
+/* a list with a check (or a cross) before each line */
+.check-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.check-list li { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 10px; font-size: 14.4px; line-height: 1.55; color: var(--ink-2); }
+.check-list li > nz-icon { color: var(--brand); font-size: 13px; margin-top: 4px; }
+.check-list.is-no li > nz-icon { color: var(--ink-3); }
+
+/* small rounded labels in a row */
+.chip-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.chip-row li, .chip {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 6px 13px; border-radius: 999px;
+  border: 1px solid var(--line); background: var(--surface);
+  font-size: 13px; color: var(--ink-2);
+}
+.section-deep .chip-row li { background: transparent; border-color: rgba(255, 255, 255, .2); color: rgba(255, 255, 255, .8); }
+
+/* the six-stage journey */
+.journey { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 700px) { .journey { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1040px) { .journey { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.journey-stage { padding: 20px 18px 22px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); }
+.journey-stage .js-top { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.journey-stage .js-no { font-size: 12px; color: var(--ink-3); }
+.journey-stage h3 { display: flex; align-items: center; gap: 9px; margin: 0; font-size: 1.1rem; font-weight: 600; color: var(--ink); }
+.journey-stage h3 nz-icon { color: var(--brand); }
+.journey-stage dl { margin: 0; display: grid; gap: 8px; }
+.journey-stage dt { font-size: 11px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); }
+.journey-stage dd { margin: 2px 0 0; font-size: 14px; line-height: 1.55; color: var(--ink-2); }
+
+/* a photo with rounded corners at a fixed ratio */
+.frame { display: block; border-radius: var(--radius-lg); overflow: hidden; background: var(--surface-3); aspect-ratio: 4 / 3; }
+.frame.tall { aspect-ratio: 4 / 5; }
+
+/* a two-column split: text one side, media or a list the other */
+.split { display: grid; gap: 32px; grid-template-columns: minmax(0, 1fr); align-items: center; }
+@media (min-width: 900px) { .split { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 56px; } }
+.split.top { align-items: start; }
+
+/* a prose block for long text pages */
+.prose > * { max-width: 70ch; }
+.prose p { margin: 0 0 16px; font-size: 15.6px; line-height: 1.75; color: var(--ink-2); }
+.prose h2 { margin: 34px 0 10px; font-family: var(--font-display); font-size: 1.4rem; font-weight: 600; color: var(--ink); }
+
+/* a form card beside an aside */
+.form-grid { display: grid; gap: 28px; grid-template-columns: minmax(0, 1fr); align-items: start; }
+@media (min-width: 1000px) { .form-grid { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 44px; } }
+.form-card { padding: 24px 20px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-lg); }
+@media (min-width: 768px) { .form-card { padding: 34px 32px; } }
+.aside-card { padding: 22px 20px; background: var(--bg-sand); border: 1px solid var(--line); border-radius: var(--radius-lg); }
+.aside-card h2, .aside-card h3 { margin: 0 0 10px; font-family: var(--font-display); font-size: 1.25rem; font-weight: 600; color: var(--ink); }
+.aside-card p { margin: 0 0 14px; font-size: 14px; line-height: 1.65; color: var(--ink-2); }
+.aside-card + .aside-card { margin-top: 16px; }

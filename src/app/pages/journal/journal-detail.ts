@@ -1,9 +1,8 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { NzIconModule } from 'ng-zorro-antd/icon';
-import { CatalogService } from '../../core/catalog.service';
+import { JOURNAL } from '../../core/content/journal';
 import { PhotoComponent } from '../../shared/photo';
-import { SiteService } from '../../core/site/site.service';
 import { Title } from '@angular/platform-browser';
 import { BRAND } from '../../core/brand';
 import { effect } from '@angular/core';
@@ -33,8 +32,7 @@ import { CtaBandComponent } from '../../shared/cta-band';
             <p>{{ para }}</p>
           }
           <p class="disclaimer">
-            Written by someone who coaches or guides on these weeks. It is an opinion informed by
-            practice, not medical, safety or training advice for your particular body.
+            General information, not medical, safety or training advice for your particular body.
           </p>
         </div>
 
@@ -95,10 +93,8 @@ import { CtaBandComponent } from '../../shared/cta-band';
   ],
 })
 export class JournalDetailPage {
-  private readonly catalog = inject(CatalogService);
   private readonly router = inject(Router);
-  private readonly isHub = inject(SiteService).isHub;
-  private readonly posts = this.isHub ? this.catalog.all.flatMap((s) => s.journal) : this.catalog.sport.journal;
+  private readonly posts = JOURNAL;
 
   readonly slug = input<string>('');
 

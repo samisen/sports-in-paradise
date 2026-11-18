@@ -1,20 +1,22 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { NavigationEnd, Router } from '@angular/router';
+import { filter, map } from 'rxjs/operators';
 import { NzIconModule } from 'ng-zorro-antd/icon';
-import { BRAND, whatsappLink } from '../core/brand';
-import { CatalogService } from '../core/catalog.service';
-import { SiteService } from '../core/site/site.service';
+import { BRAND, DEFAULT_WHATSAPP, whatsappLink } from '../core/brand';
+import { tourById } from '../core/content/tours';
 
 /**
  * The always-available conversion route. Most enquiries start on WhatsApp
  * rather than in a form, so it follows the visitor down every page, with a
- * message that already says which sport they were looking at.
+ * message that already names the tour they were looking at.
  */
 @Component({
   selector: 'app-whatsapp-fab',
   imports: [NzIconModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <a class="fab" [href]="href" target="_blank" rel="noopener noreferrer" [attr.aria-label]="'Message us on WhatsApp, ' + brand.whatsapp">
+    <a class="fab" [href]="href()" target="_blank" rel="noopener noreferrer" [attr.aria-label]="'Talk to us on WhatsApp, ' + brand.whatsapp">
       <nz-icon nzType="whats-app" />
       <span class="fab-label">WhatsApp</span>
     </a>
@@ -45,9 +47,16 @@ import { SiteService } from '../core/site/site.service';
 })
 export class WhatsappFabComponent {
   readonly brand = BRAND;
-  readonly href = whatsappLink(
-    inject(SiteService).isHub
-      ? `Hello ${BRAND.name}, I'd like to talk about a sports retreat in Bali.`
-      : inject(CatalogService).sport.whatsapp,
+  private readonly router = inject(Router);
+  private readonly url = toSignal(
+    this.router.events.pipe(
+      filter((e): e is NavigationEnd => e instanceof NavigationEnd),
+      map((e) => e.urlAfterRedirects),
+    ),
+    { initialValue: this.router.url },
   );
+  readonly href = computed(() => {
+    const m = this.url().match(/^\/tours\/([a-z-]+)/);
+    return whatsappLink(tourById(m?.[1])?.whatsapp ?? DEFAULT_WHATSAPP);
+  });
 }

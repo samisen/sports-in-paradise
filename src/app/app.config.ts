@@ -1,7 +1,5 @@
 import {
   ApplicationConfig,
-  inject,
-  provideAppInitializer,
   provideBrowserGlobalErrorListeners,
 } from '@angular/core';
 import { IMAGE_LOADER, ImageLoaderConfig, registerLocaleData } from '@angular/common';
@@ -21,7 +19,7 @@ import {
   CloseOutline, CloudOutline, CoffeeOutline, CompassOutline, CompressOutline, DashboardOutline,
   DownOutline, EnvironmentOutline, ExpandOutline, ExperimentOutline, EyeOutline, FieldTimeOutline,
   FileProtectOutline, FilterOutline, FireOutline, FlagOutline, FundOutline, GlobalOutline,
-  HeartOutline, HomeOutline, InstagramOutline, LeftOutline, LinkedinOutline, MailOutline,
+  HeartOutline, HomeOutline, InstagramOutline, LeftOutline, LinkOutline, LinkedinOutline, MailOutline,
   MedicineBoxOutline, MenuOutline, MessageOutline, MinusOutline, PhoneOutline, PictureOutline,
   PlayCircleOutline, PlusOutline, ReadOutline, RightOutline, RiseOutline, RocketOutline,
   SafetyCertificateOutline, SafetyOutline, ScheduleOutline, SendOutline, ShopOutline, SmileOutline,
@@ -30,7 +28,6 @@ import {
 } from '@ant-design/icons-angular/icons';
 
 import { routes } from './app.routes';
-import { CatalogService } from './core/catalog.service';
 import { SiteTitleStrategy } from './core/site/title.strategy';
 
 registerLocaleData(en);
@@ -41,7 +38,7 @@ const icons = [
   CloseOutline, CloudOutline, CoffeeOutline, CompassOutline, CompressOutline, DashboardOutline,
   DownOutline, EnvironmentOutline, ExpandOutline, ExperimentOutline, EyeOutline, FieldTimeOutline,
   FileProtectOutline, FilterOutline, FireOutline, FlagOutline, FundOutline, GlobalOutline,
-  HeartOutline, HomeOutline, InstagramOutline, LeftOutline, LinkedinOutline, MailOutline,
+  HeartOutline, HomeOutline, InstagramOutline, LeftOutline, LinkOutline, LinkedinOutline, MailOutline,
   MedicineBoxOutline, MenuOutline, MessageOutline, MinusOutline, PhoneOutline, PictureOutline,
   PlayCircleOutline, PlusOutline, ReadOutline, RightOutline, RiseOutline, RocketOutline,
   SafetyCertificateOutline, SafetyOutline, ScheduleOutline, SendOutline, ShopOutline, SmileOutline,
@@ -64,8 +61,6 @@ function unsplashLoader(config: ImageLoaderConfig): string {
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
-    // the site's content is a lazy chunk; nothing renders until it is here
-    provideAppInitializer(() => inject(CatalogService).load()),
     provideRouter(
       routes,
       withInMemoryScrolling({ scrollPositionRestoration: 'top', anchorScrolling: 'enabled' }),

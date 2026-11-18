@@ -4,7 +4,7 @@
       class="map-svg"
       [attr.viewBox]="'0 0 ' + map.width + ' ' + map.height"
       role="img"
-      aria-label="Map of Bali showing where the weeks are based"
+      aria-label="Map of Bali showing the areas our tours use"
       (mouseleave)="hovered.set(null)"
     >
       @for (d of map.paths; track $index) {
@@ -90,7 +90,7 @@
             <nz-icon nzType="arrow-right" />
           </button>
         } @else {
-          <p class="panel-none">We run weeks here too — tell us your dates and we will put one together.</p>
+          <p class="panel-none">Tell us your dates and we will see what fits.</p>
         }
       </div>
     } @else {

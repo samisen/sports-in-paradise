@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, input, output, signal } f
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { BALI_MAP, MAP_LANDMARKS, project } from '../core/bali-geo';
 import { Photo } from '../core/media';
-import { SiteId } from '../core/site/sites';
+import { PaletteId } from '../core/content/types';
 import { PhotoComponent } from './photo';
 
 /** One place on the map, whichever site is drawing it. */
@@ -15,10 +15,10 @@ export interface MapPlace {
   lat: number;
   lon: number;
   stats: { label: string; value: string }[];
-  /** How many retreats run here — sizes the disc. */
+  /** How many tours use this area — sizes the disc. */
   count: number;
   /** On the hub, which sport the place belongs to; colours the marker. */
-  sport?: SiteId;
+  sport?: PaletteId;
   photo?: Photo;
   /** Where the panel's action goes, if it leaves the page. */
   href?: string;
@@ -26,7 +26,7 @@ export interface MapPlace {
 }
 
 /**
- * Bali with a marker per place, sized by how many retreats run there.
+ * Bali with a marker per place, sized by how many tours use it.
  * Hovering or selecting a place surfaces its details; selecting one tells the
  * parent so a list can filter to it.
  */
@@ -43,7 +43,7 @@ export class BaliMapComponent {
   readonly selected = input<string | null>(null);
   readonly emptyTitle = input('Where we are based');
   readonly emptyText = input('Pick a marker to see what is there.');
-  readonly countNoun = input('retreats');
+  readonly countNoun = input('tours');
   readonly selectPlace = output<string | null>();
 
   readonly map = BALI_MAP;
@@ -54,7 +54,7 @@ export class BaliMapComponent {
     const placed = this.places().map((p) => ({
       ...p,
       ...project(p.lat, p.lon),
-      // area of the disc tracks the count, so two retreats do not look like four
+      // area of the disc tracks the count, so two tours do not look like four
       radius: p.count ? 11 + Math.sqrt(p.count) * 6 : 9,
     }));
 

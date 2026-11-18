@@ -1,42 +1,48 @@
-<header class="site-header" [class.is-solid]="scrolled() || !isHome() || switcherOpen()">
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header" [class.is-solid]="scrolled() || !isHome() || toursOpen()">
   <div class="container bar">
-    <a class="brand" routerLink="/" [attr.aria-label]="brand.name + (site.isHub ? '' : ' ' + siteLabel) + ' — home'">
-      <span class="brand-mark" aria-hidden="true"><app-sport-icon [sport]="siteId" /></span>
+    <a class="brand" routerLink="/" [attr.aria-label]="brand.name + ' — home'">
+      <span class="brand-mark" aria-hidden="true"><app-sport-icon sport="paradise" /></span>
       <span class="brand-text">
         <span class="brand-name">{{ brand.wordmarkLead }}</span>
         <span class="brand-sub">{{ brand.wordmarkTail }}</span>
       </span>
     </a>
 
-    <!-- which sport: every site can reach every other -->
-    <div class="switcher" [class.is-open]="switcherOpen()">
+    <!-- the five tours, from every page -->
+    <div class="switcher" [class.is-open]="toursOpen()">
       <button
         type="button"
         class="switch-btn"
-        (click)="switcherOpen.set(!switcherOpen())"
-        [attr.aria-expanded]="switcherOpen()"
+        (click)="toursOpen.set(!toursOpen())"
+        [attr.aria-expanded]="toursOpen()"
         aria-haspopup="true"
-        aria-controls="sport-menu"
+        aria-controls="tour-menu"
       >
-        <span class="switch-label">{{ site.isHub ? 'Choose a sport' : siteLabel }}</span>
+        <span class="switch-label">Tours</span>
         <nz-icon nzType="down" class="switch-caret" />
       </button>
-      @if (switcherOpen()) {
-        <div class="switch-menu" id="sport-menu" role="menu">
-          @for (s of sites; track s.id) {
+      @if (toursOpen()) {
+        <div class="switch-menu" id="tour-menu" role="menu">
+          @for (t of tours; track t.id) {
             <a
               role="menuitem"
               class="switch-item"
-              [attr.data-sport]="s.id"
-              [class.is-current]="s.current"
-              [href]="s.href"
-              [attr.aria-current]="s.current ? 'page' : null"
+              [attr.data-sport]="t.id"
+              [routerLink]="t.link"
+              routerLinkActive="is-current"
+              (click)="toursOpen.set(false)"
             >
-              <span class="switch-ico"><app-sport-icon [sport]="s.id" /></span>
-              <span>{{ s.label }}</span>
-              @if (s.current) { <nz-icon nzType="check" class="switch-check" /> }
+              <span class="switch-ico"><app-sport-icon [sport]="t.id" /></span>
+              <span class="switch-text">
+                <span>{{ t.name }}</span>
+                <span class="switch-meta">{{ t.meta }}</span>
+              </span>
             </a>
           }
+          <a role="menuitem" class="switch-item is-all" routerLink="/tours" (click)="toursOpen.set(false)">
+            Compare all five tours <nz-icon nzType="arrow-right" />
+          </a>
         </div>
       }
     </div>
@@ -68,7 +74,7 @@
         }
       </button>
 
-      <a class="cta-desktop" nz-button nzType="primary" routerLink="/plan">{{ brand.cta.primary }}</a>
+      <a class="cta-desktop" nz-button nzType="primary" routerLink="/plan-your-group-trip">{{ brand.cta.group }}</a>
 
       <button type="button" class="icon-btn menu-btn" (click)="openDrawer()" aria-label="Open menu">
         <nz-icon nzType="menu" />
@@ -88,7 +94,7 @@
   <ng-container *nzDrawerContent>
     <div class="drawer-inner">
       <div class="drawer-top">
-        <span class="drawer-label">{{ site.isHub ? 'Menu' : siteLabel }}</span>
+        <span class="drawer-label">Menu</span>
         <button type="button" class="icon-btn" (click)="closeDrawer()" aria-label="Close menu">
           <nz-icon nzType="close" />
         </button>
@@ -99,6 +105,10 @@
           <span class="d-label">Home</span>
           <span class="d-blurb">Start here</span>
         </a>
+        <a routerLink="/tours" routerLinkActive="is-current" [routerLinkActiveOptions]="{ exact: true }" (click)="closeDrawer()">
+          <span class="d-label">All tours</span>
+          <span class="d-blurb">Compare the five tours</span>
+        </a>
         @for (item of navMain; track item.link) {
           <a [routerLink]="item.link" routerLinkActive="is-current" (click)="closeDrawer()">
             <span class="d-label">{{ item.label }}</span>
@@ -107,25 +117,23 @@
         }
       </nav>
 
+      <div class="drawer-sports">
+        <span class="drawer-label">The tours</span>
+        <div class="drawer-sport-grid">
+          @for (t of tours; track t.id) {
+            <a [routerLink]="t.link" [attr.data-sport]="t.id" (click)="closeDrawer()">
+              <app-sport-icon [sport]="t.id" />
+              {{ t.short }}
+            </a>
+          }
+        </div>
+      </div>
+
       <nav class="drawer-sub" aria-label="More">
         @for (item of navSecondary; track item.link) {
           <a [routerLink]="item.link" routerLinkActive="is-current" (click)="closeDrawer()">{{ item.label }}</a>
         }
       </nav>
-
-      <div class="drawer-sports">
-        <span class="drawer-label">Other sports</span>
-        <div class="drawer-sport-grid">
-          @for (s of sites; track s.id) {
-            @if (!s.current) {
-              <a [href]="s.href" [attr.data-sport]="s.id">
-                <app-sport-icon [sport]="s.id" />
-                {{ s.label }}
-              </a>
-            }
-          }
-        </div>
-      </div>
 
       <div class="drawer-foot">
         <button type="button" class="theme-row" (click)="theme.toggle()">
@@ -134,10 +142,10 @@
         </button>
         <a class="wa-row" [href]="whatsappUrl" target="_blank" rel="noopener noreferrer">
           <nz-icon nzType="whats-app" />
-          WhatsApp
+          {{ brand.cta.whatsapp }}
         </a>
-        <a nz-button nzType="primary" nzBlock nzSize="large" routerLink="/plan" (click)="closeDrawer()">
-          {{ brand.cta.primary }}
+        <a nz-button nzType="primary" nzBlock nzSize="large" routerLink="/plan-your-group-trip" (click)="closeDrawer()">
+          {{ brand.cta.group }}
         </a>
       </div>
     </div>

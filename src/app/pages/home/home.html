@@ -1,264 +1,256 @@
 <!-- ============ HERO ============ -->
 <section class="hero">
-  <app-hero-slides [photos]="s.hero.photos" />
+  <app-hero-slides [photos]="photos.hero" [interval]="5600" />
   <span class="hero-veil" aria-hidden="true"></span>
 
   <div class="container hero-inner">
-    <p class="eyebrow">{{ s.hero.eyebrow }}</p>
-    <h1 class="display hero-title">{{ s.hero.headline }}</h1>
-    <p class="lede hero-lede">{{ s.hero.support }}</p>
+    <p class="eyebrow">Hosted sports and wellness tours in Bali</p>
+    <h1 class="display hero-title">Play your sport in paradise.</h1>
+    <p class="hero-signature">{{ brand.signature }}</p>
+    <p class="lede hero-lede">{{ messages.core }}</p>
 
     <div class="hero-actions">
-      <a nz-button nzType="primary" nzSize="large" routerLink="/plan">
-        {{ brand.cta.primary }}
+      <a nz-button nzType="primary" nzSize="large" routerLink="/tours">
+        {{ brand.cta.tours }}
         <nz-icon nzType="arrow-right" />
       </a>
-      <a nz-button nzSize="large" nzGhost routerLink="/retreats">{{ brand.cta.retreats }}</a>
+      <a nz-button nzSize="large" nzGhost routerLink="/plan-your-group-trip">{{ brand.cta.group }}</a>
     </div>
 
+    <nav class="hero-tours" aria-label="The tours">
+      @for (t of tours; track t.id) {
+        <a [routerLink]="['/tours', t.id]" [attr.data-sport]="t.id" class="hero-tour">
+          <span class="ht-ico"><app-sport-icon [sport]="t.id" /></span>
+          {{ t.short }}
+        </a>
+      }
+    </nav>
+
     <dl class="hero-stats">
-      @for (st of s.stats; track st.label) {
+      @for (f of facts; track f.label) {
         <div>
-          <dt class="mono">{{ st.value }}</dt>
-          <dd>{{ st.label }}</dd>
+          <dt class="mono">{{ f.value }}</dt>
+          <dd>{{ f.label }}</dd>
         </div>
       }
     </dl>
   </div>
 </section>
 
-<!-- ============ TWO VALUES ============ -->
-<section class="section">
+<!-- ============ THE FIVE TOURS ============ -->
+<section class="section" id="tours">
   <div class="container">
-    <div class="grid grid-2 values">
-      @for (v of s.values; track v.title; let i = $index) {
-        <article class="value" [appReveal]="i * 80">
-          <span class="value-art">
-            <app-photo [photo]="v.photo" sizes="(min-width: 700px) 50vw, 100vw" [credit]="true" />
-          </span>
-          <p class="eyebrow">{{ v.eyebrow }}</p>
-          <h2 class="value-title">{{ v.title }}</h2>
-          <p class="value-lead">{{ v.lead }}</p>
-          <p class="value-body">{{ v.body }}</p>
-          <ul class="value-points">
-            @for (p of v.points; track p) {
-              <li><nz-icon nzType="check" /> {{ p }}</li>
-            }
-          </ul>
+    <div class="head" appReveal>
+      <p class="eyebrow">Five tours</p>
+      <h2 class="display">Choose your sport. We design the journey.</h2>
+      <p class="lede">
+        Every tour is 10 to 12 days in a small group, with coaching or training, friendly competition,
+        recovery, the island and people like you. Prices are from, per person in a shared room,
+        excluding flights.
+      </p>
+    </div>
+
+    <div class="tour-grid">
+      @for (t of tours; track t.id; let i = $index) {
+        <div [appReveal]="i * 60" [class.is-wide]="i === 0">
+          <app-tour-card
+            [tour]="t"
+            [sizes]="i === 0 ? '(min-width: 1040px) 66vw, 100vw' : '(min-width: 1040px) 33vw, (min-width: 700px) 50vw, 100vw'"
+          />
+        </div>
+      }
+    </div>
+
+    <p class="head-link-row">
+      <a class="head-link" routerLink="/tours">Compare the five tours side by side <nz-icon nzType="arrow-right" /></a>
+    </p>
+  </div>
+</section>
+
+<!-- ============ WHAT MAKES IT DIFFERENT ============ -->
+<section class="section section-sand">
+  <div class="container">
+    <div class="split top">
+      <div class="head" appReveal>
+        <p class="eyebrow">What makes it different</p>
+        <h2 class="display">The sports holiday where everything is organised.</h2>
+        <p class="lede">
+          A mix of play, discovery, recovery and social time — designed and hosted by people who play,
+          coach and live in Bali.
+        </p>
+        <ul class="chip-row not-this" aria-label="What it is not">
+          @for (n of notThis; track n) {
+            <li><nz-icon nzType="close" /> {{ n }}</li>
+          }
+        </ul>
+      </div>
+      <span class="frame" appReveal>
+        <app-photo [photo]="photos.community" sizes="(min-width: 900px) 50vw, 100vw" [credit]="true" />
+      </span>
+    </div>
+
+    <div class="grid grid-3 elements">
+      @for (e of elements; track e.title; let i = $index) {
+        <article class="feature" [appReveal]="i * 50">
+          <nz-icon [nzType]="e.icon" />
+          <h3>{{ e.title }}</h3>
+          <p>{{ e.text }}</p>
         </article>
       }
     </div>
   </div>
 </section>
 
-<!-- ============ BALI NOW ============ -->
-<section class="section section-deep bali-now">
-  <div class="container">
-    <div class="grid grid-2 now-grid">
-      <div appReveal>
-        <p class="eyebrow">{{ s.bali.eyebrow }}</p>
-        <h2 class="display">{{ s.bali.title }}</h2>
-        <p class="lede">{{ s.bali.lead }}</p>
-        <p class="head-link-row">
-          <a class="head-link on-dark" routerLink="/why-bali">
-            The full picture, venue by venue <nz-icon nzType="arrow-right" />
-          </a>
-        </p>
-      </div>
-      <dl class="now-numbers">
-        @for (n of s.bali.numbers; track n.label; let i = $index) {
-          <div class="now-num" [appReveal]="i * 60">
-            <dt class="mono">{{ n.value }}</dt>
-            <dd>
-              {{ n.label }}
-              @if (n.source) { <span class="now-src">{{ n.source }}</span> }
-            </dd>
-          </div>
-        }
-      </dl>
-    </div>
-
-    <div class="now-season" appReveal>
-      <p class="now-season-head">
-        <strong>When to come.</strong> {{ s.bali.season.summary }}
-      </p>
-      <app-season-strip
-        [rows]="[{ label: s.name, sport: s.id, ratings: s.bali.season.ratings }]"
-        [caption]="'When to come for ' + s.name.toLowerCase() + ', month by month'"
-      />
-    </div>
-  </div>
-</section>
-
-<!-- ============ FEATURED RETREATS ============ -->
-<section class="section section-sand">
-  <div class="container">
-    <div class="head" appReveal>
-      <p class="eyebrow">Open now</p>
-      <h2 class="display">Weeks you can join.</h2>
-      <p class="lede">
-        {{ s.retreats.length }} formats across {{ s.bases.length }} bases. If none of them lands on
-        your dates, the planner will build one that does.
-      </p>
-    </div>
-
-    <div class="grid grid-3">
-      @for (r of featured; track r.slug; let i = $index) {
-        <div [appReveal]="i * 60"><app-retreat-card [retreat]="r" /></div>
-      }
-    </div>
-
-    <p class="head-link-row">
-      <a class="head-link" routerLink="/retreats">See all retreats <nz-icon nzType="arrow-right" /></a>
-    </p>
-  </div>
-</section>
-
-<!-- ============ WHERE ============ -->
+<!-- ============ THE THREAD ============ -->
 <section class="section">
   <div class="container">
     <div class="head" appReveal>
-      <p class="eyebrow">Where</p>
-      <h2 class="display">{{ s.bases.length }} bases, one island.</h2>
-      <p class="lede">Each one suits a different week. Tap a marker to see what is there and which retreats run from it.</p>
+      <p class="eyebrow">The thread</p>
+      <h2 class="display">A story that links every day.</h2>
+      <p class="lede">
+        Each tour has its own thread — a competition or a journey that runs from day 2 to the last
+        night, and gives everyone a reason to turn up every morning.
+      </p>
     </div>
-
-    <app-bali-map
-      [places]="places"
-      [selected]="mapBase()"
-      (selectPlace)="mapBase.set($event)"
-      [emptyTitle]="s.bases.length + ' bases, one island.'"
-      [emptyText]="'Every base suits a different kind of ' + s.name.toLowerCase() + ' week. Pick one to see what is there.'"
-    />
-
-    @if (retreatsAtMapBase().length) {
-      <div class="grid grid-3 map-retreats">
-        @for (r of retreatsAtMapBase(); track r.slug) {
-          <app-retreat-card [retreat]="r" />
-        }
-      </div>
-    }
+    <ol class="threads">
+      @for (t of tours; track t.id; let i = $index) {
+        <li class="thread" [attr.data-sport]="t.id" [appReveal]="i * 50">
+          <span class="th-ico"><app-sport-icon [sport]="t.id" /></span>
+          <span class="th-body">
+            <span class="th-name">{{ t.thread.name }}</span>
+            <span class="th-tour">{{ t.name }}</span>
+            <span class="th-text">{{ t.thread.text }}</span>
+          </span>
+        </li>
+      }
+    </ol>
   </div>
 </section>
 
-<!-- ============ THE SPORT ============ -->
-<section class="section section-sand">
+<!-- ============ RECOVERY RITUAL ============ -->
+<section class="section section-deep ritual-band">
   <div class="container">
     <div class="head" appReveal>
-      <p class="eyebrow">{{ s.sport.eyebrow }}</p>
-      <h2 class="display">{{ s.sport.title }}</h2>
-      <p class="lede">{{ s.sport.lead }}</p>
+      <p class="eyebrow">Recovery built in</p>
+      <h2 class="display">The Recovery Ritual.</h2>
+      <p class="lede">
+        Five steps, part of every tour — so you can play hard all week and still enjoy the island.
+      </p>
     </div>
-
-    <div class="grid grid-2 sport-body">
-      <div class="sport-text" appReveal>
-        @for (p of s.sport.paragraphs; track p) {
-          <p>{{ p }}</p>
-        }
-        @for (f of s.sport.facts; track f.label) {
-          <p class="source">
-            <strong>{{ f.value }}</strong> {{ f.label }}.
-            @if (f.source) { <span>{{ f.source }}</span> }
-          </p>
-        }
-      </div>
-
-      <div class="grid grid-2 drivers">
-        @for (d of s.sport.drivers; track d.title; let i = $index) {
-          <article class="driver" [appReveal]="i * 60">
-            <nz-icon [nzType]="d.icon" class="driver-icon" />
-            <h3>{{ d.title }}</h3>
-            <p>{{ d.text }}</p>
-          </article>
-        }
-      </div>
-    </div>
+    <div appReveal><app-recovery-ritual [onDark]="true" /></div>
   </div>
 </section>
 
-<!-- ============ WHO COMES ============ -->
+<!-- ============ WHO IT IS FOR ============ -->
 <section class="section">
   <div class="container">
     <div class="head" appReveal>
       <p class="eyebrow">Who comes</p>
-      <h2 class="display">Three very different weeks.</h2>
-      <p class="lede">
-        Your level changes the whole shape of the week, not just the drills. Pick the one that sounds
-        like you — the planner starts from there.
-      </p>
+      <h2 class="display">Your game. Your people. Bali.</h2>
+      <p class="lede">{{ messages.individuals }}</p>
     </div>
-
-    <div class="grid grid-3">
-      @for (p of s.profiles; track p.id; let i = $index) {
-        <article class="profile" [appReveal]="i * 70">
-          <span class="profile-art">
-            <app-photo [photo]="p.photo" sizes="(min-width: 1040px) 33vw, (min-width: 700px) 50vw, 100vw" />
-          </span>
-          <div class="profile-body">
-            <h3>{{ p.name }}</h3>
-            <p class="profile-sub">{{ p.subtitle }}</p>
-            <p class="profile-desc">{{ p.description }}</p>
-            <ul>
-              @for (pr of p.priorities; track pr) {
-                <li><nz-icon nzType="check" /> {{ pr }}</li>
-              }
-            </ul>
-            <a class="profile-go" routerLink="/plan" [queryParams]="{ level: p.id }">
-              Plan this week <nz-icon nzType="arrow-right" />
-            </a>
-          </div>
-        </article>
+    <div class="grid grid-3 personas">
+      @for (p of personas; track p.name; let i = $index) {
+        <a class="persona" [routerLink]="p.link.split('#')[0]" [fragment]="p.link.split('#')[1]" [appReveal]="i * 40">
+          <span class="p-name">{{ p.name }}</span>
+          <span class="p-who">{{ p.who }}</span>
+          <span class="p-wants">{{ p.wants }}</span>
+          <span class="p-go">{{ p.linkLabel }} <nz-icon nzType="arrow-right" /></span>
+        </a>
       }
     </div>
   </div>
 </section>
 
-<!-- ============ HOW A WEEK WORKS ============ -->
+<!-- ============ ORGANISERS ============ -->
 <section class="section section-sand">
+  <div class="container split">
+    <div appReveal>
+      <p class="eyebrow">For group organisers</p>
+      <h2 class="display">You organise the group. We organise everything else.</h2>
+      <p class="lede">{{ messages.organisers }}</p>
+      <ul class="check-list organiser-list">
+        @for (b of benefits; track b.title) {
+          <li>
+            <nz-icon nzType="check" />
+            <span><strong>{{ b.title }}.</strong> {{ b.text }} @if (b.toConfirm) { <app-tbc /> }</span>
+          </li>
+        }
+      </ul>
+      <div class="hero-actions">
+        <a nz-button nzType="primary" nzSize="large" routerLink="/plan-your-group-trip">
+          {{ brand.cta.group }} <nz-icon nzType="arrow-right" />
+        </a>
+      </div>
+    </div>
+    <span class="frame" appReveal>
+      <app-photo [photo]="photos.organiser" sizes="(min-width: 900px) 50vw, 100vw" [credit]="true" />
+    </span>
+  </div>
+</section>
+
+<!-- ============ HOW IT WORKS ============ -->
+<section class="section">
   <div class="container">
     <div class="head" appReveal>
       <p class="eyebrow">How it works</p>
-      <h2 class="display">From a message to a week, in six steps.</h2>
+      <h2 class="display">From your first message to the airport, and after.</h2>
     </div>
-
-    <ol class="steps">
-      @for (st of steps; track st.index; let i = $index) {
-        <li class="step" [appReveal]="i * 50">
-          <span class="step-no mono">{{ st.index }}</span>
-          <div class="step-body">
-            <h3><nz-icon [nzType]="st.icon" class="step-icon" />{{ st.name }}</h3>
-            <p class="step-line">{{ st.line }}</p>
-            <p class="step-detail">{{ st.detail }}</p>
+    <ol class="journey">
+      @for (s of journey; track s.index; let i = $index) {
+        <li class="journey-stage" [appReveal]="i * 40">
+          <div class="js-top">
+            <span class="js-no mono">{{ s.index }}</span>
+            <h3><nz-icon [nzType]="s.icon" /> {{ s.name }}</h3>
           </div>
+          <dl>
+            <div><dt>You</dt><dd>{{ s.you }}</dd></div>
+            <div><dt>We</dt><dd>{{ s.we }}</dd></div>
+          </dl>
         </li>
       }
     </ol>
-
     <p class="head-link-row">
-      <a class="head-link" routerLink="/how-it-works">The whole process, in detail <nz-icon nzType="arrow-right" /></a>
+      <a class="head-link" routerLink="/how-it-works">Payments, inclusions and what to bring <nz-icon nzType="arrow-right" /></a>
     </p>
   </div>
 </section>
 
-<!-- ============ VOICES ============ -->
+<!-- ============ WHEN ============ -->
+<section class="section section-sand">
+  <div class="container">
+    <div class="head" appReveal>
+      <p class="eyebrow">When to come</p>
+      <h2 class="display">Every tour has its season.</h2>
+      <p class="lede">
+        April to October is the dry season, best for outdoor sports. November to March suits wellness,
+        indoor training and martial arts.
+      </p>
+    </div>
+    <div class="season-card" appReveal>
+      <app-season-strip [rows]="seasons" caption="When to come for each tour, month by month" />
+    </div>
+    <p class="head-link-row">
+      <a class="head-link" routerLink="/departures">{{ brand.cta.departures }} <nz-icon nzType="arrow-right" /></a>
+    </p>
+  </div>
+</section>
+
+<!-- ============ PROOF ============ -->
 <section class="section">
   <div class="container">
     <div class="head" appReveal>
-      <p class="eyebrow">From the week</p>
-      <h2 class="display">What people say afterwards.</h2>
+      <p class="eyebrow">Our standards</p>
+      <h2 class="display">What you can count on.</h2>
     </div>
-
-    <div class="grid grid-2">
-      @for (t of s.testimonials; track t.name; let i = $index) {
-        <figure class="quote" [appReveal]="i * 60">
-          <blockquote>{{ t.quote }}</blockquote>
-          <figcaption>
-            <strong>{{ t.name }}</strong>
-            <span>{{ t.detail }}</span>
-          </figcaption>
-        </figure>
+    <ul class="proof">
+      @for (p of proof; track p; let i = $index) {
+        <li [appReveal]="i * 40"><nz-icon nzType="check-circle" /> {{ p }}</li>
       }
-    </div>
+    </ul>
+    <p class="head-link-row">
+      <a class="head-link" routerLink="/about">Who we are <nz-icon nzType="arrow-right" /></a>
+    </p>
   </div>
 </section>
 

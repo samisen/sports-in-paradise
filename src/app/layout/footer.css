@@ -13,7 +13,7 @@
 }
 @media (min-width: 640px) { .foot-grid { grid-template-columns: repeat(2, 1fr); gap: 40px; } }
 @media (min-width: 1040px) {
-  .foot-grid { grid-template-columns: 1.7fr 1fr 1fr 1.2fr; gap: 48px; }
+  .foot-grid { grid-template-columns: 1.5fr 1.1fr 1.4fr 1.2fr; gap: 44px; }
 }
 
 .brand { display: inline-flex; align-items: center; gap: 10px; color: #fff; text-decoration: none; }
@@ -69,3 +69,16 @@
 .foot-sports app-sport-icon { font-size: 16px; color: var(--brand); }
 html:not([data-theme='dark']) .foot-sports app-sport-icon { color: color-mix(in srgb, var(--brand) 55%, #fff); }
 .foot-sports a.is-current { color: #fff; font-weight: 600; }
+
+.foot-signature {
+  margin: 18px 0 0;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  color: #fff;
+}
+.foot-blurb { margin-top: 10px; }
+@media (min-width: 640px) { .foot-two { grid-template-columns: repeat(2, minmax(0, auto)); column-gap: 24px; } }
+.foot-legal-links { display: flex; flex-wrap: wrap; gap: 8px 18px; }
+.foot-legal-links a { color: rgba(255, 255, 255, .7); text-decoration: none; }
+.foot-legal-links a:hover { color: #fff; text-decoration: underline; text-underline-offset: 3px; }
+.foot-contact address { margin-top: 12px; }

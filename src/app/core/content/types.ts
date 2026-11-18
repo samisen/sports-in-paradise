@@ -1,31 +1,25 @@
 import { Photo } from '../media';
-import { PlannerSpec } from '../planner/engine';
-import { SportId } from '../site/sites';
 
 /**
- * The shape of a sport site.
+ * The shape of the content.
  *
- * Every sport fills one `SportSite` and the shared templates render it, so
- * adding a sixth sport is a content file and a palette, not new pages.
+ * Sports in Paradise designs and hosts five small-group tours. Each tour is
+ * one `Tour` object in `tours.ts`; the shared templates render it. Copy that
+ * is true for every tour (the Recovery Ritual, the journey, the FAQ, the
+ * team) lives in `site.ts`.
  *
  * Icons (`icon` fields) must be ng-zorro outline icon names registered in
  * app.config.ts.
  */
 
-export interface Fact {
-  value: string;
-  label: string;
-  /** Where the number comes from. Every hard number on the site has one. */
-  source?: string;
-}
+export const TOUR_IDS = ['padel', 'golf', 'martial-arts', 'wellness', 'hybrid'] as const;
+export type TourId = (typeof TOUR_IDS)[number];
 
-export interface Pillar {
-  eyebrow: string;
-  title: string;
-  lead: string;
-  body: string;
-  points: string[];
-  photo: Photo;
+/** A palette: the master brand or one of the tours. */
+export type PaletteId = 'paradise' | TourId;
+
+export function isTourId(v: string | null | undefined): v is TourId {
+  return !!v && (TOUR_IDS as readonly string[]).includes(v);
 }
 
 export interface IconPoint {
@@ -34,108 +28,82 @@ export interface IconPoint {
   text: string;
 }
 
-export interface Profile {
-  /** A planner level id. */
-  id: string;
-  name: string;
-  subtitle: string;
-  description: string;
-  priorities: string[];
-  photo: Photo;
-}
-
-export interface Venue {
-  name: string;
-  area: string;
-  note: string;
-}
-
-export interface SeasonNote {
-  label: string;
-  months: string;
-  text: string;
-}
-
-/** Twelve ratings, January first: 0 off, 1 possible, 2 good, 3 best. */
-export type SeasonRow = [number, number, number, number, number, number, number, number, number, number, number, number];
-
-/** The state of this sport on the island, as it is today. */
-export interface BaliStatus {
-  eyebrow: string;
-  title: string;
-  lead: string;
-  paragraphs: string[];
-  numbers: Fact[];
-  venues: Venue[];
-  season: { ratings: SeasonRow; summary: string; notes: SeasonNote[] };
-  practical: IconPoint[];
-  sources: { label: string; url: string }[];
-  /** Month this was last checked, e.g. "October 2026". */
-  checked: string;
-}
-
-export interface Base {
-  /** A planner base id. */
-  id: string;
-  name: string;
-  subtitle: string;
-  tagline: string;
-  description: string;
-  lat: number;
-  lon: number;
-  /** Up to three short facts: { label: 'Courts', value: '7' }. */
-  stats: { label: string; value: string }[];
-  driveToAirportMin: number;
-  bestFor: string[];
-  photo: Photo;
-}
-
-export type RetreatStatus = 'open' | 'filling' | 'waitlist';
-
-export interface Retreat {
-  id: string;
-  slug: string;
-  name: string;
-  headline: string;
-  base: string;
-  level: string;
-  intensity: string;
-  stay: string;
-  nights: number;
-  dates: string;
-  month: string;
-  priceFromUsd: number;
-  spotsTotal: number;
-  spotsLeft: number;
-  status: RetreatStatus;
-  coachId: string;
-  summary: string;
-  body: string[];
-  includes: string[];
-  photo: Photo;
-  extras: string[];
-}
-
-export interface Coach {
-  id: string;
-  name: string;
-  role: string;
-  from: string;
-  level: string;
-  years: number;
-  bio: string;
-  speaks: string[];
-}
-
 export interface Faq {
   question: string;
   answer: string;
+  /** Shown with a "to confirm" marker until the company signs it off. */
+  toConfirm?: boolean;
 }
 
-export interface Testimonial {
-  quote: string;
+/** Twelve ratings, January first: 0 avoid, 1 possible, 2 good, 3 best. */
+export type SeasonRow = [number, number, number, number, number, number, number, number, number, number, number, number];
+
+export type DayKind = 'arrival' | 'assessment' | 'sport' | 'culture' | 'recovery' | 'off' | 'community' | 'finale' | 'departure';
+
+/** One day (or a run of days) on the tour's timeline. */
+export interface JourneyDay {
+  /** "Day 1", "Days 3–4". */
+  day: string;
+  kind: DayKind;
+  title: string;
+  text: string;
+}
+
+/** A row on the tour's fact sheet. */
+export interface FactRow {
+  label: string;
+  value: string;
+}
+
+export interface Tour {
+  id: TourId;
+  /** "Padel in Paradise" */
   name: string;
-  detail: string;
+  /** "Padel" — navigation, chips, the season table. */
+  short: string;
+  /** "Flagship", "Signature wellness tour", "HYROX-style". */
+  badge?: string;
+  /** One line for cards. */
+  tagline: string;
+  /** Meta description. */
+  description: string;
+  /** Who leads it, by role. */
+  ledBy: string;
+
+  days: number;
+  nights: number;
+  /** "8 to 12 guests" */
+  group: string;
+  groupMax: number;
+  /** List price per person, twin share, excluding flights. */
+  priceFromUsd: number;
+
+  thread: { name: string; text: string };
+  /** The opening paragraph of the tour page. */
+  intro: string;
+  /** Rows on the fact sheet beyond duration, group and price. */
+  facts: FactRow[];
+  journey: JourneyDay[];
+  /** Included on this tour beyond the shared list. */
+  includedExtra: string[];
+  bestFor: string;
+  season: { ratings: SeasonRow; note: string };
+  faqs: Faq[];
+
+  hero: Photo[];
+  gallery: Photo[];
+
+  /** The prefilled WhatsApp message. */
+  whatsapp: string;
+}
+
+/** A dated departure that individuals can join. None are dated yet. */
+export interface Departure {
+  tour: TourId;
+  /** ISO date of day 1. */
+  start: string;
+  placesTotal: number;
+  placesLeft: number;
 }
 
 export interface JournalPost {
@@ -148,50 +116,5 @@ export interface JournalPost {
   author: string;
   photo: Photo;
   body: string[];
-}
-
-export interface DaySlot {
-  icon: string;
-  time: string;
-  title: string;
-  text: string;
-}
-
-export interface SportSite {
-  id: SportId;
-  /** "Padel" */
-  name: string;
-  /** "Padel retreats in Bali" — the browser title and hub card line. */
-  descriptor: string;
-  /** One line for the footer and hub card. */
-  coreIdea: string;
-  /** Meta description for search results. */
-  description: string;
-
-  hero: { eyebrow: string; headline: string; support: string; photos: Photo[] };
-  /** Four figures under the hero. */
-  stats: Fact[];
-
-  values: [Pillar, Pillar];
-  sport: { eyebrow: string; title: string; lead: string; paragraphs: string[]; drivers: IconPoint[]; facts: Fact[] };
-  bali: BaliStatus;
-  profiles: Profile[];
-
-  /** How a day runs, for How It Works. */
-  dayShape: DaySlot[];
-  included: string[];
-  notIncluded: string[];
-
-  bases: Base[];
-  retreats: Retreat[];
-  coaches: Coach[];
-  testimonials: Testimonial[];
-  faqs: Faq[];
-  journal: JournalPost[];
-
-  planner: PlannerSpec;
-
-  /** The prefilled WhatsApp message. */
-  whatsapp: string;
-  cta: { heading: string; lede: string };
+  tour?: TourId;
 }

@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
-import { SiteId } from '../core/site/sites';
+import { PaletteId } from '../core/content/types';
 
 /**
- * One glyph per site, drawn on a 24px grid in the same stroke weight, so the
- * brand mark, the switcher and the hub cards read as one set.
+ * One glyph per tour, plus the sun for the brand itself, drawn on a 24px grid
+ * in the same stroke weight so the brand mark, menus and cards read as one set.
  */
 @Component({
   selector: 'app-sport-icon',
@@ -17,22 +17,23 @@ import { SiteId } from '../core/site/sites';
           <circle cx="8" cy="7.5" r=".6" class="dot" /><circle cx="11" cy="7.5" r=".6" class="dot" />
           <circle cx="9.5" cy="10.5" r=".6" class="dot" />
         }
-        @case ('tennis') {
-          <circle cx="12" cy="12" r="8.5" />
-          <path d="M5.2 6.8c3.4 2.6 3.4 7.8 0 10.4M18.8 6.8c-3.4 2.6-3.4 7.8 0 10.4" />
-        }
         @case ('golf') {
           <path d="M7 21V3.5l9 3.5-9 3.5" />
           <ellipse cx="12" cy="20.5" rx="7.5" ry="1.6" />
         }
-        @case ('diving') {
-          <path d="M3.5 9.5c0-1.4 1.1-2.5 2.5-2.5h12c1.4 0 2.5 1.1 2.5 2.5v2c0 1.7-1.3 3-3 3h-1.6c-.9 0-1.6-.5-2-1.3l-.4-.8a1.7 1.7 0 0 0-3 0l-.4.8c-.4.8-1.1 1.3-2 1.3H6.5c-1.7 0-3-1.3-3-3z" />
-          <path d="M4 18.5c1.4 0 1.4-1 2.7-1s1.3 1 2.7 1 1.3-1 2.6-1 1.4 1 2.7 1 1.3-1 2.7-1 1.3 1 2.6 1" />
+        @case ('martial-arts') {
+          <path d="M7 10.5V7.2A4.2 4.2 0 0 1 11.2 3h2.3A4.5 4.5 0 0 1 18 7.5v4.3a4.7 4.7 0 0 1-2 3.8V19a1.5 1.5 0 0 1-1.5 1.5h-5A1.5 1.5 0 0 1 8 19v-3.4a3.4 3.4 0 0 1-3-3.4v-.6a1.6 1.6 0 0 1 2-1.1z" />
+          <path d="M7 10.5c1.7-.4 3.6-.2 5 .9M8 15.6h8" />
         }
-        @case ('hiking') {
-          <path d="M2.5 20 9 9l3.4 5.4L15 10.5 21.5 20z" />
-          <path d="M7.4 11.8 9 12.8l1.6-1.3" />
-          <circle cx="17.5" cy="5" r="1.8" />
+        @case ('wellness') {
+          <path d="M12 20c-1.2-2.2-1.6-5.6 0-9.5 1.6 3.9 1.2 7.3 0 9.5z" />
+          <path d="M12 20c-2.8-.6-6-2.9-6.8-7.6 3.4.6 5.6 2.6 6.8 7.6zM12 20c2.8-.6 6-2.9 6.8-7.6-3.4.6-5.6 2.6-6.8 7.6z" />
+          <path d="M3.5 20.5h17" />
+        }
+        @case ('hybrid') {
+          <path d="M9.2 9.2a3 3 0 1 1 5.6 0" />
+          <path d="M8.4 9.2h7.2l1.6 2.1a6.2 6.2 0 1 1-10.4 0z" />
+          <path d="M9.5 20.2h5" />
         }
         @default {
           <circle cx="12" cy="12" r="4" />
@@ -50,5 +51,5 @@ import { SiteId } from '../core/site/sites';
   ],
 })
 export class SportIconComponent {
-  readonly sport = input.required<SiteId>();
+  readonly sport = input.required<PaletteId>();
 }

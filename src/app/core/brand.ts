@@ -1,33 +1,35 @@
 /**
  * Single source of truth for the brand.
  *
- * "Sports in Paradise" is a working name: every brand reference on every site
- * reads from here, so changing these values changes the name, wordmark,
- * contact details and legal footer everywhere at once. What differs per sport
- * (descriptor, colours, copy) lives in that sport's content file.
+ * Every brand reference on the site reads from here, so changing these values
+ * changes the name, wordmark, contact details and legal footer everywhere at
+ * once. The logo, colours, domain and social handles are still to be supplied
+ * by the company (project brief, section 15).
  */
 export const BRAND = {
   name: 'Sports in Paradise',
   wordmarkLead: 'Sports',
   wordmarkTail: 'IN PARADISE',
+  /** True until the company supplies the logo and confirms the domain. */
   isPlaceholder: true,
 
-  coreIdea: 'Five sports, one island, and a week built around how you want to spend it.',
+  signature: 'Train. Play. Discover. Connect.',
+  descriptor: 'Hosted sports and wellness tours in Bali',
 
   email: 'hello@sportsinparadise.com',
-  phone: '+62 361 000 000',
-  phoneHref: 'tel:+62361000000',
   whatsapp: '+90 533 399 46 48',
   /** Digits only, international, no leading zero — the form wa.me accepts. */
   whatsappDigits: '905333994648',
-  address: ['Jl. Pantai Berawa No. 24', 'Canggu, Badung, Bali 80361', 'Indonesia'],
+  location: 'Bali, Indonesia',
   hours: 'Mon–Sat, 08:00–19:00 WITA (UTC+8)',
+  /** The brief's promise: every enquiry answered within a day. */
+  replyWithin: 'We reply within 24 hours',
 
   cta: {
-    primary: 'Plan Your Retreat',
-    secondary: 'Talk to the Team',
-    retreats: 'See the Retreats',
-    send: 'Send it to the team',
+    group: 'Plan your group trip',
+    departures: 'See departures',
+    tours: 'Find your tour',
+    whatsapp: 'Talk to us on WhatsApp',
   },
 } as const;
 
@@ -36,15 +38,14 @@ export function whatsappLink(text: string): string {
   return `https://wa.me/${BRAND.whatsappDigits}?text=${encodeURIComponent(text)}`;
 }
 
+export const DEFAULT_WHATSAPP = `Hello ${BRAND.name}, I would like to know more about your tours in Bali.`;
+
 /**
- * What a price on this site is, and is not.
- *
- * Nothing here is a booking and nothing is held. Venues, rooms and people are
- * confirmed with the guest before any money changes hands, so every figure is
- * shown as an indication with this qualifier beside it.
+ * How a price on this site is always written (brief, section 12): "from",
+ * "per person" and "excluding flights".
  */
 export const PRICE_CLAIM = {
-  headline: 'Indicative, per person',
+  short: 'per person, excluding flights',
   footnote:
-    '*Indicative pricing, not a quote and not a booking. Final cost depends on travel dates, venue and room availability, group size and the season. Flights and the Bali tourist levy are not included. We confirm everything in writing before taking a deposit.',
+    'Prices are list prices from, per person, in a shared (twin) room, excluding flights. Final prices and upgrade tiers are confirmed in writing at booking.',
 } as const;

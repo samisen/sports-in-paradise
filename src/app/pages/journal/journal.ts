@@ -1,9 +1,7 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NzIconModule } from 'ng-zorro-antd/icon';
-import { CatalogService } from '../../core/catalog.service';
-import { JournalPost } from '../../core/content/types';
-import { SiteService } from '../../core/site/site.service';
+import { JOURNAL } from '../../core/content/journal';
 import { PageHeroComponent } from '../../shared/page-hero';
 import { PhotoComponent } from '../../shared/photo';
 import { CtaBandComponent } from '../../shared/cta-band';
@@ -16,8 +14,8 @@ import { RevealDirective } from '../../shared/reveal.directive';
   template: `
     <app-page-hero
       eyebrow="Journal"
-      heading="Written to be useful."
-      lede="Technique, training, and what is actually on the island right now. Every piece here is written by someone who coaches or guides on it."
+      heading="Guides and stories."
+      lede="Guides to Bali, the tours and how they work. Guest stories and partner spotlights join them after the first departures."
     />
 
     <section class="section">
@@ -30,10 +28,10 @@ import { RevealDirective } from '../../shared/reveal.directive';
 
         <div class="grid grid-3 posts">
           @for (p of filtered(); track p.slug; let i = $index) {
-            <a class="post" [routerLink]="['/journal', p.slug]" [appReveal]="i * 50" [attr.data-sport]="p.sportId">
+            <a class="post" [routerLink]="['/journal', p.slug]" [appReveal]="i * 50" [attr.data-sport]="p.tour ?? null">
               <span class="post-art"><app-photo [photo]="p.photo" sizes="(min-width: 1040px) 33vw, (min-width: 700px) 50vw, 100vw" /></span>
               <span class="post-body">
-                <span class="post-meta">{{ p.sport ? p.sport + ' · ' : '' }}{{ p.category }} <span class="dot"></span> {{ p.readMinutes }} min</span>
+                <span class="post-meta">{{ p.category }} <span class="dot"></span> {{ p.readMinutes }} min</span>
                 <span class="post-title">{{ p.title }}</span>
                 <span class="post-excerpt">{{ p.excerpt }}</span>
                 <span class="post-go">Read it <nz-icon nzType="arrow-right" /></span>
@@ -85,25 +83,13 @@ import { RevealDirective } from '../../shared/reveal.directive';
   ],
 })
 export class JournalPage {
-  private readonly catalog = inject(CatalogService);
-  private readonly isHub = inject(SiteService).isHub;
+  private readonly posts = [...JOURNAL].sort((a, b) => b.date.localeCompare(a.date));
 
-  /** On the hub every sport's writing, newest first, labelled by sport. */
-  private readonly posts: (JournalPost & { sport?: string; sportId?: string })[] = this.isHub
-    ? this.catalog.all
-        .flatMap((s) => s.journal.map((p) => ({ ...p, sport: s.name, sportId: s.id })))
-        .sort((a, b) => b.date.localeCompare(a.date))
-    : this.catalog.sport.journal;
-
-  readonly categories = [
-    'All',
-    ...new Set(this.posts.map((p) => (this.isHub ? p.sport! : p.category))),
-  ];
+  readonly categories = ['All', ...new Set(this.posts.map((p) => p.category))];
   readonly active = signal('All');
 
   readonly filtered = computed(() => {
     const c = this.active();
-    if (c === 'All') return this.posts;
-    return this.posts.filter((p) => (this.isHub ? p.sport : p.category) === c);
+    return c === 'All' ? this.posts : this.posts.filter((p) => p.category === c);
   });
 }

@@ -3,66 +3,68 @@
     <div class="foot-grid">
       <div class="foot-brand">
         <a class="brand" routerLink="/" [attr.aria-label]="brand.name + ' — home'">
-          <span class="brand-mark" aria-hidden="true"><app-sport-icon [sport]="site.id" /></span>
+          <span class="brand-mark" aria-hidden="true"><app-sport-icon sport="paradise" /></span>
           <span class="brand-text">
             <span class="brand-name">{{ brand.wordmarkLead }}</span>
-            <span class="brand-sub">{{ brand.wordmarkTail }}{{ site.isHub ? '' : ' · ' + label }}</span>
+            <span class="brand-sub">{{ brand.wordmarkTail }}</span>
           </span>
         </a>
-        <p class="foot-blurb">{{ blurb }}</p>
+        <p class="foot-signature">{{ brand.signature }}</p>
+        <p class="foot-blurb">
+          Small-group, hosted sports and wellness tours in Bali. You choose the sport; we design and
+          host the journey, from the airport to departure.
+        </p>
         <div class="foot-social">
-          <a href="#" aria-label="WhatsApp"><nz-icon nzType="whats-app" /></a>
-          <a href="#" aria-label="Instagram"><nz-icon nzType="instagram" /></a>
-          <a href="#" aria-label="LinkedIn"><nz-icon nzType="linkedin" /></a>
+          <a [href]="whatsappUrl" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><nz-icon nzType="whats-app" /></a>
+          <a href="#" aria-label="Instagram (account coming soon)"><nz-icon nzType="instagram" /></a>
+          <a href="#" aria-label="LinkedIn (account coming soon)"><nz-icon nzType="linkedin" /></a>
         </div>
       </div>
 
+      <nav class="foot-col" aria-label="The tours">
+        <h3>The tours</h3>
+        <ul class="foot-sports">
+          @for (t of tours; track t.id) {
+            <li [attr.data-sport]="t.id">
+              <a [routerLink]="t.link"><app-sport-icon [sport]="t.id" /> {{ t.label }}</a>
+            </li>
+          }
+        </ul>
+      </nav>
+
       <nav class="foot-col" aria-label="Explore">
         <h3>Explore</h3>
-        <ul>
+        <ul class="foot-two">
           @for (l of explore; track l.link) {
             <li><a [routerLink]="l.link">{{ l.label }}</a></li>
           }
         </ul>
       </nav>
 
-      <nav class="foot-col" aria-label="Our sports">
-        <h3>Our sports</h3>
-        <ul class="foot-sports">
-          @for (s of sports; track s.id) {
-            <li [attr.data-sport]="s.id">
-              <a [href]="s.href" [class.is-current]="s.current">
-                <app-sport-icon [sport]="s.id" />
-                {{ s.label }}
-              </a>
-            </li>
-          }
-        </ul>
-      </nav>
-
       <div class="foot-col foot-contact">
-        <h3>Office</h3>
-        <address>
-          @for (line of brand.address; track line) {
-            {{ line }}<br />
-          }
-        </address>
+        <h3>Contact</h3>
+        <a class="foot-link-strong" [href]="whatsappUrl" target="_blank" rel="noopener noreferrer">WhatsApp {{ brand.whatsapp }}</a>
         <a class="foot-link-strong" [href]="'mailto:' + brand.email">{{ brand.email }}</a>
-        <a class="foot-link-strong" [href]="brand.phoneHref">{{ brand.phone }}</a>
+        <address>{{ brand.location }}<br />{{ brand.hours }}</address>
       </div>
     </div>
 
     <div class="foot-bottom">
+      <nav class="foot-legal-links" aria-label="Legal">
+        @for (l of legal; track l.link) {
+          <a [routerLink]="l.link">{{ l.label }}</a>
+        }
+      </nav>
       <p>
         &copy; {{ year }} {{ brand.name }}.
         @if (brand.isPlaceholder) {
-          <span class="foot-note">Working brand name — subject to change.</span>
+          <span class="foot-note">Logo, colours and domain to be supplied — this is a working version of the site.</span>
         }
       </p>
       <p class="foot-legal">
-        {{ priceClaim.footnote }} Photography from Unsplash, credited to each photographer where it
-        appears. Facts about Bali were checked in October 2026; rules and prices on the island change,
-        so confirm anything you rely on. Demonstration site.
+        {{ priceClaim.footnote }} HYROX is a registered trademark of its owner; Hybrid in Paradise is
+        HYROX-style and is not affiliated with or endorsed by HYROX. Placeholder photography from
+        Unsplash, credited to each photographer where it appears.
       </p>
     </div>
   </div>
